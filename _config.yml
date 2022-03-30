@@ -93,8 +93,8 @@ theme: fluid
 # repo: git@github.com:Hello-Alex-Cheng/Hello-Alex-Cheng.github.io.git
 deploy:
   type: git
-  repo: https://github.com/Hello-Alex-Cheng/Hello-Alex-Cheng.github.io
-  # repo: git@github.com:Hello-Alex-Cheng/Hello-Alex-Cheng.github.io.git
+  # repo: https://github.com/Hello-Alex-Cheng/Hello-Alex-Cheng.github.io
+  repo: git@github.com:Hello-Alex-Cheng/Hello-Alex-Cheng.github.io.git
   branch: master
 
 # all
