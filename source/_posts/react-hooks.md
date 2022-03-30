@@ -5,6 +5,7 @@ tags: React，Hooks
 banner_img: /img/home.jpg
 index_img: /img/home.jpg
 excerpt: 什么是React Hooks，为什么需要它？
+comment: true
 ---
 
 ### 概述
