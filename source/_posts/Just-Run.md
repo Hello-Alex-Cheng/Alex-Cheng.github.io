@@ -2,8 +2,8 @@
 title: Hello_AlexCc
 date: 2019-07-29 23:37:50
 tags: ME
-banner_img: /img/tree.png
-index_img: /img/tree.png
+banner_img: /img/chicken.jpg
+index_img: /img/chicken.jpg
 excerpt: First Article
 ---
 
