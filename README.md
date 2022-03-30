@@ -33,6 +33,7 @@ https://hexo.fluid-dev.com/docs/
 https://disqus.com/
 
 可以在管理后台看到评论数据
+https://hello-alexcc.disqus.com/admin/
 
 ```
 step1:
