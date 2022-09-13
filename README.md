@@ -9,7 +9,13 @@
 
 ## 创建文章
 
-- hexo new <文章标题>
+- hexo new <page> <文章标题>
+
+## 创建草稿文章
+- hexo new draft demo
+
+### 查看草稿
+- hexo s --draft
 
 ## 生成静态资源
 
