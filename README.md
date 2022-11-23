@@ -11,6 +11,8 @@
 
 - hexo new <page> <文章标题>
 
+<page> 表示要创建的类型，比如 post，draft, about
+
 ## 创建草稿文章
 - hexo new draft demo
 
