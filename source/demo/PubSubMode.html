@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>发布订阅者模式</title>
+  <style>
+    ul {
+      background-color: antiquewhite;
+    }
+
+    li {
+      background-color: aqua;
+      margin-top: 12px;
+    }
+
+  </style>
+</head>
+
+<body>
+  <h3>面包屑 <span class="bread"></span></h3>
+
+  <hr />
+  <ul class="left">
+    <li>1</li>
+    <li>2</li>
+    <li>3</li>
+  </ul>
+
+  <script>
+    const PubSub = {
+      message: {}, // 将事件存储数组，改成对象，key 表示事件类型，value 表示订阅的事件数组
+      publist(type, text) {
+        if (!this.message[type]) return
+
+        this.message[type].forEach(cb => {
+          cb(text)
+        })
+      },
+      subscribe(type, cb) {
+        if (!this.message[type]) {
+          this.message[type] = [cb] // 如果事件 type 不存在，我们就创建一个事件类型数组
+        } else {
+          this.message[type].push(cb)
+        }
+      },
+      unsubscribe(type, cb) {
+        // 取消订阅
+        if (!this.message[type]) return
+
+        if (!cb) {
+          // 取消所有订阅的事件
+          this.message[type] = []
+        } else {
+          this.message[type] = this.message[type].filter(i => i !== cb)
+        }
+      }
+    }
+
+    PubSub.subscribe('updateBread', function (text) {
+      const breadEle = document.querySelector('.bread')
+      breadEle.innerHTML = text
+    })
+
+    let oLi = document.querySelectorAll('.left li')
+    for (let i = 0; i < oLi.length; i++) {
+      oLi[i].onclick = function () {
+        PubSub.publist('updateBread', this.innerHTML)
+      }
+    }
+
+  </script>
+</body>
+
+</html>

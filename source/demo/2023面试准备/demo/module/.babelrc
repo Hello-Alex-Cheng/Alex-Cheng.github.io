@@ -1,0 +1,7 @@
+{
+  // "presets": ["babel-preset-env"],
+  "plugins": [["./plugin.js", {
+    "ES5": false
+  }]]
+}
+

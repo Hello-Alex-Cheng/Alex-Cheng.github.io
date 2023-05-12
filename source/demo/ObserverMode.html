@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>观察者模式</title>
+  <style>
+    ul {
+      background-color: antiquewhite;
+    }
+
+    li {
+      background-color: aqua;
+      margin-top: 12px;
+    }
+
+  </style>
+</head>
+
+<body>
+  <h3>面包屑 <span class="bread"></span></h3>
+
+  <hr />
+  <ul class="left">
+    <li>1</li>
+    <li>2</li>
+    <li>3</li>
+  </ul>
+
+  <script>
+    // 目标
+    class Subject {
+      constructor() {
+        this.observers = []
+      }
+
+      add(ob) {
+        this.observers.push(ob)
+      }
+
+      notify(text) {
+        this.observers.forEach(o => {
+          o.update(text)
+        })
+      }
+    }
+
+    // 观察者
+    class Observer {
+      constructor(name) {
+        this.ele = document.querySelector(name)
+      }
+
+      update(text) {
+        this.ele.innerHTML = text
+      }
+    }
+
+    const s = new Subject()
+    const o1 = new Observer('.bread')
+
+    s.add(o1)
+
+    let oLi = document.querySelectorAll('.left li')
+    for (let i = 0; i < oLi.length; i++) {
+      oLi[i].onclick = function () {
+        s.notify(this.innerHTML)
+      }
+    }
+
+  </script>
+</body>
+
+</html>

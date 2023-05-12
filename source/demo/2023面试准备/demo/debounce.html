@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      height: 2000px;
+    }
+  </style>
+</head>
+<body>
+  <h1>防抖：用户触发事件频繁，只需要用户最后一次操作的结果</h1>
+  <input type="text" id="input">
+
+
+  <script>
+    const input = document.querySelector('#input')
+
+    input.oninput = debounce(function() {
+      console.log('value: ', this.value)
+    }, 800)
+
+    function debounce(fn, delay = 500) {
+      // 闭包
+      let timer = null
+      // this ===> window
+
+      return function() {
+        // this ===> input
+        if (timer !== null) {
+          clearTimeout(timer)
+        }
+
+        timer = setTimeout(() => {
+          fn.call(this)
+        }, delay);
+      }
+    }
+
+    let time = 0
+    window.onscroll = throttle(function() {
+      console.log('hello world')
+    }, 1000)
+
+    function throttle(fn, delay) {
+      let time = 0
+
+      return function() {
+        let now = Date.now()
+        if (now - time > delay) {
+          fn.call(this)
+          time = now
+        }
+      }
+    }
+  </script>
+</body>
+</html>

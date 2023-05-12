@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>收集 key 的依赖</title>
+</head>
+<body>
+  
+  <h1>reactive</h1>
+
+  <script src="./reactive.js"></script>
+  <script>
+
+    const data = {
+      foo: 1
+    }
+    const obj = handleProxy(data)
+
+    // 控制次数
+    const jobQueue = new Set()
+    const p = Promise.resolve()
+    let isFlushing = false
+
+    function flushJob() {
+      if (isFlushing) return
+
+      isFlushing = true
+
+      p.then(() => {
+        jobQueue.forEach(job => job())
+      }).finally(() => {
+        isFlushing = false
+      })
+    }
+
+    effect(() => {
+      console.log(obj.foo)
+    }, {
+      scheduler(fn) {
+        // 调度
+        // setTimeout(fn)
+        
+        // 控制次数
+        // fn() // 会依次从 1 打印到 6，而我不在过程，只需要结果 6
+        // 由于 Set 集合的特殊性，多次添加同一个 fn，最终都只会有个 fn 在 set 中
+        jobQueue.add(fn)
+
+        flushJob()
+      }
+    })
+    obj.foo++
+    obj.foo++
+    obj.foo++
+    obj.foo++
+    obj.foo++
+
+    console.log('结束了')
+  </script>
+</body>
+</html>
