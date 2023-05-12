@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="main.js"></script>
+</head>
+<body>
+  <h1>template & slot</h1>
+
+  <template id="my-paragraph">
+    <!-- 默认插槽 -->
+    <slot name="title">
+      <h1>Default Title</h1>
+    </slot>
+
+    <slot>default slot</slot>
+    <p>My paragraph</p>
+  </template>
+
+  <my-paragraph>
+    <!-- 使用插槽 -->
+    <h1 slot="title">Slot title</h1>
+  </my-paragraph>
+
+  <hr>
+</body>
+</html>

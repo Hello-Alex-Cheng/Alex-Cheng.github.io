@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>prefers-color-scheme</title>
+
+  <style>
+    .day   { background: #eee; color: black; }
+    .night { background: #333; color: white; }
+
+    @media (prefers-color-scheme: dark) {
+      .day.dark-scheme   { background:  #333; color: white; }
+      .night.dark-scheme { background: black; color:  red; }
+    }
+
+    @media (prefers-color-scheme: light) {
+      .day.light-scheme   { background: skyblue; color:  #333; }
+      .night.light-scheme { background:  pink; color: #333; }
+    }
+
+    .day, .night {
+      display: inline-block;
+      padding: 1em;
+      width: 7em;
+      height: 7em;
+      vertical-align: middle;
+    }
+
+    :root {
+      --color: #333;
+      --background-color: pink;
+    }
+
+    [data-theme="dark"] {
+      --color: #fff;
+      --background-color: #000;
+    }
+
+  </style>
+</head>
+<body>
+  <h1 style="background-color: var(--background-color); color: var(--color)">MDN: prefers-color-scheme CSS 媒体特性用于检测用户是否有将系统的主题色设置为亮色或者暗色。</h1>
+
+  <hr>
+
+  <div class="day light-scheme">Day (changes in light scheme)</div>
+  <div class="day dark-scheme">Day (changes in dark scheme)</div> <br>
+
+  <div class="night light-scheme">Night (changes in light scheme)</div>
+  <div class="night dark-scheme">Night (changes in dark scheme)</div>
+
+  <button class="dark-btn">dark mode</button>
+  
+  <script>
+
+    window.onload = function() {
+      // 如果匹配成功，scheme.matches === true
+      // 也就是说，如果我们的系统是暗黑色，那么这个 matches 就是true，否则是 false
+      const scheme = window.matchMedia('(prefers-color-scheme: dark)')
+
+      scheme.addEventListener('change', e => {
+        console.log(e)
+        if (e.matches) {
+          // 表示亮色模式
+          document.documentElement.setAttribute('data-theme', 'dark')
+        } else {
+          document.documentElement.setAttribute('data-theme', 'light')
+        }
+      })
+      
+      const darkBtn = document.querySelector('.dark-btn')
+
+      darkBtn.addEventListener('click', () => {
+        // 设置主题色
+        document.documentElement.setAttribute('data-theme', 'dark')
+        // document.documentElement.style.setProperty('--color', '#fff')
+        // document.documentElement.style.setProperty('--background-color', '#000')
+      })
+    }
+  </script>
+</body>
+</html>

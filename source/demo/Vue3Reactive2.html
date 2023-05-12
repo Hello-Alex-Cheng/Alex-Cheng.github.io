@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>收集 key 的依赖</title>
+</head>
+<body>
+  
+  <script>
+    // 存储被注册的副作用函数
+    let activeEffect;
+
+    const data = {
+      ok: true,
+      text: 'hello world'
+    }
+
+    const bucket = new WeakMap() // target => Map
+
+    const obj = new Proxy(data, {
+      get(target, key) {
+        // 追踪依赖
+        track(target, key)
+        return target[key]
+      },
+      set(target, key, value) {
+        target[key] = value
+        // 触发依赖
+        trigger(target, key)
+      }
+    })
+
+
+    function track(target, key) {
+      if (!activeEffect) return target[key]
+      let depsMap = bucket.get(target)
+
+      if (!depsMap) {
+        bucket.set(target, depsMap = new Map())
+      }
+
+      let deps = depsMap.get(key)
+
+      if (!deps) {
+        depsMap.set(key, deps = new Set())
+      }
+
+      // 添加副作用函数
+      deps.add(activeEffect)
+
+      // deps 存储与该副作用函数相关联的依赖集合
+      // 将来在 cleanup 中通过 activeEffect.deps[i] delete effectFn 时，其实，就是将 deps 中的副作用函数删除了
+      activeEffect.deps.push(deps)
+    }
+
+    function trigger(target, key) {
+      const depsMap = bucket.get(target)
+
+      if (!depsMap) return
+
+      const effects = depsMap.get(key)
+      const effectsToRun = new Set(effects)
+
+      // effects && effects.forEach(fn => fn())
+      effectsToRun && effectsToRun.forEach(fn => fn())
+    }
+
+    function effect(fn) {
+      function effectFn() {
+        activeEffect = effectFn
+
+        cleanup(effectFn)
+        fn()
+      }
+
+      effectFn.deps = [] // 存储所有包含当前副作用函数的依赖 集合，在 get 拦截函数中处理 deps
+
+      effectFn()
+    }
+
+    function cleanup(effectFn) {
+
+      console.log('effectFn ', effectFn.deps)
+      // 我们删除 effectFn.deps[i] 中的 effectFn，其实就是删除了 'xxx'(key) 中对应的依赖集合的副作用函数
+      // effectFn.deps[i] 中，存放的依赖集合，和 Map key 对应的依赖集合，是同一个集合，删除某一项，自然会影响到另一个
+      // 当我们在 trigger 中执行 effects 时，就是执行副作用函数
+      // 这个时候，会执行 cleanup，删除所有的 key 对应的副作用函数，最后执行 fn，重新走 属性的读取逻辑，触发 get 方法，重新收集依赖
+      // 当我们设置 obj.ok = false 后，不会再读取 obj.text 了，从而不会对其 key 收集依赖。
+      for(let i = 0; i < effectFn.deps.length; i++) {
+        const deps = effectFn.deps[i]
+
+        deps.delete(effectFn)
+      }
+
+      effectFn.deps.length = 0
+    }
+
+    effect(() => {
+      console.log(' obj.ok',  obj.ok)
+      // obj.ok = true 会触发 obj 的 get拦截方法，并且通过 track 函数收集到了副作用函数，并且将其存储在 deps 中
+      document.body.innerHTML = obj.ok ? obj.text : 'ok not'
+    })
+
+
+    setTimeout(() => {
+      // obj.text = 'Vue3 Reactive'
+      obj.ok = false
+
+      console.log('bucket ', bucket)
+    }, 1000)
+
+    // setTimeout(() => {
+    //   console.log('执行了')
+    //   obj.text = 'Vue3 Reactive'
+    // }, 3000)
+
+
+  </script>
+</body>
+</html>

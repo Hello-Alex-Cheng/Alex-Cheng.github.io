@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Life cycle callbacks test</title>
+    <style>
+    </style>
+    <script defer src="main.js"></script>
+  </head>
+  <body>
+    <h1>00</h1>
+
+    <template id="child">
+      <button>Child Button</button>
+    </template>
+
+    <template id="parent">
+      <p>parent template</p>
+      <child-wc text="Btn"></child-wc>
+    </template>
+
+    <parent-wc />
+
+  </body>
+</html>

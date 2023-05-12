@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue3 响应式原理</title>
+</head>
+<body>
+  <script>
+    // 定义一个存储副作用函数的集合，每次设置对象时，我们就会取出集合里面的副作用函数，并执行
+    const bucket = new Set()
+
+    const data = {
+      text: 'helloworld'
+    }
+
+    const obj = new Proxy(data, {
+      get(target, key) {
+        // 添加副作用函数
+        // 每一次触发 get 方法，都会向 集合 中添加一次 effect 方法
+        // 但是集合是不会存储相同的值的（包括相同的内存地址）
+        // 所以这里每一次执行 bucket.add 方法，因为 effect 地址没变，所以里面一直只会有一个副作用函数。
+        bucket.add(effect)
+
+        return target[key]
+      },
+      set(target, key, val) {
+        target[key] = val
+
+        // 批量执行副作用函数
+        bucket.forEach(fn => fn())
+
+        return true
+      }
+    })
+
+    // 执行副作用函数，会触发代理对象的 get 方法，从而收集到副作用函数
+    const effect = () => {
+      document.body.innerHTML = obj.text
+    }
+
+    effect()
+
+    // 一秒钟后，我们执行 代理对象的 set 操作，出发 set 方法
+    setTimeout(() => {
+      obj.text = 'update obj text'
+
+      console.log('??',bucket)
+    }, 1000);
+  </script>
+</body>
+</html>

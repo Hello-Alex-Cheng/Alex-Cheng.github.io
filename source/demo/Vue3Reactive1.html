@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+
+    let activeEffect = undefined
+
+    const data = {
+      text: 'hello world @.@'
+    }
+
+    function effect(fn) {
+      activeEffect = fn
+      fn()
+    }
+
+    const bucket = new WeakMap() // target => Map
+
+    const obj = new Proxy(data, {
+      get(target, key) {
+
+        if (!activeEffect) return target[key]
+
+        let depsMap = bucket.get(target)
+
+        if (!depsMap) {
+          // 关联 target 和 Map
+          bucket.set(target, depsMap = new Map())
+        }
+
+        let deps = depsMap.get(key)
+
+        if (!deps) {
+          // 依赖集合
+          depsMap.set(key, deps = new Set())
+        }
+
+        deps.add(activeEffect)
+
+        return target[key]
+      },
+      set(target, key, val) {
+        target[key] = val
+
+        const depsMap = bucket.get(target)
+
+        console.log('depsMap ', depsMap)
+
+        if (!depsMap) return
+ 
+        let effects = depsMap.get(key)
+
+        effects && effects.forEach(fn => fn())
+      }
+    })
+
+    // 注册副作用函数
+    effect(() => {
+      console.log('text effect')
+      document.body.innerHTML = obj.text // 读取
+    })
+
+    // effect(() => {
+    //   console.log('title effect')
+    //   obj.title = '标题123'
+    //   // document.title = obj.title // 读取
+    // })
+
+    setTimeout(() => {
+      obj.notExist = 'hello vue3'
+    }, 1000)
+
+  </script>
+</body>
+</html>
