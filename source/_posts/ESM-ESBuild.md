@@ -886,6 +886,6 @@ VariableDeclaration(path, state) {
 ```
 
 # ESBuild
-> https://esbuild.github.io/api/
+> https://esbuild.bootcss.com/
 
 > 介绍: https://juejin.cn/post/6918927987056312327
