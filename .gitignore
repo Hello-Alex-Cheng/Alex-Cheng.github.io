@@ -6,6 +6,6 @@ node_modules/
 public/
 .deploy*/
 public/
-scaffolds/
-source/
+# scaffolds/
+# source/
 themes/
