@@ -8,7 +8,7 @@ index_img: /img/webpack.jpg
 excerpt: 一切皆模块。
 ---
 
-# Webpack
+# Webpack5
 > 找出模块之间的依赖关系，按照一定的规则把这些模块组织、合并为一个JavaScript（以下简写为JS）文件。
 
 Webpack认为一切都是模块，如JS文件、CSS文件、jpg和png图片等都是模块。Webpack会把所有这些模块都合并为一个JS文件，这是它最本质的工作。
@@ -20,6 +20,12 @@ Webpack认为一切都是模块，如JS文件、CSS文件、jpg和png图片等�
 webpack是Webpack核心npm包
 
 webpack-cli是命令行运行webpack命令所需的npm包
+
+```js
+"webpack": "^5.82.1",
+"webpack-cli": "^5.1.1",
+"webpack-dev-server": "^4.15.0"
+```
 
 ## 资源拆分
 我们可以把所有模块打包成一个 js 文件，但是，这样就会导致 js 过于庞大，我们希望可以将其拆分成JS、CSS和图片等资源。
@@ -517,7 +523,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 // webpack.config.js
 plugins: [
   new CleanWebpackPlugin()
-  ]
+]
 ```
 
 ## webpack devServer
@@ -1117,9 +1123,15 @@ npm install -D webpack-bundle-analyzer@4.3.0
 
   在Webpack 5之前的版本里，Webpack自身没有提供持久化缓存，我们在开发时经常需要使用cache-loader或dll动态链接技术来做缓存方面的处理，这无疑提高了我们的学习成本和Webpack配置的复杂度。Webpack 5提供了持久化缓存，它通过使用文件系统缓存，极大地减少了再次编译的时间。
 
+## Webpack构建原理
+
+> https://www.bilibili.com/video/BV1Va4y1G7HX?p=5&vd_source=a9f38e58a519cc0570c2dacd34ad7ebe
+
 # Rollup
 
-> ESM打包器，小巧
+> Rollup 是一个 JavaScript 模块打包工具，可以将多个小的代码片段编译为完整的库和应用。
+> 
+> https://www.rollupjs.com/
 
 # Parcel
 
@@ -1127,5 +1139,204 @@ npm install -D webpack-bundle-analyzer@4.3.0
 
 # ESBuild
 
+极速 JavaScript 打包器，速度比其它打包工具**快**的 10 - 100 倍。
+
+主要特性：
+
+- 极快的速度，无需缓存
+- 支持 ES6 和 CommonJS 模块
+- 支持对 ES6 模块进行 tree shaking
+- API 可同时用于 JavaScript 和 Go
+- 兼容 TypeScript 和 JSX 语法
+- 支持 Source maps
+- 支持 Minification
+- 支持 plugins
+
+## 它为什么这么快？
+
+1. 它是用Go语言编写的，编译成可执行代码
+
+JavaScript必须基于解释器的node环境才能执行，所以当webpack等工具解释完本身的代码后，可能esbuild已经完成编译工作了，而这时候webpack才开始执行编译。
+
+此外，Go的核心设计是并行的，而JavaScript不是。
+
+Go有线程之间的共享内存，而JavaScript则必须在线程之间进行数据序列化。
+
+## webpack 中使用 ESBuild
+> https://www.npmjs.com/package/esbuild-loader
+>
+> esbuild-loader: Speed up your Webpack build with esbuild! 🔥
+
+```js
+npm i -D esbuild-loader
+```
+
+Use esbuild-loader to transform new JavaScript syntax to support older browsers, and TypeScript to JavaScript.
+
+```js
+// webpack.config.js
+
+  module.exports = {
+    module: {
+      rules: [
+        // {
+        //   test: /\.js$/,
+        //   use: 'babel-loader'
+        // },
+        // {
+        //   test: /\.tsx?$/,
+        //   use: 'ts-loader'
+        // },
+        {
+          // Match js, jsx, ts & tsx files
+          test: /\.[jt]sx?$/,
+          loader: 'esbuild-loader',
+          options: {
+            // JavaScript version to compile to
+            target: 'es2015'
+          }
+        },
+
+        ...
+      ],
+    },
+  }
+
+```
+
+## webpack 中使用 esbuild 来压缩 JS 代码
+
+You can replace JS minifiers like Terser or UglifyJs. 
+
+In webpack.config.js:
+
+```js
+const { EsbuildPlugin } = require('esbuild-loader')
+
+  module.exports = {
+    ...,
+    optimization: {
+      minimizer: [
+        new EsbuildPlugin({
+          target: 'es2015'
+        })
+      ]
+    },
+  }
+```
+
+## webpack 中使用 esbuild 来压缩 css 代码
+
+```js
+// webpack.config.js
+
+const { EsbuildPlugin } = require('esbuild-loader')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
+module.exports = {
+  optimization: {
+    minimizer: [
+      new EsbuildPlugin({
+        target: 'es2015',
+        css: true // 压缩 css
+      })
+    ]
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader'
+        ]
+      }
+    ]
+  },
+  plugins: [
+    new MiniCssExtractPlugin()
+  ]
+}
+```
+
+如果你的 CSS 不是作为 CSS 文件发出的，而是使用类似 style-loader 的东西通过 JS 加载的，那么你可以使用 loader 进行压缩。
+
+```js
+ module.exports = {
+    ...,
+
+    module: {
+      rules: [
+        {
+          test: /\.css$/i,
+          use: [
+            'style-loader',
+            'css-loader',
+            {
+              loader: 'esbuild-loader',
+              options: {
+                minify: true
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+```
+
 # vite
+
+> https://vitejs.cn/
+>
+> 下一代前端开发与构建工具
+
+Vite 使用 esbuild 预构建依赖。
+
+特性：
+
+- 💡 极速的服务启动
+  使用原生 ESM 文件，无需打包!
+
+- ⚡️ 轻量快速的热重载
+  无论应用程序大小如何，都始终极快的模块热重载（HMR）
+
+- 🛠️ 丰富的功能
+  对 TypeScript、JSX、CSS 等支持开箱即用。
+
+- 📦 优化的构建
+  可选 “多页应用” 或 “库” 模式的预配置 Rollup 构建
+
+- 🔩 通用的插件
+  在开发和构建之间共享 Rollup-superset 插件接口。
+
+- 🔑 完全类型化的API
+  灵活的 API 和完整 TypeScript 类型。
+
+
+
+像 webpack 等打包器，在开发时，是先将我们的构建内容放到内存中，这样它们只需要在文件更改时使模块图的一部分失活，但它也仍需要整个重新构建并重载页面。
+
+Vite 以 原生 ESM 方式提供源码。这实际上是让浏览器接管了打包程序的部分工作：Vite 只需要在浏览器请求源码时进行转换并按需提供源码。根据情景动态导入代码，即只在当前屏幕上实际使用时才会被处理。
+
+Vite 同时利用 HTTP 头来加速整个页面的重新加载（再次让浏览器为我们做更多事情）：源码模块的请求会根据 304 Not Modified 进行协商缓存，而依赖模块请求则会通过 Cache-Control: max-age=31536000,immutable 进行强缓存，因此一旦被缓存它们将不需要再次请求。
+
+
+## 为什么生产环境还需要打包？
+
+尽管原生 ESM 现在得到了广泛支持，`但由于嵌套导入会导致额外的网络往返`，在生产环境中发布未打包的 ESM 仍然效率低下（即使使用 HTTP/2）。
+
+为了在生产环境中获得最佳的加载性能，最好还是将代码进行 tree-shaking、懒加载和 chunk 分割（以获得更好的缓存）。
+
+## 浏览器兼容性
+
+用于生产环境的构建包会假设目标浏览器支持现代 JavaScript 语法。默认情况下，Vite 的目标是能够支持原生 ESM script 标签、支持原生 ESM 动态导入 和 import.meta 的浏览器：
+
+- Chrome >=87
+- Firefox >=78
+- Safari >=14
+- Edge >=88
+
+你也可以通过 build.target 配置项 指定构建目标，最低支持 es2015。
+
 
