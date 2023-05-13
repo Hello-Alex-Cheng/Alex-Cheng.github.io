@@ -1,8 +1,8 @@
 ---
-layout: build
-title: ESM/ESBuild
+layout: ESM
+title: ES Module / Babel
 date: 2022-09-13 17:11:35
-tags: ESM ESModule ESBuild
+tags: ESM、babel
 banner_img: /img/modules.jpg
 index_img: /img/modules.jpg
 excerpt: 继 CommonJS、AMD、CMD 几种模块化规范由社区提出后，ES 2015（ES6）在语言层面上实现了模块功能，且实现简单，可以替代CommonJS和AMD规范，成为在服务器和浏览器通用的解决方案。
@@ -884,8 +884,3 @@ VariableDeclaration(path, state) {
 },
 ...
 ```
-
-# ESBuild
-> https://esbuild.bootcss.com/
-
-> 介绍: https://juejin.cn/post/6918927987056312327
