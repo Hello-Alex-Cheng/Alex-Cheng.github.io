@@ -1,7 +1,7 @@
 ---
 layout: Vue3
 title: Vue3项目实战(一)：工程化配置
-date: 2022-12-23 12:16:55
+date: 2022-12-2 12:16:55
 tags: 工程化,Vue3
 banner_img: /img/login.png
 index_img: /img/login.png

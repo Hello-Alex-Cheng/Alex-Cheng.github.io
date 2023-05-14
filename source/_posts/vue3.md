@@ -59,7 +59,7 @@ globals: {
 # 动态组件
 > component
 
-要渲染的实际组件由 is prop 决定。
+当我们要渲染的组件不确定时，可以使用 `<component is="'component-name'" />` 来处理，要渲染的实际组件由 is 属性决定。
 
 - 当 is 是字符串，它既可以是 HTML 标签名也可以是组件的注册名。
 - 或者，is 也可以直接绑定组件。
@@ -97,7 +97,7 @@ export default {
 <component :is="href ? 'a' : 'span'"></component>
 ```
 
-# 插槽
+# 插槽 slot
 
 默认插槽、具名插槽。
 
@@ -153,7 +153,71 @@ const slotName = ref('header')
 
 [官方描述](https://cn.vuejs.org/guide/components/async.html#basic-usage)
 
-> 在大型项目中，我们可能需要拆分应用为更小的块，并仅在需要时再从服务器加载相关组件。Vue 提供了 `defineAsyncComponent` 方法来实现此功能：
+> 在大型项目中，我们可能需要拆分应用为更小的块，并仅在需要时再从加载相关组件。
+
+## Vue2 用法
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    <h3>异步组件测试</h3>
+
+    <button @click="toggle">toggle</button>
+    <async-component v-if="showAsync" />
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+
+  <script type="module">
+
+    import './main.js'
+
+    const app = new Vue({
+      el: '#app',
+      components: {
+        AsyncComponent: () => import('./async.js') // 异步加载组件，页面需要时才加载 async.js 资源
+      },
+      data() {
+        return {
+          showAsync: false,
+        }
+      },
+      methods: {
+        toggle() {
+          this.showAsync = !this.showAsync
+        }
+      }
+    })
+  </script>
+</body>
+</html>
+```
+
+接着我们创建一个组件 `async.js`
+
+```js
+export default {
+  template: `
+    <h3>我是局部注册的 异步组件</h3>
+  `
+}
+```
+
+我们回到页面上，因为 `showAsync` 刚开始是 false，所以 `AsyncComponent` 不会显示出来。
+
+打开控制台，会发现并没有加载 `async.js` 资源。
+
+这时，我们点击 `toggle` 按钮，此时 network 显示加载了 `async.js` 资源，并且 `AsyncComponent` 组件的内容也显示出来了。
+
+
+## Vue3 提供了 `defineAsyncComponent` 方法来实现异步加载组件：
 
 ```js
 import { defineAsyncComponent } from 'vue'
@@ -401,7 +465,7 @@ const Foo = (_, { slots }) => {
 # v-model
 > 官网：https://cn.vuejs.org/guide/components/events.html
 
-v-model 在原生元素上的用法：
+## v-model 在原生元素上的用法：
 
 ```js
 <input v-model="searchText" />
@@ -414,9 +478,35 @@ v-model 在原生元素上的用法：
 />
 ```
 
-而当使用在一个组件上时，v-model 会被展开为如下的形式：
+## 在自定义组件上使用（Vue2）
 
 ```js
+Vue.component('Comp', {
+  model: {
+    prop: 'compValue',
+    event: 'change' // event值必须要和 $emit 中的第一个参数相同，不一定非得是 `chagne`，可以随便填
+  },
+  props: {
+    compValue: {
+      text: String,
+      default: ''
+    }
+  },
+  template: `
+    <input :value="compValue" @input="$emit('change', $event.target.value)" />  
+  `
+})
+
+// 使用
+<Comp v-model="compValue" />
+```
+
+## 在自定义组件上使用（Vue3）
+
+而当 v-model 使用在一个自定义组件上时，v-model 会被展开为如下的形式：
+
+```js
+// vue3
 <CustomInput
   :modelValue="searchText"
   @update:modelValue="newValue => searchText = newValue"
@@ -424,17 +514,14 @@ v-model 在原生元素上的用法：
 
 
 // 内部定义 props 和 方法
-
 const props = defineProps<{
   modelValue: boolean
 }>()
 
 const emits = defineEmits(['update:modelValue'])
 
-
 // 调用
 emits('update:modelValue', !props.modelValue)
-
 ```
 
 当然，我们也可以给 `v-model` 指定一个参数，不使用默认的 `modelValue`:
@@ -455,6 +542,21 @@ defineEmits(['update:title'])
   v-model:last-name="last"
 />
 ```
+
+
+
+# $nextTick
+
+Vue 是异步渲染，data 改变之后，DOM不会立刻渲染
+
+`$nextTick` 表示在 DOM 渲染之后触发，以获取最新的 DOM 节点。
+
+```js
+this.$nextTick(() => {
+  // ...
+})
+```
+
 
 # 自定义指令
 

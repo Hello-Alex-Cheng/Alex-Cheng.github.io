@@ -144,6 +144,7 @@ pm2 start index.js --watch
 
 
 # 参考资料
-[^1]: [小满Linux介绍](https://blog.csdn.net/qq1195566313/article/details/123885302)
+
+- [小满Linux介绍](https://blog.csdn.net/qq1195566313/article/details/123885302)
 
 

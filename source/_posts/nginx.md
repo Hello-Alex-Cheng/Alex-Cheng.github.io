@@ -251,6 +251,9 @@ upstream node {
 
 
 # 参考资料
+
 [^1]: [小满介绍Nginx](https://xiaoman.blog.csdn.net/article/details/123958967)
+
 [^2]: [安装Nginx](https://xiaoman.blog.csdn.net/article/details/123965492)
+
 [^3]: [Nginx相关](https://blog.csdn.net/qq1195566313/category_11727192.html)

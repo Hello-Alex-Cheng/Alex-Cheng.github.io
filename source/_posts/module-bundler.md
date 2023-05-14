@@ -1340,3 +1340,6 @@ Vite 同时利用 HTTP 头来加速整个页面的重新加载（再次让浏览
 你也可以通过 build.target 配置项 指定构建目标，最低支持 es2015。
 
 
+# 参考资源
+
+- [从0到1学习 vite](https://www.bilibili.com/video/BV1GN4y1M7P5/?spm_id_from=333.337.search-card.all.click&vd_source=a9f38e58a519cc0570c2dacd34ad7ebe)
