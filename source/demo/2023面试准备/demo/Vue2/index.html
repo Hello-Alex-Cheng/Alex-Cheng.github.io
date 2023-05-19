@@ -8,32 +8,32 @@
 </head>
 <body>
   <div id="app">
-    <form @submit.prevent="add">
+    <!-- <form @submit.prevent="add">
       <input type="text" v-model="student.name">
       <input type="text" v-model="student.age">
       <button>添加</button>
-    </form>
+    </form> -->
 
     <ul>
       <li v-for="item in list">姓名：{{item.name}}, 年龄：{{item.age}}</li>
     </ul>
 
-    <hr>
+    <!-- <hr>
     <div id="my-component"></div>
 
 
     <hr>
     <p>v-model: {{compValue}}</p>
-    <!-- <vmodel v-model="compValue" /> -->
+    <vmodel v-model="compValue" />
 
     <hr>
   
     <h3>异步组件测试</h3>
     <button @click="toggle">toggle</button>
-    <async-component v-if="showAsync" />
+    <async-component v-if="showAsync" /> -->
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+  <script src="./vue@2.7.14.js"></script>
 
   <script type="module">
     import './main.js'

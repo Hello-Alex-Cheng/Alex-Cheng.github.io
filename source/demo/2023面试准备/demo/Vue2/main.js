@@ -11,5 +11,5 @@ const MyCompnent = Vue.extend({
   `
 })
 
-new MyCompnent().$mount('#my-component')
+// new MyCompnent().$mount('#my-component')
 
