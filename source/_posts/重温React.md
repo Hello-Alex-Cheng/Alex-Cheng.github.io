@@ -303,6 +303,14 @@ setState 可以多次设置，如果设置成同步，每一次 setState 都触�
 
 - Vue 渲染 DOM 也是异步的，可以通过 $nextTick 可以获取最新的数据
 
+## 为什么setState在 setTimeout 和自定义事件中是同步的？
+
+与 batchUpdate 机制有关。
+
+依据是判断 isBatchingUpdates 是 true or false.
+
+dirtComponent ?
+
 # state 与 不可变值
 
 React采用函数式编程的不可变数据特性。
@@ -813,6 +821,22 @@ React 比较两棵树是从树的根节点开始比较的，比较规则如下�
 有了 key 做标识，React 就在 diff 时就会知道 first 和 second 这两个元素没有发生变化，所以只会在这两个元素前面插入 third 元素。
 
 **所以 key 的使用减少了 DOM 操作，提高了 DOM 的更新效率。**
+
+# React 和 Vue 的区别
+
+相同点：
+
+- 都支持组件化
+
+- 数据驱动视图
+
+- 都使用 vDom 操作 DOM
+
+区别：
+
+- React 使用 JSX，Vue 使用 template
+
+- React 函数式编程，Vue 声明式编程
 
 # 参考文献
 

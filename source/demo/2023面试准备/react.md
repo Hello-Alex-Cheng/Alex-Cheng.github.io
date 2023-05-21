@@ -499,6 +499,24 @@ render() {
 
 在 Vue 中引入组件时，直接使用 import 函数导入即可实现异步加载组件。
 
+# react-router 如何配置懒加载？
+
+结合异步组件的方法使用(lazy、suspense)
+
+```js
+const Home = React.lazy(() => import('./Home.tsx'))
+const About = React.lazy(() => import('./About.tsx'))
+
+const App = () => (
+  <Router>
+    <Suspense fallback={<div>loading</div>}>
+      <Route exact path="/" component={Home}></Route>
+      <Route path="/about" component={About}></Route>
+    </Suspense>
+  </Router>
+)
+```
+
 # 性能优化 - SCU（shouldComponentUpdate）
 
 默认返回 true
