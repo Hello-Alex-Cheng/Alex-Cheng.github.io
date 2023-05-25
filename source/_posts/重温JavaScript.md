@@ -345,21 +345,21 @@ const obj = {
 }
 
 function deepClone(obj) {
-  const o = {}
+  if (typeof obj !== 'object' || obj === null) {
+    return obj; // 如果是基本类型或null，则直接返回
+  }
 
-  for (const key in obj) {
-    if (Object.hasOwnProperty.call(obj, key)) {
-      
-      if(typeof obj[key] === 'object') {
-        o[key] = deepClone(obj[key])
-      } else {
-        o[key] = obj[key];
-      }
+  const clone = Array.isArray(obj) ? [] : {};
+
+  for (let key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      clone[key] = deepClone(obj[key]);
     }
   }
 
-  return o
+  return clone;
 }
+
 ```
 
 # JSON.stringify实现深克隆
@@ -379,9 +379,54 @@ const o = JSON.parse(JSON.stringify(obj))
 console.log(o)
 ```
 
-JSON.stringify 存在的问题：
+JSON.stringify 存在的两个问题：
 
-如果属性值是 undefined 或者是方法（含箭头函数），克隆出来后，undefined 和函数会丢失
+- 无法拷贝函数、正则表达式、特殊类型的对象（如Date对象）等。
+- 对象中存在循环引用时会导致报错。
+
+```js
+// 如果属性值是 undefined 或者是方法（含箭头函数），克隆出来后，undefined 和函数会丢失
+const o = {
+  fn: function (params) { // 方法会丢失
+      console.log('is fn')
+  },
+  reg: /\.js$/ig, // 空对象: {}
+  date: new Date(), // 时间会被计算出来: "2023-05-24T03:07:23.547Z"
+  n: null, // null
+  u: undefined, // 丢失
+  name: 'hello alexCc', // 'hello alexCc'
+  s: new Set([1,1,2,2,3,3]), // 空对象: {}
+  m: new Map() // 空对象: {}
+}
+```
+
+# structuredClone 实现深克隆
+
+structuredClone是浏览器提供的一种机制，用于在不同的上下文（例如Web Workers之间）传输和复制可结构化的数据。它是一种用于序列化和反序列化JavaScript对象的算法。
+
+需要注意的是，structuredClone算法是浏览器提供的特性，它并不是JavaScript语言本身的一部分，因此在非浏览器环境中（例如Node.js），无法直接使用structuredClone。
+
+对比 JSON.parse 需要注意的两个问题:
+
+- 对象中存在方法，使用 structuredClone 拷贝会报错，而 JSON.parse 会丢失
+- structuredClone 支持对象循环引用，JSON.parse 处理循环引用的对象会报错
+
+```js
+const o = {
+  // fn: function (params) { // 会报错
+  //     console.log('is fn')
+  // },
+  reg: /\.js$/ig, // /\.js$/gi
+  date: new Date(), // Wed May 24 2023 11:23:31 GMT+0800 (中国标准时间) {}
+  n: null, // null
+  u: undefined, // undefined
+  name: 'hello alexCc', // 'hello alexCc'
+  s: new Set([1,1,2,2,3,3]), // Set(3) {1, 2, 3}
+  m: new Map() // Map(0) {size: 0}
+}
+```
+
+
 
 # parseInt
 
@@ -1484,18 +1529,66 @@ const p = Promise.race([
 
 # async await
 
-> async函数就是Generator函数的语法糖。
+async/await被称为Generator函数的语法糖，是因为它们之间具有一些相似的特性和作用。
+
+使用Generator函数时，需要手动编写迭代器的控制逻辑，即不断调用next方法来推进函数的执行。而async函数则更加简洁，通过使用async关键字声明函数，并在函数内部使用await关键字来等待异步操作的完成。使用await关键字可以暂停函数的执行，等待Promise对象的解析，并将解析值作为结果返回。整个过程更加类似于同步代码的书写，避免了手动编写迭代器的繁琐操作。
+
+从语法角度来看，async/await确实简化了异步编程的过程，使得代码更加易读和易于维护。它们隐藏了Generator函数的复杂性，并提供了更直观的方式来处理异步操作。因此，我们可以说async/await是Generator函数的一种更高级的语法糖形式。
+
+async/await的内部原理是基于Generator函数来实现的。在JavaScript引擎内部，async函数会被转化为一个状态机，而await表达式会被转化为适当的yield表达式。
+
+当遇到一个async函数时，JavaScript引擎会将其转化为一个返回Promise的普通函数。在函数内部，通过Generator函数的方式来实现异步操作的控制流。
+
+我们来看一段 `async/await` 转为为 `ES5` 的代码
+
+```js
+async function async1 () {
+  console.log('async1 start')
+  await async2()
+  console.log('async1 end')
+}
+
+async function async2 () {
+  console.log('async2')
+}
+
+console.log('script start')
+async1()
+console.log('script end')
+
+
+// ===================== 转为 es5 的代码后 =====================
+
+function async1() {
+  console.log('async1 start');
+  return async2().then(function() {
+    console.log('async1 end');
+  });
+}
+
+function async2() {
+  console.log('async2');
+  return Promise.resolve();
+}
+
+console.log('script start');
+async1().then(function() {
+  console.log('script end');
+});
+
+```
 
 async函数返回一个Promise对象，可以使用then方法添加回调函数
 
 ```js
 async function sayName() {
-  return 'name'
+  return 'name' // 相当于 return Promise.resolve('name')
 }
 
 console.log(sayName()) // Promise { 'name' }
 
 sayName().then(res => console.log(res)) // name
+
 ```
 
 当函数执行时，一旦遇到await就会先返回，等到触发的异步操作完成，再接着执行函数体内后面的语句。
