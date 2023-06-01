@@ -838,6 +838,47 @@ React 比较两棵树是从树的根节点开始比较的，比较规则如下�
 
 - React 函数式编程，Vue 声明式编程
 
+# ReactHooks缺点 —— 状态不同步问题
+
+```js
+function App(props: any) {
+  const [count, setCount] = useState(0)
+
+  let timer: any = null
+
+  const onClick = () => {
+    setCount(count + 1)
+  }
+  const onClickAsync = () => {
+    timer = setTimeout(() => {
+      console.log('count ', count)
+    }, 3000);
+  }
+
+  useEffect(() => {
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [])
+
+  return (
+    <div className="App">
+      <h1>{count}</h1>
+      <button onClick={onClick}>立即执行</button>
+      <button onClick={onClickAsync}>异步执行</button>
+    </div>
+  )
+}
+```
+
+问题：
+
+count = 0，点击异步执行后，再点击立即执行表示 count + 1，3秒后，打印结果为 0。
+
+原因：
+
+函数的变量保存在运行时的作用域里，在点击 `异步执行` 按钮的时候，执行函数的内部作用域将变量 count 复制了一份，无论 count 在这 3 秒内如何变化，定时器的回调函数读取的 count 还是原来的值。
+
 # 参考文献
 
 [^1]: [React 老文档](https://zh-hans.legacy.reactjs.org/)

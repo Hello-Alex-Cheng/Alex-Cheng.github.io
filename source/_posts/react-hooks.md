@@ -8,17 +8,16 @@ excerpt: 什么是React Hooks，为什么需要它？如何高效的使用React 
 comment: true
 ---
 
+https://zh-hans.react.dev/reference/react/useCallback
+
 > Hook 是 React 16.8 的新增特性。它可以让你在不编写 class 的情况下使用 state 以及其他的 React 特性。
-
-
-# 动机
 
 # Hook 规则
 1. 只在最顶层使用 Hook
 2. 只在 React 函数中调用 Hook。（或：在自定义 Hook 中调用其他 Hook）
 
 
-# 使用 useCallback、useMemo、memo 做性能优化
+# 性能优化—— useCallback、useMemo、memo
 
 尽可能的保证组件不去发生变化，发生变化的因素有：`state、props、context`。
 
@@ -149,7 +148,7 @@ const fn = useCallback(() => {
 5. useCallback 返回新函数的条件是：依赖项（第二个参数）发生了改变。
 6. 如果说我们的 Child 组件，本身就是需要根据 count 变化而变化，那么就不需要加这个缓存 API了，反而增加其计算负担。
 
-## 设计组件
+# 设计组件
 
 不要为了使用钩子，过渡的使用钩子，好的页面设计，也许用不上这些钩子。
 
@@ -189,20 +188,66 @@ const Demo = () => {
 }
 ```
 
-## useRef / createRef
+# useRef / createRef
 
-> 访问 DOM 节点
+> https://zh-hans.react.dev/reference/react/useRef
+
+获取 DOM 元素。
+
+当 React 创建 DOM 节点并将其渲染到屏幕时，React 将会把 DOM 节点设置为你的 ref 对象的 current 属性。
+
+当节点从屏幕上移除时，React 将把 current 属性设回 null。
 
 ```js
+const inputRef = useRef(null) // const inputRef = React.createRef()
 
-const inputEle = useRef(null)
-const inputEle = React.createRef()
+inputRef.current.focus()
 
-inputEle.current.focus()
-
+// ...
+return <input ref={inputRef} />;
 ```
 
-### 测量 DOM节点？
+通过使用 ref，你可以确保：
+
+- 可以在重新渲染之间 存储信息（不像是普通对象，每次渲染都会重置）。
+- 改变它 不会触发重新渲染（不像是 state 变量，会触发重新渲染）。
+- 对于你的组件的每个副本来说，这些信息都是本地的（不像是外面的变量，是共享的）。
+
+
+注意：
+
+- 不要在渲染期间写入 或者读取 ref.current。
+
+```js
+function MyComponent() {
+  // ...
+  // 🚩 不要在渲染期间写入 ref
+  myRef.current = 123;
+  // ...
+  // 🚩 不要在渲染期间读取 ref
+  return <h1>{myOtherRef.current}</h1>;
+}
+```
+
+- 可以在 事件处理程序或者 effects 中读取和写入 ref。
+
+```js
+function MyComponent() {
+  // ...
+  useEffect(() => {
+    // ✅ 你可以在 effects 中读取和写入 ref
+    myRef.current = 123;
+  });
+  // ...
+  function handleClick() {
+    // ✅ 你可以在事件处理程序中读取和写入 ref
+    doSomething(myOtherRef.current);
+  }
+  // ...
+}
+```
+
+# 测量 DOM节点？
 
 ```js
 
@@ -249,9 +294,11 @@ const [rect, ref] = useClientRect()
 }
 ```
 
-### React.forwardRef
+# React.forwardRef
 
-> React.forwardRef 会创建一个React组件，这个组件能够将其接受的 ref 属性转发到其组件树下的另一个组件中。
+> https://zh-hans.react.dev/reference/react/forwardRef
+
+React.forwardRef 会创建一个React组件，这个组件能够将其接受的 ref 属性转发到其组件树下的另一个组件中。
 
 ```js
 
@@ -260,17 +307,22 @@ const FancyInput = forwardRef((props, ref) => (
 ))
 
 // 这样可以拿到 input 元素了
-const inputEle = React.createRef()
+const inputEle = React.createRef() // const inputEle = useRef(null)
 <FancyInput ref={inputEle} />
 
 ```
 
-### useImperativeHandle
+# useImperativeHandle(ref, createHandle, [deps])
 
 > useImperativeHandle 可以让你在使用 ref 时自定义暴露给父组件的实例值。
 
-```js
+对上述代码中所涉参数说明如下。
+- ref：定义current对象的ref属性。
+- createHandle：这是一个函数，返回值是一个对象，即这个ref的current对象。
+- [deps]：依赖列表。当监听的依赖发生变化时，useImperativeHandle才会重新将子组件的实例属性输出到父组件ref的current属性上；如果为空数组，则不会重新输出。
 
+```js
+// 注意：该组件接收到的 ref 已不再被转发到 <input> 中。
 const FancyInput = forwardRef((props, ref) => {
   const inputRef = useRef();
 
@@ -278,22 +330,21 @@ const FancyInput = forwardRef((props, ref) => {
     focus: () => {
       inputRef.current.focus();
     },
-    alert () {
-      alert(1)
-    }
+    scrollIntoView() {
+        inputRef.current.scrollIntoView();
+      },
   }));
   return <input ref={inputRef} {...props} />;
 })
 
 
-const inputEle = React.createRef()
-<FancyInput ref={inputEle} />
+const ref = React.createRef()
+<FancyInput ref={ref} />
 
 
-// 通过 inputEle 获取到 useImperativeHandle 定义的方法
-inputEle.current.focus()
-
-inputEle.current.alert()
+// 通过 ref 获取到 useImperativeHandle 暴露的方法
+ref.current.focus()
+ref.current.scrollIntoView()
 
 ```
 

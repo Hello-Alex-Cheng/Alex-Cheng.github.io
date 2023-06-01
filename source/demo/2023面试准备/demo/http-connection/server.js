@@ -52,6 +52,6 @@ const server = http.createServer((req, res) => {
   }
 })
 
-server.listen(8888, () => {
+server.listen(8080, () => {
   console.log('server running at port 8888...')
 })

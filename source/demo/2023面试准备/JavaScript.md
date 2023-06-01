@@ -721,7 +721,7 @@ function createAnother(original){
     SuperType.call(this, name);   //第二次调用SuperType()
     this.age = age;
   }
-  SubType.prototype=newSuperType();   //第一次调用SuperType()
+  SubType.prototype = new SuperType();   //第一次调用SuperType()
   SubType.prototype.constructor = SubType;
   SubType.prototype.sayAge = function() {
     console.log(this.age);
