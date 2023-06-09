@@ -213,7 +213,7 @@ module.exports = {
 
 bundle.js是从入口文件index.js开始打包生成的output.filename指定的文件，`1.bundle.js, 2.bundle.js`是动态加载JS模块而生成的异步资源文件，test.js文件被单独打包成1.bundle.js文件，test1.js文件被单独打包成2.bundle.js文件。
 
-我们打开 index.html 页面，并查看 network，会发现这几个资源文件，都在 dist 目录下。
+我们打开 index.html 页面，并查看 network，会发现这几个资源文件，都是从 dist 目录下加载而来。
 
 ```js
 http://127.0.0.1:5500/source/demo/webpack5/dist/bundle.js
@@ -240,7 +240,7 @@ http://127.0.0.1:5500/source/demo/webpack5/assets/1.bundle.js
 http://127.0.0.1:5500/source/demo/webpack5/assets/2.bundle.js
 ```
 
-<img src="./img/publicPath.jpg" />
+<img src="../img/publicPath.jpg" />
 
 原来，浏览器是从 `assets` 目录下加载了这两个资源文件，而我们根本没有创建这个 `assets` 目录，并且 `1.bundle.js, 2.bundle.js` 是在 `dist` 目录下，所以找不到资源了。
 
@@ -1135,7 +1135,11 @@ npm install -D webpack-bundle-analyzer@4.3.0
 
 # Parcel
 
+https://parceljs.org/docs/
+
 > 零配置的前端打包器
+
+Parcel 结合了开箱即用的开发体验和可伸缩的体系结构，可以将您的项目从刚刚开始的阶段带到大规模的生产应用程序。
 
 # ESBuild
 
@@ -1339,6 +1343,193 @@ Vite 同时利用 HTTP 头来加速整个页面的重新加载（再次让浏览
 
 你也可以通过 build.target 配置项 指定构建目标，最低支持 es2015。
 
+
+# Rspack
+
+> https://www.rspack.dev/zh/
+
+一个基于 Rust 的高性能构建引擎， 具备与 Webpack 生态系统的互操作性，可以被 Webpack 项目低成本集成，并提供更好的构建性能。
+
+
+- 启动速度快: 基于 Rust，项目启动速度极快，带给你极致的开发体验。
+
+- 高效的 Build 性能
+
+
+## 和其他构建工具的对比
+
+> https://www.rspack.dev/zh/guide/introduction#%E5%92%8C%E5%85%B6%E4%BB%96%E6%9E%84%E5%BB%BA%E5%B7%A5%E5%85%B7%E7%9A%84%E5%AF%B9%E6%AF%94
+
+- 和 Turbopack 的区别
+
+Rspack 和 turbopack 都是基于 Rust 实现的 bundler，且都发挥了 Rust 语言的优势。
+
+与 turbopack 不同的是，Rspack 选择了对 Webpack 生态兼容的路线，一方面，这些兼容可能会带来一定的性能开销，但在实际的业务落地中，我们发现对于大部分的应用来说，这些性能开销是可以接受的，另一方面，这些兼容也使得 Rspack 可以更好地与上层的框架和生态进行集成，能够实现业务的渐进式迁移。
+
+## 优势
+
+- Rust 语言优势: Rspack 使用 Rust 语言编写， 得益于 Rust 的高性能编译器支持， Rust 编译生成的 Native Code 通常比 JavaScript 性能更为高效。
+
+- 高度并行的架构: Rspack 采用了高度并行化的架构，如模块图生成，代码生成等阶段，都是采用多线程并行执行，这使得其编译性能随着 CPU 核心数的增长而增长，充分挖掘 CPU 的多核优势。
+
+- 内置大部分的功能: Webpack 做现代 Web App 开发时，通常需要配合很多的 plugin 和 loader 进行使用，而这些 loader 和 plugin 往往是性能的瓶颈，而 Rspack 虽然支持 loader 和 plugin，但是保证绝大部分常用功能都内置在 Rspack 内，从而减小 JS plugin | loader 导致的低性能和通信开销问题。
+
+- 增量编译: 尽管 Rspack 的全量编译足够高效，但是当项目庞大时，全量的编译仍然难以满足 HMR 的性能要求，因此在 HMR 阶段，我们采用的是更为高效的增量编译策略，从而保证，无论你的项目多大，其 HMR 的开销总是控制在合理范围内。
+
+## 使用 Rspack CLI
+
+`npm/yarn create rspack@latest`
+
+## 手动安装
+
+```js
+mkdir rspack-demo
+cd rspack-demo
+npm init -y
+npm install -D @rspack/cli
+```
+
+Node version > 14
+
+```js
+// rspack.config.js
+
+const path = require('path')
+
+module.exports = {
+  entry: {
+    main: './src/index.jsx'
+  },
+  output: {
+    // filename: 'index.js', // filename 默认是 entry 的 key
+    path: path.resolve(__dirname, 'dist')
+  },
+  builtins: {
+    html: [{
+      template: './src/index.html'
+    }]
+  }
+}
+```
+
+## HMR
+
+Rspack 内置了对 HMR 的支持，并对 React 项目内置了 fast-refresh 的支持，无需配置，通过 `npx rspack serve` 即可体验 React 的 HMR。
+
+## css module
+
+CSS 是 Rspack 的一等公民，Rspack 内置了对 CSS 的处理能力，你无需额外的配置即可使用。
+
+默认会将 *.css 结尾的文件视为 CSS 模块类型，将 *.module.css 结尾的文件视为 CSS Modules 模块类型。
+
+```css
+// index.module.css
+
+.red-color {
+  color: red;
+}
+```
+
+```js
+// app.jsx
+
+import styles from './index.module.css'
+
+<p className={styles['red-color']}>css module</p>
+```
+
+## less
+
+Rspack 已经完成了对 less-loader 的兼容，你可以这样配置：
+
+```js
+// rspack.config.js
+
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.less$/,
+        use: [
+          {
+            loader: 'less-loader',
+            options: {
+              // ...
+            },
+          },
+        ],
+        type: 'css',
+      },
+    ],
+  },
+};
+```
+
+## Tailwind CSS
+
+> https://www.rspack.dev/zh/guide/language-support.html#tailwind-css
+
+# SWC
+
+> https://swc.rs/
+
+SWC（Speedy WebAssembly Compiler）是一个基于Rust语言开发的JavaScript和TypeScript编译器。它使用WebAssembly技术来提供高效的代码编译和转换。SWC旨在提供更快的编译速度和更低的内存消耗，以改善前端开发者的工作流程。通过利用Rust语言的性能和内存安全特性，SWC能够在处理大型代码库时表现出色。
+
+SWC 可用于编译和捆绑。对于编译，它使用现代 JavaScript 特性获取 JavaScript/TypeScript 文件，并输出所有主要浏览器都支持的有效代码。
+
+## 和 babel 相比
+
+SWC 在一个线程上比 Babel 快20倍，在四个核心上比 Babel 快70倍。
+
+`安装`
+
+```js
+npm/yarn i -D @swc/cli @swc/core
+```
+
+Transpile JavaScript file and emit to stdout
+
+`npx swc ./file.js`
+
+## 在线体验
+
+> https://swc.rs/playground
+
+Input
+
+```js
+const fn = () => 123
+
+interface IProps {
+    name: string;
+}
+
+const App = (props: IProps) => {
+    return (
+        <h1>Jsx</h1>
+    )
+}
+```
+
+Output
+
+```js
+var fn = function() {
+    return 123;
+};
+var App = function(props) {
+    return React.createElement("h1", null, "Jsx");
+};
+```
+
+
+# why-you-should-use-swc
+
+https://blog.logrocket.com/why-you-should-use-swc/
+
+# turbopack
+
+> https://turbo.build/pack/docs
 
 # 参考资源
 

@@ -8,6 +8,167 @@ index_img: /img/micro-app.png
 excerpt: shadow dom、样式隔离方案
 ---
 
+# 对微前端的理解
+
+微前端的核心理念是将前端应用程序看作是一个整体，由多个独立的部分组成。每个部分被视为一个微前端应用，它们可以具有自己的技术栈、开发流程和团队组织。这种方式使得团队可以独立开发和部署各个子应用，减少了协调和合并的复杂性。
+
+
+# 为什么 Iframe 无法胜任微前端的工作？
+
+IFrame 在传统的前端开发中是一种常见的技术，用于在页面中嵌入其他网页或应用程序。然而，在微前端架构中，IFrame 并不是一个理想的选择，主要是因为以下几个方面的限制：
+
+1. 隔离性和通信复杂性：IFrame 本身提供了一种隔离的环境，但这也带来了通信和数据交互的复杂性。由于每个子应用都在独立的 IFrames 中运行，它们之间的通信需要通过特定的机制，如消息传递，而这增加了开发和维护的复杂性。
+
+2. 性能和加载时间：每个 IFrames 都需要加载和渲染独立的 HTML、CSS 和 JavaScript。这意味着在加载微前端应用时，需要同时加载多个 IFrames，导致额外的网络请求和页面资源占用，可能会影响性能和加载时间。
+
+3. 样式和布局限制：IFrame 的内容在页面中是独立的，它们具有自己的 CSS 样式和布局上下文。这导致在微前端架构中难以实现全局样式的一致性，以及子应用之间的布局和交互的协调问题。
+
+4. 浏览器安全性限制：由于安全策略的限制，IFrame 之间的跨域通信可能受到限制，特别是在涉及跨域资源访问和共享数据时。这可能导致在微前端架构中需要处理复杂的安全性问题。
+
+鉴于以上限制，微前端架构通常采用其他技术手段来实现子应用的拆分和集成，例如使用 Web Components、JavaScript 模块加载器等。这些技术能够提供更好的隔离性、通信机制和性能优化，使得微前端架构更具可行性和灵活性。
+
+# 微前端运行原理
+
+- 监听路由变化
+
+- 匹配子应用
+
+- 加载子应用
+
+- 渲染子应用
+
+## 监听路由变化
+
+1. 监听 hash 路由: `window.onhashchange`
+
+2. 监听 history 路由
+
+history.go、history.back、history.forward 使用 popstate 事件 `window.onpopstate`
+
+监听的方式
+```js
+window.addEventListener('popstate', () => {})
+```
+
+**重写**: pushState、replaceState 需要通过函数重写的方式进行 `劫持`
+
+```js
+const rawPushState = window.history.pushState
+window.history.pushState = function(...args) {
+  rawPushState.apply(window.history, args)
+
+  // 其他逻辑
+}
+
+const rawReplaceState = window.history.replaceState
+window.history.replaceState = function(...args) {
+  rawReplaceState.apply(window.history, args)
+
+  // 其他逻辑
+}
+```
+
+在 Vue 项目中，我们通过 this.$router.push 会触发 `history.pushState` 事件，this.$router.replace 会触发 `history.replaceState` 事件。
+
+## 匹配子应用
+
+监听路由的变化后，拿到当前路由的路径 `window.location.pathname`，然后根据 registerMicroApps 的参数 `apps` 查找子应用。因为子应用都配置了 `activeRule`。
+
+```js
+// 如果当前的 pathname 以 activeRule 开头，表明匹配到了子应用
+
+const currentApp = apps.find(app => window.location.pathname.startWith(app.activeRule))
+```
+
+## 加载子应用
+
+当我们找到了与当前路由匹配的子应用，接着就去加载这个子应用的资源。
+
+```js
+function handleRouter = async () => {
+  // 匹配子应用
+
+  // 加载资源
+  const html = await fetch(currentApp.entry.then(res => res.text())
+
+  // 将 html 渲染到指定的容器内
+  const container = document.querySelector(currentApp.container)
+}
+```
+
+这个时候，我们就拿到了子应用的 `html` 文本。
+
+但是我们不能给直接通过 `container.innerHTML = html` 将文本放到容器内，这样是无法显示的。
+
+**注意** 浏览器处于安全考虑，放到页面上的 html 如果包含了 js 脚本，它是不会去执行 js 的。我们需要手动处理 `script` 脚本。
+
+## importHTML 加载资源/处理脚本
+
+我们来封装一个函数 `importHTML`，专门来处理 `html` 文本。(`qiankun内部引用的 import-html-entry 就是做这个事的。`)
+
+我们可以把加载子应用资源的 fetch 请求放到 importHTML 函数中，它还有如下几个功能：
+
+- 将获取到的 html 文本，放到 template DOM节点中
+
+- 获取所有的 Script 脚本
+
+- 执行所有的 Script 脚本
+
+```js
+export const importHTML = url => {
+  const html = await fetch(currentApp.entry).then(res => res.text()
+
+  const template = document.createElement('div')
+
+  template.innerHTML = html
+
+  const scripts = template.querySelectAll('script')
+
+  const getExternalScripts = () => {
+    console.log('解析所有脚本: ', scripts)
+  }
+
+  const execScripts = () => {}
+
+  return {
+    template, // html 文本
+    getExternalScripts, // 获取 Script 脚本
+    execScripts, // 执行 Sript 脚本
+  }
+}
+```
+
+script 脚本分为 `内联` 脚本和外链脚本，这里需要分开处理，拿到内联脚本后，获取内容可以通过 `eval` 直接处理。如果是含有 `scr` 的 script 脚本，还需要拿到 src 的值，通过 `fetch` 去加载脚本。
+
+我们在 `getExternalScripts` 方法中来处理 
+
+```js
+const getExternalScripts = async () => {
+  return Promise.all(Array.from(scripts).map(script => {
+    // 获取 scr 属性
+    const src = script.getAttribute('src')
+
+    if (!src) {
+      return Promise.resolve(script.innerHTML)
+    } else {
+      return fetch(src.startWith('http') ? src : `${url}${src}`).then(res => res.text())
+    }
+  }))
+}
+```
+
+然后我们就可以通过 `execScripts` 方法去调用 getExternalScripts，拿到所有的脚本内容后，执行！
+
+```js
+const execScripts = async () => {
+  const scripts = await getExternalScripts() 
+
+  scripts.forEach(code => {
+    eval(code)
+  })
+}
+```
+
 # qiankun
 
 > https://qiankun.umijs.org/zh
@@ -21,8 +182,6 @@ excerpt: shadow dom、样式隔离方案
   // ...
 },
 ```
-
-
 # 微前端的子项目是怎么引入到主项目里的
 
 ```js
@@ -63,7 +222,7 @@ module.exports = {
   // 自定义webpack配置
   configureWebpack: {
     output: {
-      // 把子应用打包成 umd 库格式
+      // 把子应用打包成库文件、格式是 umd
       library: `${name}-[name]`,
       libraryTarget: 'umd',
       jsonpFunction: `webpackJsonp_${name}`,
@@ -83,6 +242,29 @@ umd全称是UniversalModuleDefinition，是一种通用模块定义格式，通�
 
 umd 格式是一种既可以在浏览器环境下使用，也可以在 node 环境下使用的格式。它将 CommonJS、AMD以及普通的全局定义模块三种模块模式进行了整合。
 
+```js
+(function (global, factory) {
+  // CommonJS
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+  // AMD
+	typeof define === 'function' && define.amd ? define(['exports'], factory) :
+  // Window
+	(global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.qiankun = {}));
+}(this, (function (exports) {
+  // 应用代码
+})));
+```
+
+## 为什么 qiankun 要求子应用打包为 umd 库格式呢？
+
+主要是为了拿到子应用在 `入口文件` 导出的 `生命钩子函数`，这也是主应用和子应用之间通信的关键。
+
+- bootstrap
+
+- mount
+
+- unmount
+
 # 获取子应用资源 - import-html-entry
 
 > https://zhuanlan.zhihu.com/p/369414267
@@ -95,15 +277,36 @@ single-spa和qiankun最大的不同，大概就是qiankun实现了html entry，�
 
 importHTML 几个核心方法:
 
-首先importHTML的参数为需要加载的页面url，拿到后会先通过 `fetch方法` 读取页面内容，并且返回为页面html的字符串
+首先importHTML的参数为需要加载的页面url，拿到后会先通过 `fetch方法` 读取页面内容。
 
-- processTpl
+```js
+import importHTML from 'import-html-entry';
 
-- execScript
+importHTML('./subApp/index.html')
+  .then(res => {
+    console.log(res.template);
 
-- getExternalStyleSheets
+    res.execScripts().then(exports => {
+      const mobx = exports;
+      const { observable } = mobx;
+      observable({
+        name: 'kuitos'
+      })
+    })
+});
+```
 
-- getExternalScripts
+## 返回值
+
+- template - string - 处理过的 HTML 模板。
+- assetPublicPath - string - 资源的公共途径。
+- getExternalScripts - Promise<string[]> - 来自模板的脚本 URL。
+- getExternalStyleSheets - Promise<string[]> - 来自模板的 StyleSheets URL。
+- execScripts - (sandbox?: object, strictGlobal?: boolean, execScriptsHooks?: ExecScriptsHooks): - Promise<unknown> - the return value is the last property on window or proxy window which set by the entry - script.
+  - sandbox - optional, Window or proxy window.
+  - strictGlobal - optional, Strictly enforce the sandbox.
+
+
 
 
 ## processTpl
@@ -118,6 +321,17 @@ processTpl的返回值有 template，script，style，entry。
 > [文章](https://juejin.cn/post/6920110573418086413)
 >
 > [视频](https://www.bilibili.com/video/BV1Gv4y177yn/?spm_id_from=333.337.search-card.all.click&vd_source=a9f38e58a519cc0570c2dacd34ad7ebe)
+
+JavaScript 沙箱是一种安全机制，用于隔离和限制 JavaScript 代码的执行环境，以防止恶意代码或意外行为对系统造成损害。沙箱提供了一种受控的环境，限制了代码的访问权限和执行能力，确保代码只能在受限制的范围内操作。
+
+JavaScript 沙箱通常用于以下情况：
+
+1. 在多租户环境中，确保不同用户或组织的代码相互隔离，防止相互干扰或访问敏感信息。
+2. 在第三方代码或插件中使用，以确保其代码不会对宿主环境造成潜在的安全漏洞或冲突。
+3. 在应用程序中执行用户提供的代码，例如在线代码编辑器或脚本执行环境，以防止恶意代码对用户数据或系统进行攻击。
+4. 在浏览器中执行不受信任的代码，例如浏览器插件或扩展，以保护用户的隐私和安全。
+
+JavaScript 沙箱通过限制代码的访问权限、提供隔离的执行环境、使用安全策略和沙箱沙盒技术等手段来实现。常见的 JavaScript 沙箱技术包括沙盒环境、Web Worker、iframe、JavaScript 虚拟机等。这些技术通过限制代码的执行权限、提供独立的运行环境、隔离全局上下文等方式来确保代码的安全执行。
 
 ## 快照沙箱-SnapshotSandbox
 
@@ -547,7 +761,7 @@ import styles from './index.module.css'
 
 css modules 和 scoped css 差不多，都能实现组件级别样式隔离，能设置子组件和全局样式，只是实现方式不同，导致了使用起来也有差异。
 
-# 那么 qiankun 的样式隔离就毫无作用了？
+## 那么 qiankun 的样式隔离还有必要做吗
 
 老项目还是可以用的，比如 JQuery 这种，qiankun 的样式隔离能用。
 
@@ -723,7 +937,35 @@ qiankun、wujie、micro-app 的区别主要还是实现容器（或者叫沙箱�
 
 - wujie: web components 和 iframe。
 
+# 微前端（qiankun）架构中，主应用和子应用有共同的组件，如何封装呢？
+
+在微前端架构中，主应用和子应用可能会共享一些组件，为了实现组件的共享和封装，可以采用以下方法：
+
+1. 封装为独立的 npm 包：将共享的组件封装为独立的 npm 包，并发布到私有或公共的 npm 仓库中。主应用和子应用都可以通过 npm 安装该组件，并在需要的地方引入和使用。
+
+2. Git 仓库依赖：将共享组件放置在一个独立的 Git 仓库中，并通过 Git 仓库的依赖关系来引入组件。主应用和子应用可以通过 Git 仓库的 URL 或路径来引入共享组件。
+
+3. Git Submodule：如果主应用和子应用都在同一个 Git 仓库下，可以使用 Git Submodule 的方式来引入共享组件。将共享组件作为子模块添加到主应用和子应用的仓库中。
+
+4. 本地引用：如果主应用和子应用处于同一个代码仓库中，可以直接通过相对路径引入共享组件。将共享组件放置在一个独立的目录下，并通过相对路径引用。
+
+无论选择哪种方式，关键是要保持共享组件的独立性和可维护性。确保共享组件的代码和样式与具体的主应用和子应用解耦，避免出现冲突和依赖混乱的情况。同时，建议对共享组件进行版本管理，以便在更新和维护时能够更好地控制和追踪变更。
+
+在微前端架构中，可以通过合适的方式引入共享组件，使主应用和子应用可以共享和复用组件，提高开发效率和代码质量。
 
 
-# 参考链接
-- [qiankun CSS隔离问题](https://zhuanlan.zhihu.com/p/596349482?utm_medium=social&utm_oi=762241709898739712&utm_psn=1593891522373799936&utm_source=wechat_session)
+## monorepo架构
+
+Monorepo 模式也可以解决微前端中的公共依赖包和公共组件的问题。
+
+Monorepo 模式是指将多个项目或应用放置在同一个代码仓库中管理的开发模式。
+
+在 Monorepo 中，可以将公共依赖包和公共组件作为共享资源，放置在代码仓库的合适位置，供不同的项目或应用使用。这样可以避免不同项目之间重复安装和维护相同的依赖包，也能够统一管理和更新公共组件。
+
+以下是 Monorepo 模式下解决微前端中公共依赖包和公共组件的方式：
+
+1. 公共依赖包管理：将公共的依赖包放置在代码仓库的根目录或指定目录下，通过工具如 Yarn 或 Lerna 管理依赖包的安装、更新和版本控制。不同的项目或应用可以通过引用共享的依赖包来解决依赖关系，避免重复安装和冲突。
+
+2. 公共组件封装：将公共的组件封装为独立的包或模块，放置在代码仓库的特定目录中，并通过工具如 NPM 发布和安装。不同的项目或应用可以通过引用共享的组件来实现组件的复用和共享，提高开发效率和代码一致性。
+
+通过 Monorepo 模式，可以集中管理和维护公共依赖包和公共组件，减少重复工作和资源浪费。同时，还能够促进团队协作和代码共享，统一规范和风格，提高整体项目的质量和可维护性。

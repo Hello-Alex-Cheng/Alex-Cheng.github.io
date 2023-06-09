@@ -610,6 +610,22 @@ p.__proto__.__proto__.__proto__ === null
 o instanceof Object // true 实例的原型链中出现过相应的构造函数
 ```
 
+```js
+function instance_of(instance, obj) {
+  let prototype = Object.getPrototypeOf(instance)
+
+  while(true) {
+    if (prototype === null) return false
+
+    if (prototype === obj.prototype) {
+      return true
+    }
+
+    prototype = Object.getPrototypeOf(prototype)
+  }
+}
+```
+
 第二种方式是使用`isPrototypeOf()`方法
 
 ```js

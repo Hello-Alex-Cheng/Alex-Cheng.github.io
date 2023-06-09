@@ -200,4 +200,225 @@ function insertSort(arr) {
 }
 
 
-console.log(insertSort(arr))
+// console.log(insertSort(arr))
+
+
+
+
+
+class PromiseSchedule {
+
+  constructor(max) {
+    this.list = []
+    this.max = max // 并发数
+    this.workingNum = 0 // 当前正在执行的数量
+  }
+
+  add(cb) {
+    this.list.push(cb)
+  }
+
+  start() {
+    for (let i = 0; i < this.max; i++) {
+      this.doNext()
+    }
+  }
+
+  doNext() {
+    if (this.list.length > 0 && this.workingNum < this.max) {
+      this.workingNum++
+      // 取出来执行
+      this.list.shift()().then(() => {
+        this.workingNum--
+        this.doNext()
+      })
+    }
+  }
+}
+
+const timeout = (time, value) => new Promise(resolve => setTimeout(resolve, time, value))
+
+
+const scheduler = new PromiseSchedule(2)
+
+const addTask = (time, value) => {
+  scheduler.add(() => timeout(time, value).then(res => {
+    console.log('打印: ', res)
+  }))
+}
+
+addTask(1000, 1)
+addTask(300, 2)
+addTask(500, 3)
+addTask(400, 4)
+
+// scheduler.start()
+
+
+
+
+
+const linkList = {
+  value: 1,
+  next: {
+    value: 2,
+    next: {
+      value: 3,
+      next: {
+        value: 4,
+        next: {
+          value: 5,
+          next: null
+        }
+      }
+    }
+  }
+}
+
+// function reverse(head) {
+
+//   let prev = null
+//   let curr = head
+
+//   while(curr) {
+//     head = curr
+
+//     curr = curr.next
+
+//     head.next = prev
+
+//     prev = head
+//   }
+
+//   return head
+// }
+
+// console.log(reverse(linkList))
+
+
+
+
+
+
+
+
+
+// const timeMap = new Map()
+// class Cache {
+//   constructor(timeout, limit) {
+//     this.obj = {}
+//     this.timeout = timeout // 过期时间
+//     this.limit = limit // 最多能存储多少个
+//   }
+
+//   get(id) {
+//     if (!this.obj[id]) return
+
+//     // 处理自动过期
+//     const now = Date.now()
+
+//     if (now - timeMap.get(id) > this.timeout) {
+//       // 已过期
+//       return undefined
+//     }
+
+//     // 被访问了，刷新存储时间
+//     timeMap.set(id, Date.now())
+//     return this.obj[id]
+//   }
+
+//   set(id, value) {
+//     if(Object.keys(this.obj).length === this.limit) {
+//       // 是否等于当前限制，找到最久未使用的对象
+//       const now = Date.now()
+
+//       // 遍历 map，找到 now - time 值最大的那个，就是最久未使用的对象
+//       let oldKey = 0
+//       let bigger = 0
+
+//       timeMap.forEach((v, key) => {
+//         if (now - v > bigger) {
+//           bigger = now - v
+//           oldKey = key
+//         }
+//       })
+
+//       timeMap.delete(oldKey)
+//       delete this.obj[oldKey]
+
+//       this.obj[id] = value
+//     } else {
+//       this.obj[id] = value
+//       timeMap.set(id, Date.now())
+//     }
+//   }
+// }
+
+// const c =  new Cache(5000, 3)
+
+
+// console.log(c)
+
+
+
+
+
+
+const versionsList = ['1.45.1', '1.5', '1.3.2', '6', '3.3.3.3'];
+
+// function compareVersions(version1, version2) {
+//   const v1 = version1.split('.').map(Number)
+//   const v2 = version2.split('.').map(Number)
+
+//   for (let i = 0; i < Math.max(v1.length, v2.length); i++) {
+//     const num1 = v1[i] || 0
+//     const num2 = v2[i] || 0
+
+//     if (num1 > num2) return 1
+
+//     if (num1 < num2) return -1
+//   }
+
+//   return 0
+// }
+
+// console.log(versionsList.sort(compareVersions))
+
+
+// 冒泡实现
+
+function compareMaxVersion(current, next) {
+  const currentNumberList = current.split('.').map(Number)
+  const nextNumberList = next.split('.').map(Number)
+
+  for (let i = 0; i < Math.max(currentNumberList.length, nextNumberList.length); i++) {
+    const number1 = currentNumberList[i] || 0
+    const number2 = nextNumberList[i] || 0
+
+    if (number1 > number2) return 1
+
+    if (number1 < number2) return -1
+  }
+
+  return 0
+}
+
+function sortVersions(versions) {
+  const length = versions.length
+
+  for (let i = 0; i < length; i++) {
+    for (let j = 0; j < length - 1 - i; j++) {
+      if (compareMaxVersion(versions[j], versions[j+1]) > 0) {
+        [versions[j], versions[j+1]] = [versions[j+1], versions[j]]
+      }
+    }
+  }
+
+  return versions
+}
+
+console.log('版本排序：', sortVersions(versionsList))
+
+
+
+

@@ -448,30 +448,159 @@ const obj = {
 
 // console.log(Promise.resolve('helo') instanceof Promise)
 
-const sleep = function(ms) {
-  return new Promise(r => {
-    console.log(xxxxx + 3)
+// const sleep = function(ms) {
+//   return new Promise(r => {
+//     console.log(xxxxx + 3)
 
-    setTimeout(() => {
-      r()
-    }, ms)
-  })
-}
+//     setTimeout(() => {
+//       r()
+//     }, ms)
+//   })
+// }
 
-async function sayName() {
-  console.log(1)
+// async function sayName() {
+//   console.log(1)
 
-  try {
-    await sleep(3000)
-  } catch (error) {
-    console.log(' - - - ', error)
+//   try {
+//     await sleep(3000)
+//   } catch (error) {
+//     console.log(' - - - ', error)
+//   }
+
+
+//   console.log(2)
+
+//   return 'name'
+// }
+
+// sayName().then(res => console.log(res))
+
+
+// const m = new Map()
+
+// const o = {
+//   name: '1'
+// }
+
+// m.set(o, '这是一个对象')
+// m.set('hello world', '这是字符串')
+
+// console.log(m.size)
+// console.log(m.has(o))
+// console.log(m.get(o))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// var resolvedPromisesArray = [Promise.resolve(33), Promise.resolve(44)];
+
+// var p = Promise.race(resolvedPromisesArray);
+// // immediately logging the value of p
+
+// console.log(p)
+
+// // p.then(res => {
+// //   console.log(res)
+// // })
+// setTimeout(function(){
+//   console.log('the stack is now empty')
+//   console.log(p)
+// });
+
+
+
+class PromiseQueue {
+  constructor(concurrency) {
+    this.concurrency = concurrency; // 并发执行的数量
+    this.running = 0; // 当前正在执行的 Promise 数量
+    this.queue = []; // 存储待执行的 Promise 的队列
   }
 
+  add(promiseFn) {
+    return new Promise((resolve, reject) => {
+      // 创建一个包装过的 Promise，用于处理执行结果
+      const wrapperFn = () => promiseFn().then(resolve).catch(reject);
+      
+      // 将包装过的 Promise 加入队列
+      this.queue.push(wrapperFn);
+      
+      // 如果当前正在执行的 Promise 数量小于并发执行的数量，开始执行队列中的下一个 Promise
+      if (this.running < this.concurrency) {
+        this.runNext();
+      }
+    });
+  }
 
-  console.log(2)
-
-  return 'name'
+  runNext() {
+    if (this.queue.length > 0 && this.running < this.concurrency) {
+      const promiseFn = this.queue.shift();
+      this.running++;
+      promiseFn()
+        .then(() => {
+          // Promise 执行完成后，继续执行队列中的下一个 Promise
+          this.running--;
+          this.runNext();
+        })
+        .catch(() => {
+          this.running--;
+          this.runNext();
+        });
+    }
+  }
 }
 
-sayName().then(res => console.log(res))
+// 创建一个最多并发执行 2 个 Promise 的队列
+const queue = new PromiseQueue(2);
 
+// 添加多个 Promise 到队列中
+queue.add(() => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      console.log('Promise 1');
+      resolve();
+    }, 1000);
+  });
+});
+
+queue.add(() => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      console.log('Promise 2');
+      resolve();
+    }, 500);
+  });
+});
+
+queue.add(() => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      console.log('Promise 3');
+      resolve();
+    }, 300);
+  });
+});
+
+queue.add(() => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      console.log('Promise 4');
+      resolve();
+    }, 400);
+  });
+});
+
+
+queue.runNext()

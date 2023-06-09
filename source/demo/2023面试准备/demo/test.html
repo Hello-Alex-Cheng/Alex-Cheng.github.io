@@ -1,64 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>css阻塞</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- <meta http-equiv="Refresh" content="5; URL=debounce.html"> -->
+  <title>css阻塞</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- <meta http-equiv="Refresh" content="5; URL=debounce.html"> -->
 
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-      }
+  <script src="./test.js"></script>
 
-      html,
-      body {
-        width: 100%;
-        height: 100%;
-      }
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
 
-      .outer {
-        background-color: pink;
-        /* display: flex;
-        flex-direction: column; */
-      }
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+    }
 
-      .c1 {
-        width: 100%;
-        height: 100px;
-        background-color: aqua;
-        margin-bottom: 10px;
+    .box {
+      width: 100px;
+      height: 100px;
+      background-color: red;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      /* animation: moveBox 1s infinite linear; */
+    }
+/* 
+    @keyframes moveBox {
+      0% {
+        color: yellow;
+        transform: translateX(-50%);
       }
-      .c2 {
-        width: 100%;
-        height: 100px;
-        background-color: blue;
-        margin-top: 30px;
+      50% {
+        color: #000;
+        transform: translateX(calc(100% - 50px));
       }
-      .box {
-        overflow: hidden;
+      100% {
+        color: pink;
+        transform: translateX(-50%);
       }
-
-      .floatDiv {
-        width: 50px;
-        height: 50px;
-        background-color: blue;
-        float: left;
-      }
-
-      .normalDiv {
-        width: 100px;
-        height: 100px;
-        background-color: red;
-        overflow: hidden;
-      }
-    </style>
+    } */
+  </style>
 </head>
 <body>
-  <!-- <div style="display: flex;"> -->
-    <div class="floatDiv"></div>
-    <div class="normalDiv"></div>
-  <!-- </div> -->
+  <div class="box">你好啊</div>
+
+  <script>
+    const box = document.querySelector('.box');
+    const viewportWidth = window.innerWidth;
+    const boxWidth = box.offsetWidth;
+    let direction = 10; // 移动方向，1表示向右，-1表示向左
+
+    function moveBox() {
+      const boxLeft = box.offsetLeft;
+      
+      if (boxLeft <= 0) {
+        // 碰到最左边的边界，改变移动方向为向右
+        direction = 10;
+      } else if (boxLeft + boxWidth >= viewportWidth) {
+        // 碰到最右边的边界，改变移动方向为向左
+        direction = -10;
+      }
+      
+      box.style.left = `${boxLeft + direction}px`;
+      
+      requestAnimationFrame(moveBox);
+    }
+
+    // moveBox();
+
+  </script>
 </body>
 </html>
