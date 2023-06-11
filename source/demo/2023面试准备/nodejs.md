@@ -16,7 +16,6 @@
 
 nextTick的原理是什么，和setImmaite有什么区别？
 
-
 # 事件循环
 
 事件循环同样运行在单线程环境下，JavaScript的事件循环是依靠浏览器实现的，而Node作为另一种运行时，事件循环由底层的libuv实现。
@@ -480,7 +479,6 @@ curl -d "param1=value1&param2=value2" http://localhost:3000
 
 SSL（Secure Sockets Layer，安全套接层）协议及其继任者TLS（Transport Layer Security，传输层安全）协议是为网络通信提供安全及数据完整性的一种安全协议。TLS与SSL在传输层对网络连接进行加密。 SSL的一大优势在于它独立于上层协议，和HTTP结合即为HTTPS，和WebSocket结合即为WSS。
 
-
 # 事件和监听器
 
 ```js
@@ -620,18 +618,6 @@ router.get('/', async (ctx, next) => {
 
 })
 ```
-
-
-# mongodb collection
-
-在 Mongoose 中，`collection` 是指 MongoDB 数据库中的集合（Collection）。集合是 MongoDB 存储数据的基本单位，类似于关系数据库中的表。
-
-在 Mongoose 中，每个模型（Model）对应着 MongoDB 数据库中的一个集合。当定义一个模型时，Mongoose 会自动将模型的名称转换为复数形式，并将其作为对应的集合名称。例如，如果定义了一个名为 `User` 的模型，则对应的集合名称将会是 `users`。
-
-通过模型，我们可以进行各种数据库操作，如插入数据、查询数据、更新数据等。Mongoose 提供了丰富的方法和功能来操作集合中的数据，并提供了便捷的方式来定义和管理集合的结构、字段和索引等。
-
-通过 Mongoose 的模型和集合的概念，我们可以在应用程序中使用面向对象的方式来操作 MongoDB 数据库，简化了与数据库的交互和管理。
-
 # koa 中的 ctx.accepts
 
 在 Koa 2 中，`ctx.accepts` 是一个属性，用于获取客户端可接受的内容类型（MIME 类型）。它用于检查客户端请求头中的 Accept 字段，以确定客户端能够接受的内容类型。
@@ -658,6 +644,105 @@ app.listen(3000);
 ```
 
 在上面的示例中，我们通过 `ctx.accepts('json', 'html', 'text/plain')` 检查客户端可接受的内容类型。如果客户端能够接受 `'json'`、`'html'` 或 `'text/plain'` 中的任意一种类型，那么响应体中将返回对应的 Accepted Content-Type。如果客户端无法接受任何一种类型，那么会返回状态码 406 Not Acceptable。
+
+# ctx.state
+
+在 Koa 中，`ctx.state` 是一个用于存储上下文状态的对象。它可以用来在中间件之间传递数据，并且在请求的生命周期内保持持久性。
+
+通常情况下，`ctx.state` 可以用于存储一些在请求处理过程中需要共享的数据，例如用户信息、权限信息、请求的元数据等。它可以在中间件中设置和获取，允许不同的中间件对该数据进行操作或使用。
+
+一个常见的用例是在`身份验证中间件`中将用户信息存储在 `ctx.state` 中，然后在后续的中间件或路由处理函数中访问该信息，以便进行权限检查或其他操作。这样可以避免在每个中间件或路由处理函数中重复执行相同的身份验证逻辑。
+
+示例代码：
+
+```javascript
+app.use(async (ctx, next) => {
+  // 在某个中间件中设置 ctx.state
+  ctx.state.user = { id: 1, name: 'John' };
+  await next();
+});
+
+app.use(async (ctx) => {
+  // 在后续的中间件或路由处理函数中获取 ctx.state
+  const user = ctx.state.user;
+  // 使用 user 进行权限检查或其他操作
+  // ...
+});
+```
+
+通过使用 `ctx.state`，我们可以更方便地在不同的中间件之间传递数据，并确保数据在整个请求处理过程中的持久性和一致性。
+
+# 定义 auth 中间件
+
+通过 `ctx.state` 保存用户信息
+
+```js
+const jwt = require('jsonwebtoken')
+
+const auth = async (ctx, next) => {
+  // 1. 获取、解析token
+  const { authorization } = ctx.request.header
+  const token = authorization.replace('Bearer ', '')
+  const user = jwt.verify(token, 'shhhh')
+
+  // 2. 保存用户信息
+  ctx.state.user = user
+
+  await next()
+}
+```
+
+使用 `auth` 中间件
+
+```js
+router.patch('/', auth, HomeController.updatePassword)
+```
+
+然后我们就可以在 `HomeController.updatePassword` controller 中获取 user，并对 user 进行相应的处理。
+
+```js
+module.exports = {
+  updatePassword: async (ctx, next) => {
+    // 拿到用户信息
+    const user = ctx.state.user
+
+    // 1. 根据 ID 到数据库查询用户，判断是否存在用户
+    const hasUser = await Login.find({
+      username: user.username
+    })
+    if (!hasUser.length) return ctx.body = '数据库未查询到当前用户'
+
+    // 2. 获取 body 参数，拿到新的密码
+    const { newpassword } = ctx.request.body
+
+    // 3. 通过 db.collection.updateOne 更新用户密码
+    db.login.updateOne(
+      { username: 'alex.cheng' }, // 查询
+      {
+        $set: {
+          password: newpassword
+        }
+      }
+    )
+
+    // 4. 告诉用户更新密码成功，直接把最新的用户信息都返回
+    const currentUser = await Login.find({
+      username: user.username
+    })
+    ctx.body = currentUser
+  },
+}
+```
+
+# mongodb collection
+
+在 Mongoose 中，`collection` 是指 MongoDB 数据库中的集合（Collection）。集合是 MongoDB 存储数据的基本单位，类似于关系数据库中的表。
+
+在 Mongoose 中，每个模型（Model）对应着 MongoDB 数据库中的一个集合。当定义一个模型时，Mongoose 会自动将模型的名称转换为复数形式，并将其作为对应的集合名称。例如，如果定义了一个名为 `User` 的模型，则对应的集合名称将会是 `users`。
+
+通过模型，我们可以进行各种数据库操作，如插入数据、查询数据、更新数据等。Mongoose 提供了丰富的方法和功能来操作集合中的数据，并提供了便捷的方式来定义和管理集合的结构、字段和索引等。
+
+通过 Mongoose 的模型和集合的概念，我们可以在应用程序中使用面向对象的方式来操作 MongoDB 数据库，简化了与数据库的交互和管理。
 
 # koa 使用 数据存储
 
@@ -734,6 +819,101 @@ ctx.body = `
   <h1>Login success!</h1>
   <p>username: ${query[0].username}; password: ${query[0].password}</p>
 `
+```
+
+# Koa 的应用级别错误处理 `ctx.app.emit`
+
+在 Koa 中，`ctx.app.emit` 方法用于触发应用级别的事件，并且可以在不同的中间件或请求处理函数之间进行通信。
+
+`ctx.app.emit` 方法的作用是发送一个指定的事件到应用程序实例。这样可以让其他部分监听该事件，并采取相应的操作。它类似于 Node.js 中的事件触发器模式。
+
+你可以使用 `ctx.app.emit` 方法来实现自定义的应用级别事件的触发和处理。下面是一个示例：
+
+```javascript
+const Koa = require('koa');
+
+const app = new Koa();
+
+// 监听自定义事件
+app.on('myEvent', (data) => {
+  console.log('Custom event triggered:', data);
+});
+
+app.use(async (ctx, next) => {
+  // 触发自定义事件
+  ctx.app.emit('myEvent', 'Hello, world!', ctx);
+  await next();
+});
+
+app.listen(3000, () => {
+  console.log('Server is running on port 3000');
+});
+```
+
+在上面的示例中，我们在中间件中使用 `ctx.app.emit` 方法触发了一个自定义事件 `'myEvent'`，并且传递了 `'Hello, world!'` 作为数据。然后，在应用程序实例上监听了该事件，并在事件处理函数中打印出了接收到的数据。
+
+通过使用 `ctx.app.emit` 方法，我们可以在应用程序中的不同部分之间实现松耦合的通信和协作。可以根据具体的业务需求，自定义并触发不同的应用级别事件，以满足特定的功能和交互需求。
+
+## 定义统一的错误格式
+
+我们可以在 `constant/error-type.js` 中统一定义各式各样的错误类型，保持格式统一。比如用户登录失败、密码错误、token过期、token错误等等
+
+```js
+module.exports = {
+  userLoginError: {
+    code: '1005',
+    message: '用户登录失败',
+    result: ''
+  },
+  invalidPassword: {
+    code: '1006',
+    message: '用户密码错误',
+    result: ''
+  },
+  tokenExpiredError: {
+    code: '10101',
+    message: 'token 已过期',
+    result: ''
+  },
+  jsonWebTokenError: {
+    code: '10101',
+    message: 'token 错误',
+    result: ''
+  },
+}
+```
+
+然后我们在处理各式各样的逻辑时，如果发生了错误，就可以引用定义好的错误格式，通过 `ctx.app.emit` 来触发错误监听事件
+
+比如，在解析 token 时，我们做的错误处理
+
+```js
+// 导入错误类型
+const { tokenExpiredError, jsonWebTokenError } = require('../constans/error-type.js')
+
+const { authorization } = ctx.request.header
+
+  if (authorization) {
+    const token = authorization.replace('Bearer ', '')
+
+    try {
+      const decoded = jwt.verify(token, 'shhhh')
+
+      ctx.state = decoded // 存储用户状态，在各个中间件之间共享
+
+      if (decoded.username === 'alex.cheng') {
+        ctx.body = '可以修改密码'
+      }
+    } catch(error) {
+      // 错误处理
+      switch(error.name) {
+        case 'TokenExpiredError':
+          return ctx.app.emit('error', tokenExpiredError, ctx)
+        case 'JsonWebTokenError':
+          return ctx.app.emit('error', jsonWebTokenError, ctx)
+      }
+    }
+  }
 ```
 
 # Nodejs 中的错误处理
@@ -890,6 +1070,48 @@ module.exports = {
 }
 ```
 
+# 路由自动加载
+
+我们不希望每次创建了 `router`，都去手动引入、配置，而是每次建好 router 就不用处理引入的问题了。
+
+定义 `router/home.route.js`
+
+```js
+const Router = require('koa-router')
+const router = new Router({ prefix: '/home' })
+
+const HomeController = require('../controller/HomeController')
+
+router.get('/', HomeController)
+
+module.exports = router
+```
+
+`router/index.js`
+
+```js
+const fs = require('fs')
+const Router = require('koa-router')
+const router = new Router()
+
+fs.readdirSync(__dirname).forEach(filename => {
+  if (filename !== 'index.js') {
+    const currentRouter = require('./' + filename)
+    router.use(currentRouter.routes())
+  }
+})
+
+module.exports = router
+```
+
+使用 `app.js`
+
+```js
+const router = require('./router/index.js')
+
+app.use(router.routes())
+```
+
 # 读取配置文件 .env
 
 读取根目录中的 .env 文件, 将配置写到 process.env 中
@@ -927,6 +1149,8 @@ module.exports = process.env
 如果你只需要处理 JSON 和 Form 表单类型的请求体，可以使用较为简单的 `koa-bodyparser` 中间件。而如果你需要处理更多类型的请求体，如文件上传等，可以考虑使用功能更为强大的 `koa-body` 中间件。
 
 # jwt(jsonwebtoken)
+
+> https://www.npmjs.com/package/jsonwebtoken
 
 当用户登录成功，我们在服务端生成 token，并返给客户端。
 
@@ -967,6 +1191,26 @@ jwt.verify(token, 'my-secret-key', (err, decoded) => {
 
 如果我们是从 MongoDB 中查出的 user info，在解密 JWT 令牌后，你得到的是一个 Mongoose 文档对象，它包含了 Mongoose 特定的属性和方法。
 
+## jwt 错误处理
+
+会返回一个包含 `name` 的 err 信息
+
+1. TokenExpiredError（token 过期错误）
+
+```js
+jwt.verify(token, 'shhhhh', function(err, decoded) {
+  if (err) {
+    /*
+      err = {
+        name: 'TokenExpiredError',
+        message: 'jwt expired',
+        expiredAt: 1408621000
+      }
+    */
+  }
+});
+```
+
 ## auth 中间件
 
 我们需要对每一个请求都进行鉴权，判断用户是否登录，以及 token 是否过期等等。
@@ -991,3 +1235,155 @@ async (ctx, next) => {
   }
 }
 ```
+
+# 文件上传
+
+如果你只需要处理 JSON 和 Form 表单类型的请求体，可以使用较为简单的 `koa-bodyparser` 中间件。
+
+而如果你需要处理更多类型的请求体，如文件上传等，可以考虑使用功能更为强大的 `koa-body` 中间件。
+
+> https://www.npmjs.com/package/koa-body
+
+使用 `koa-body` (v6.0.1)，它会将文件信息挂到 `ctx.request.files` 上
+
+```js
+const { koaBody } = require('koa-body')
+
+app.use(koaBody({
+  multipart: true // 开启文件上传，默认是关闭
+}))
+```
+
+## apifox 模拟上传
+
+<img src='./img/apifox-upload.png' />
+
+`form-data` 这一栏中，设置的 key 是 `file`，那么 `ctx.request.files` 上，就有个 `file` 对象，它包含了文件的信息！
+
+那我们的上传的文件或者图片，放到哪里呢？
+
+## 配合 formidable 参数使用
+
+- UploadDir { String }设置放置文件上传的目录，默认为 os.tmpDir ()
+
+- keepExtensions { Boolean }写入 uploadDir 的文件是否包含原始文件的扩展名，默认为 false
+
+创建 `upload` 文件夹，用来存放上传的文件：
+
+```js
+app.use(koaBody({
+  multipart: true,
+  formidable: {
+    uploadDir: __dirname + '/upload',
+    keepExtensions: true // 保留文件后缀
+  }
+}))
+```
+
+formidable `其他参数`
+
+- `maxFieldsSize`: 指定允许的字段最大大小（字节）。
+- `maxFields`: 指定允许的最大字段数。
+- `keepExtensions`: 是否保留上传文件的扩展名，默认为 `false`。
+- `uploadDir`: 指定上传文件的存储目录。
+- `hash`: 是否生成文件的哈希值作为文件名，默认为 `false`。
+- `multiples`: 是否支持上传多个文件，默认为 `false`。
+- `encoding`: 指定上传文件的编码方式，默认为 `'utf-8'`。
+- `type`: 指定上传文件的编码类型，默认为 `'multipart'`。
+- `maxFileSize`: 指定允许的最大文件大小（字节）。`10 * 1024 * 1024`
+
+## 上传成功后，将图片信息返回给用户
+
+```js
+module.exports = {
+  upload: async (ctx, next) => {
+    const { file } = ctx.request.files
+
+    // 如果同时上传了多个文件，那么 file 是个数组
+
+    if (file) {
+      ctx.body = {
+        code: 0,
+        message: '文件上传成功',
+        data: file
+      }
+    } else {
+      ctx.body = '上传失败或者文件无法解析???'
+    }
+  }
+}
+```
+
+`file.filepath` 表示上传文件在服务端存放的路径，如果我们想要修改上传文件的名字，需要在 `koaBody` 中配置 `formidable.onFileBegin` 方法
+
+```js
+app.use(koaBody({
+  multipart: true,
+  formidable: {
+    uploadDir: __dirname + '/static',
+    keepExtensions: true,
+    onFileBegin(name, file) {
+      if (file && file.originalFilename && file.newFilename) {
+        const originalFilename = file.originalFilename.split('.')[0]
+        const newFilename = file.newFilename.split('.')[0]
+
+        file.filepath = file.filepath.replace(newFilename, originalFilename)
+      }
+    },
+    onError(err) {
+      console.log('上传失败~', err)
+    }
+  }
+}))
+```
+
+这样我们上传的文件，在服务端也保持着同样的名字，而不是 `[hash].jpg` 这种。
+
+## 多文件上传
+
+html5 支持多文件上传，添加 `multiple` 属性
+
+```js
+<input type="file" name="imgs" multiple/> 
+```
+
+使用 koa-body 的话，接收的 `imgs` 是个数组 `ctx.request.files.imgs`
+
+# Apifox 设置环境变量
+
+比如，我们调用登录接口，都会获取到 token，那么可以将这个 token 设置为 `环境变量`，后面所有带有 `权限校验` 的接口引用这个变量就可以了，不需要我们每次都去手动复制、粘贴。
+
+
+
+第一步
+
+找到 `登录接口`，在面板栏有个 `后置操作`，表示接口响应成功之后，我们要做什么操作，我们选择如下 `代码片段`
+
+1. 状态码 200
+
+2. 设置环境变量
+
+<img src='./img/apifox-variables.png' />
+
+`pm.response.json()` 是将响应结果 json 化，我们可以获取 json 数据里面的内容。
+
+```js
+pm.test("Status code is 200", function () {
+    const res = pm.response.json()
+    pm.environment.set("token", res.data.token); // 设置环境变量
+});
+```
+
+第二步
+
+添加新的接口，在 `Auth` 面板设置 token 环境变量。点击 `{{token}}` 可以预览 token 信息。
+
+<img src='./img/apifox-add-variables.png' />
+
+发起请求，我们会发现请求头中自动带上了 `token`，即使将来 token 过期了，我们也不需要在别的接口中去修改 token，环境变量自动帮我们更新了。
+
+# 参考
+
+1. [文件上传攻略](https://juejin.cn/post/6844903968338870285)
+2. [大文件上传和断点续传](https://juejin.cn/post/6844904046436843527)
+3. [koa 项目: 代码组织、目录结构、node api](https://github.com/jj112358/node-api) [对应视频 [视频](https://www.bilibili.com/video/BV13A411w79h?p=1)]

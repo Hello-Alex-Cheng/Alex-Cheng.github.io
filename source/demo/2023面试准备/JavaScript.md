@@ -1546,3 +1546,505 @@ async function sayName() {
 sayName().then(res => console.log(res))
 ```
 
+# node 中使用修饰器
+
+环境搭建
+
+安装包
+
+```js
+"devDependencies": {
+  "@babel/core": "^7.22.5",
+  "@babel/node": "^7.22.5",
+  "@babel/plugin-proposal-decorators": "^7.22.5",
+  "@babel/preset-env": "^7.22.5"
+}
+```
+
+配置 `.babelrc`
+
+```js
+{
+  "presets": ["@babel/preset-env"],
+  "plugins": [
+    ["@babel/plugin-proposal-decorators", { "version": "2023-01" }]
+  ]
+}
+```
+
+> https://www.babeljs.cn/docs/babel-plugin-proposal-decorators
+
+## 装饰器 提案
+> [tc39 proposal-decorators](https://github.com/tc39/proposal-decorators)
+
+## 调用装饰器
+
+当装饰器被调用时，它们接收两个参数：
+
+1. 被修饰的对象（class, 成员方法）
+
+2. 包含有关被装饰值的信息的上下文对象
+
+使用 TypeScript 接口来描述的话，就是如下样子:
+
+```js
+type Decorator = (value: Input, context: {
+  kind: string; // "class" | "method" | "getter" | "setter" | "field" | "accessor"
+  name: string | symbol; // 值的名称，或者在私有元素的情况下是它的描述（例如可读名称）
+  access: { // 包含访问值的方法的对象
+    get?(): unknown;
+    set?(value: unknown): void;
+  };
+  private?: boolean; // 该值是否为私有类元素。仅适用于类元素。
+  static?: boolean; // 该值是否为static类元素。仅适用于类元素
+  addInitializer?(initializer: () => void): void; // 允许用户添加额外的初始化逻辑。
+}) => Output | void;
+```
+
+`Input、Output 代表传递给装饰器的对象（修饰的对象）和从装饰器返回的值。`
+
+装饰器就是调用了普通函数，定义装饰器没有特殊的语法，任何函数都可以用作装饰器。
+
+## 注意事项
+
+在开始编写修饰器之前，我们要格外注意一个配置，那就是修饰器的 版本 `versions` 是 `2023-01`，
+
+```js
+// .babelrc
+["@babel/plugin-proposal-decorators", { "version": "2023-01" }]
+```
+
+我们这里使用的是 `@babel/plugin-proposal-decorators` 最新提案，如果你使用之前的提案，如 `version: legacy`，那么在使用修饰器时，结果会有很大的差别。
+
+## 修饰类
+
+我们编写一个修饰类的修饰器 `mixins`，目的是将多个对象，混入到类的原型中。
+
+定义类
+
+```js
+class Person {
+  name = 'alex.cheng'
+}
+```
+
+接着定义 `mixins` 修饰器，并在 Person 类上使用它，`foo` `bar` 是我们要添加到 Person 原型上的对象。
+
+```js
+const foo = {
+  a: 1
+}
+
+const bar = {
+  b: 2
+}
+
+function mixins(...list) {
+  return function(value, context) {
+    if (context.kind === 'class') {
+      Object.assign(value.prototype, ...list)
+    }
+  }
+}
+
+class Person {
+  name = 'alex.cheng'
+}
+```
+
+就这样，我们将 foo 和 bar 对象通过 `mixins` 修饰器，添加到了 Person 的原型对象上。
+
+我们就可以在每个 Person 实例上访问这两个对象了。
+
+```js
+const p = new Person()
+
+console.log(p.a, p.b)
+```
+
+如果我们不给修饰器传递参数，那么直接将 `mixins` 写成如下形式即可：
+
+```js
+function mixins(value, context) {
+  value.prototype.bar = {
+    value: 'is bar'
+  }
+}
+```
+
+## 修饰成员方法
+
+```js
+class Person {
+  name = 'alex.cheng'
+
+  @decoratorfn
+  sayName() {
+    console.log(this.name)
+  }
+}
+
+function decoratorfn(value, context) {
+  if (context.kind === 'method') {
+    return function(...args) {
+      const res = value.call(this, ...args)
+    } 
+  }
+}
+```
+
+修饰器修饰方法时，可以粗略的转译为下面这种形式
+
+```js
+class Person {
+  sayName(arg) {}
+}
+
+Person.prototype.sayName = decoratorfn(Person.prototype.sayName, {
+  kind: "method",
+  name: "sayName",
+  static: false,
+  private: false,
+}) ?? Person.prototype.sayName;
+```
+
+多个修饰器时，执行顺序是怎样的？
+
+```js
+function first(...args) {
+  console.log('first outer')
+  return function(value, context) {
+    console.log('first inner')
+  }
+}
+
+function decoratorfn(...args) {
+  console.log('decoratorfn outer')
+  return function(value, context) {
+    console.log('decoratorfn inner')
+  }
+}
+
+class Person {
+  name = 'alex.cheng'
+
+  @first(1,2,3)
+  @decoratorfn(4, 5, 6)
+  sayName() {
+    console.log(this.name)
+  }
+}
+```
+
+`从上往下，从内到外`
+
+执行结果如下 
+
+```js
+first outer
+
+decoratorfn outer
+
+decoratorfn inner
+
+first inner
+```
+
+## 修饰类的访问器属性
+
+用 TypeScript 来描述访问器的修饰器方法，如下所示
+
+```js
+type ClassGetterDecorator = (value: Function, context: {
+  kind: "getter";
+  name: string | symbol;
+  access: { get(): unknown };
+  static: boolean;
+  private: boolean;
+  addInitializer(initializer: () => void): void;
+}) => Function | void;
+
+type ClassSetterDecorator = (value: Function, context: {
+  kind: "setter";
+  name: string | symbol;
+  access: { set(value: unknown): void };
+  static: boolean;
+  private: boolean;
+  addInitializer(initializer: () => void): void;
+}) => Function | void;
+```
+
+访问器也是方法，所以我们可以按照修饰方法时的处理逻辑来就可以了。
+
+```js
+function getterDecorator(value, context) {
+  if (context.kind === 'getter' || context.kind === 'setter') {
+    // ...
+  }
+}
+
+class Person {
+  name = 'alex.cheng'
+
+  @getterDecorator
+  get name() {
+    console.log('??', this.name)
+  }
+
+  set name(value) {
+    this.name = value
+  }
+}
+```
+
+目前尚不清楚哪些用例受益于 getter/setter 合并。移除 getter/setter 合并是规范的一大简化，我们希望它也能简化实现。
+
+## 修饰类的成员属性
+
+```js
+type ClassFieldDecorator = (value: undefined, context: {
+  kind: "field";
+  name: string | symbol;
+  access: { get(): unknown, set(value: unknown): void };
+  static: boolean;
+  private: boolean;
+}) => (initialValue: unknown) => unknown | void;
+```
+
+注意，修饰属性的时候，第一个参数是 `undefined`，context.kind 是 `field`
+
+```js
+function propDecorator(value, context) {
+  return function(initialValue) {
+    return initialValue + ' emmmmmm'
+  }
+}
+class Person {
+  @propDecorator name = 'alex.cheng'
+}
+```
+
+实例化 Person
+
+```js
+const p = new Person()
+
+console.log(p.name) // alex.cheng emmmmmm
+```
+
+# class 自动访问器
+
+我们先看下定义 class 私有属性 `#`
+
+```js
+class Person {
+  #name = 'alex.cheng'
+  accessor x = 1
+
+  sayName() {
+    console.log('#name', this.#name)
+  }
+
+  setName(value) {
+    this.#name = value
+  }
+}
+
+
+const p = new Person()
+
+p.setName('hello world')
+
+console.log(p.name) // undefined
+
+p.sayName() // hello world
+```
+
+现在，我们给某个字段加上 `自动访问器`
+
+```js
+class Person {
+  accessor name = 'alex.cheng';
+}
+```
+
+脱糖后，大概是如下样子
+
+```js
+class Person {
+  #name = 1;
+
+  get name() {
+    return this.#name;
+  }
+
+  set name(val) {
+    this.#name = val;
+  }
+}
+```
+
+也可以定义静态和私有自动访问器：
+
+```js
+class Person {
+  static accessor age = 18;
+  accessor #name = 'alex.cheng';
+}
+
+Person.age // 18
+```
+
+与字段装饰器不同，自动访问器装饰器接收一个值，该值是一个包含在类原型上定义的访问器的对象（或者在静态自动访问器的情况下是类本身）get、set。
+
+然后装饰器可以包装这些并返回一个新的 get和/或set，允许装饰器拦截对属性的访问。
+
+这是字段无法实现的功能，但自动访问器可以实现。
+
+此外，自动访问器可以返回一个init函数，可用于更改私有属性的初始值，类似于字段装饰器。如果返回一个对象但省略了任何值，则省略值的默认行为是使用原始行为。如果返回包含这些属性的对象以外的任何其他类型的值，则会抛出错误。
+
+```js
+function logged(value, { kind, name }) {
+  if (kind === "accessor") {
+    let { get, set } = value;
+
+    return {
+      get() {
+        console.log(`getting ${name}`);
+
+        return get.call(this);
+      },
+
+      set(val) {
+        console.log(`setting ${name} to ${val}`);
+
+        return set.call(this, val);
+      },
+
+      init(initialValue) {
+        console.log(`initializing ${name} with value ${initialValue}`);
+        return initialValue;
+      }
+    };
+  }
+
+  // ...
+}
+
+class C {
+  @logged accessor x = 1;
+}
+
+let c = new C();
+// initializing x with value 1
+c.x;
+// getting x
+c.x = 123;
+// setting x to 123
+```
+
+# 添加初始化逻辑addInitializer
+
+该addInitializer方法在提供给装饰器的上下文对象上可用，用于除类字段之外的每种类型的值。可以调用此方法将初始化函数与类或类元素相关联，该函数可用于在定义值后运行任意代码以完成设置。这些初始化器的时间取决于装饰器的类型：
+
+- 类装饰器初始值设定项在类已完全定义后运行，并在类静态字段已分配后运行。
+- 类元素初始值设定项在类构造期间运行，在类字段初始化之前。
+- 类静态元素初始值设定项在类定义期间运行，在定义静态类字段之前，但在定义类元素之后。
+
+我们可以使用addInitializer类装饰器来创建一个在浏览器中注册 Web 组件的装饰器。
+
+```js
+function customElement(name) {
+  return (value, { addInitializer }) => {
+    addInitializer(function() {
+      customElements.define(name, this);
+    });
+  }
+}
+
+@customElement('my-element')
+class MyElement extends HTMLElement {
+  static get observedAttributes() {
+    return ['some', 'attrs'];
+  }
+}
+```
+
+这个例子粗略地“脱糖”到以下内容（即，可以这样转译）：
+
+```js
+class MyElement {
+  static get observedAttributes() {
+    return ['some', 'attrs'];
+  }
+}
+
+let initializersForMyElement = [];
+
+MyElement = customElement('my-element')(MyElement, {
+  kind: "class",
+  name: "MyElement",
+  addInitializer(fn) {
+    initializersForMyElement.push(fn);
+  },
+}) ?? MyElement;
+
+for (let initializer of initializersForMyElement) {
+  initializer.call(MyElement);
+}
+```
+
+我们还可以使用addInitializerwith 方法装饰器来创建一个@bound装饰器，它将方法绑定到类的实例：
+
+```js
+function bound(value, { name, addInitializer }) {
+  addInitializer(function () {
+    this[name] = this[name].bind(this);
+  });
+}
+
+class C {
+  message = "hello!";
+
+  @bound
+  m() {
+    console.log(this.message);
+  }
+}
+
+let { m } = new C();
+
+m(); // hello!
+```
+
+这个例子大致对以下内容“脱糖”：
+
+```js
+class C {
+  constructor() {
+    for (let initializer of initializersForM) {
+      initializer.call(this);
+    }
+
+    this.message = "hello!";
+  }
+
+  m() {}
+}
+
+let initializersForM = []
+
+C.prototype.m = bound(
+  C.prototype.m,
+  {
+    kind: "method",
+    name: "m",
+    static: false,
+    private: false,
+    addInitializer(fn) {
+      initializersForM.push(fn);
+    },
+  }
+) ?? C.prototype.m;
+```
+

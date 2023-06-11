@@ -1,32 +1,61 @@
 const HomeService = require('../service/home')
-const jwt = require('jsonwebtoken')
+const Login = require('../models/login')
 
 module.exports = {
   updatePassword: async (ctx, next) => {
+    const user = ctx.state.user
+    const { newpassword } = ctx.request.body
+    const hasUser = await Login.find({
+      username: user.username
+    })
+    
+    if (!hasUser.length) return ctx.body = '数据库未查询到当前用户'
 
-    const { authorization } = ctx.request.header
-
-    if (authorization) {
-      const token = authorization.replace('Bearer ', '')
-
-      const decoded = jwt.verify(token, 'shhhh')
-      console.log(decoded)
-
-      if (decoded.username === 'alex.cheng') {
-        ctx.body = '可以修改密码'
+    await Login.updateOne(
+      { username: user.username },
+      {
+        $set: {
+          password: newpassword
+        }
       }
-    } else {
-      ctx.body = 'token失效或者用户未登录'
-    }
+    )
+
+    const currentUser = await Login.find({
+      username: user.username
+    })
+    ctx.body = currentUser
   },
   index: async (ctx, next) => {
     ctx.response.body = `
+      <iframe id="temp-iframe" name="temp-iframe" src="" style="display:none;"></iframe>
       <h1>Index</h1>
       <form action='/login' method='post'>
         <p>Name <input name='name' /></p>
         <p>Password <input name='password' type='password' /></p>
         <p><input type='submit' value='提交' /></p>
       </form>
+
+      <h1>文件上传</h1>
+      <form action='/upload/img' target="temp-iframe" method='post' enctype='multipart/form-data'>
+        <p><input type='file' name='file' multiple /></p>
+        <p><input type='submit' value='提交' /></p>
+      </form>
+
+      <script>
+        var iframe = document.getElementById('temp-iframe');
+        iframe.addEventListener('load',function () {
+              var result = iframe.contentWindow.document.body.innerText;
+              //接口数据转换为 JSON 对象
+              if (result) {
+                var obj = JSON.parse(result);
+                console.log(obj);
+
+                if(obj && obj.file.filepath){
+                    alert('上传成功');
+                }
+              }
+        });
+      </script>
     `
   },
   home: async (ctx, next) => {
@@ -66,5 +95,5 @@ module.exports = {
 
     const data = await HomeService.login(name, password)
     ctx.body = data
-  }
+  },
 }

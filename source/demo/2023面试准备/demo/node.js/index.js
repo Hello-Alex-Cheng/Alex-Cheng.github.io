@@ -1,6 +1,12 @@
 const fs = require('fs')
 const http = require('http')
 
+// require("@babel/core").transformSync("code", {
+//   plugins: [
+//     ["@babel/plugin-proposal-decorators", { version: "2023-01" }],
+//   ]
+// });
+
 
 // require('./test-module')
 // require('./test-module')
@@ -228,25 +234,87 @@ const http = require('http')
 // console.log(process.env)
 
 
-function timeoutFn() {
-  setTimeout(() => {
-    console.log('执行了')
-    console.log('打印：', a)
-  }, 1000);
-}
+// function timeoutFn() {
+//   setTimeout(() => {
+//     console.log('执行了')
+//     console.log('打印：', a)
+//   }, 1000);
+// }
 
-async function fn() {
-  try {
-    const res = await timeoutFn()
+// async function fn() {
+//   try {
+//     const res = await timeoutFn()
 
 
-  } catch (error) {
-    console.log('捕获错误: ', error)
+//   } catch (error) {
+//     console.log('捕获错误: ', error)
+//   }
+// }
+
+// fn()
+
+
+
+
+
+// function test(target) {
+//   target.isStatic = true
+  
+//   // 原型上添加方法
+//   target.prototype.sayName = function() {
+//     console.log(this.name)
+//   }
+// }
+
+
+// function readonly(target, name, descriptor) {
+//   console.log(name, descriptor)
+
+//   descriptor.writable = false
+//   return descriptor
+// }
+// @test
+// class Person {
+
+//   name = 1
+
+//   @readonly
+//   sayName() {
+//     console.log(this.name)
+//   }
+// }
+
+// console.log('Person.isStatic', Person.isStatic)
+
+// const p = new Person()
+// p.sayName()
+
+
+function privateDecorator(value, { kind, name }) {
+  if (kind === 'accessor') {
+    let { get, set } = value
+
+    return {
+      get() {
+        console.log('getting name ')
+        return get.call(this)
+      },
+      set(val) {
+        console.log('??? ', val)
+
+        return set.call(this, val)
+      }
+    }
   }
 }
+class Person {
+  @privateDecorator accessor name = 'alex.cheng'
+  static accessor age = 18
+}
 
-fn()
 
+const p = new Person()
 
+p.name = 'hello world'
 
-
+// console.log(Person.age)

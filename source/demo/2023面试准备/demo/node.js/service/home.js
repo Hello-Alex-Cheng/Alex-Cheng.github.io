@@ -46,9 +46,6 @@ module.exports = {
         username: 'alex.cheng'
       })
 
-
-
-
       if (query.length) {
         // 查询到了用户，我们通过 JWT 来生成签名（token）
         const userInfo = query[0]
@@ -56,24 +53,32 @@ module.exports = {
         const token = jwt.sign({
           id: userInfo.id,
           username: userInfo.username,
-          isAdmin: userInfo.isAdmin,
+          isAdmin: true,
           password: userInfo.password
         }, 'shhhh', {
           expiresIn: '1h'
         })
 
+        responseData = {
+          code: 0,
+          message: '登录成功',
+          data: {
+            token: token
+          }
+        }
         
+        // 解码
         jwt.verify(token, 'shhhh', (err, decoded) => {
           if (err) throw new Error('verify token error')
           console.log('decoded token', decoded)
         })
 
 
-        responseData = `
-          <h1>Login success!</h1>
-          <p>username: ${query[0].username}; password: ${query[0].password}</p>
-          <p>jwt token: ${token}</p>
-        `
+        // responseData = `
+        //   <h1>Login success!</h1>
+        //   <p>username: ${query[0].username}; password: ${query[0].password}</p>
+        //   <p>jwt token: ${token}</p>
+        // `
       } else {
         responseData = '未查到对应用户，请先注册!'
       }
