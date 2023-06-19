@@ -86,6 +86,12 @@ module.exports = {
 
 - 有可能 Prettier 和 eslint 规则存在冲突，比如 eslint 希望方法名和括号之间有空格，而 Prettier 不希望有空格，控制台就会报出 ESlint 错误，我们就可以找到 ESlint 配置文件，找到 `rules`，将 `space-before-function-paren` 设置为 `0` 或者 `off` 即可。
 
+5. 手动格式化
+
+```js
+Shift + Alt + F
+```
+
 ## Git 提交规范
 
 ```md
@@ -233,8 +239,8 @@ module.exports = {
 
 检测 git hooks 的工具
 
-
 1. 安装
+
 ```js
 npm install husky@7.0.1 --save-dev
 ```
@@ -324,6 +330,7 @@ lint-staged 可以 `只检测本次更新的代码，并在错误出现的时候
 使用 `vue-cli` 生成项目时，lint-staged 不需要安装了，项目已经有了。如果没有的话，就需要单独安装
 
 1. 修改 `package.json`：
+
 ```json
 "lint-staged": {
   "src/**/*.{js,jsx,vue}": {

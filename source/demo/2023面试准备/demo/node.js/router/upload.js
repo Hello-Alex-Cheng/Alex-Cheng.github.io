@@ -7,7 +7,7 @@ const router = new Router({
   prefix: '/upload'
 })
 
-router.post('/img', UploadController.uploadImg)
+router.post('/img', auth, hasAdminPermission, UploadController.uploadImg)
 
 module.exports = router
 

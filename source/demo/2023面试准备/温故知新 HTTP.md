@@ -1000,7 +1000,7 @@ Refused to load the image 'http://www.fangfa.net/public/uploads/ueditor/images/2
 }
 ```
 
-## meta 标签也可以配置 CSP
+## <span>meta 标签也可以配置 CSP</span>
 
 ```html
 <meta

@@ -415,3 +415,251 @@ cookie是网站为了标示用户身份而储存在用户本地终端（Client S
 - cookie 设置的cookie过期时间之前一直有效，即使窗口或浏览器关闭
 
 
+# flex（flex-grow、flex-shrink、flex-basis）
+
+- flex-grow 定义项目的放大比例，`默认为0`，即如果存在剩余空间，也不放大
+
+- flex-shrink 定义了项目的缩小比例，`默认为1`，即如果空间不足，该项目将缩小
+
+- flex-basis给上面两个属性分配多余空间之前, 计算项目是否有多余空间, 默认值为 auto, 即项目本身的大小
+
+```html
+<div class="container">
+  <div class="item1">
+    <span>item1</span>
+  </div>
+  <div class="item2">
+    <span>item2</span>
+  </div>
+  <div class="item3">
+    <span>item3</span>
+  </div>
+</div>
+```
+
+```css
+.container {
+  width: 600px;
+  height: 300px;
+  background-color: pink;
+  display: flex;
+}
+
+.item1 {
+  flex: none;
+  width: 50px;
+  background-color:blue;
+}
+
+.item2 {
+  width: 50px;
+  flex: 1 1 50px;
+  background-color:red;
+}
+
+.item3 {
+  width: 50px;
+  flex: 7 1 100px;
+  background-color:yellow;
+}
+```
+
+## 伸张(grow)计算公式
+
+```css
+容器：width: 600px
+
+所有子项目item: width: 50px
+
+item1: flex: none; =======> flex: 0, 0, auto;
+
+item2: flex: 1 1 50px;
+
+item3: flex: 7 1 100px;
+```
+
+注意 `在空间充足情况下，flex-basis的优先级 高于 width 属性`
+
+当空间充足时，flex子项的宽度计算公式是： `自身的基础宽度 + 容器剩余宽度 *（自身伸张比例 / 所有子项伸张比例之和）`
+
+容器剩余宽度: `600 - 50 - 50 - 100 = 400`（取 flex-basis 值）
+
+item1 最终 width 的计算结果
+
+```js
+50 + 400*(0/(0+1+7)) // 50
+```
+
+item2 最终 width 的计算结果
+
+```js
+50 + 400*(1/(0+1+7)) // 100
+```
+
+item3 最终 width 的计算结果
+
+```js
+100 + 400*(7/(0+1+7)) // 450
+```
+
+## 当我们设置 flex-basis 设置为 auto，计算公式又是如何？
+
+计算公式依然适用，只不过，我们需要明确知道元素的内容，特别是元素包含了文字的时候。
+
+```css
+.container {
+  width: 600px;
+  height: 300px;
+  background-color: pink;
+  display: flex;
+}
+
+.item1 {
+  flex: none;
+  width: 50px;
+  background-color:blue;
+}
+```
+
+我们可以通过 `getBoundingClientRect` 拿到元素的基础宽度 width
+
+```js
+const item2 = document.querySelector('.item2')
+console.log(item2.getBoundingClientRect().width) // 41.9375
+```
+
+然后给元素添加 flex 样式
+
+```css
+.item2 {
+  flex: 1 1 auto;
+  background-color:red;
+}
+
+.item3 {
+  flex: 7 1 auto;
+  background-color:yellow;
+}
+```
+
+容器剩余宽度 `600 - 50 - (41.94 * 2) = 466.12`
+
+这里的 `41.94` 就是`item1 item2`的基础宽度，保留两位小数。
+```js
+
+
+计算后的宽度
+
+item1: 50 + 466.12*(0/0+1+7) // 0
+
+item2: 41.94 + 466.12*(1/0+1+7) // 100.205
+
+item3: 41.94 + 466.12*(7/0+1+7) // 449.795
+```
+
+我们也可以把内部的 `文字内容` 去掉，那么计算 item2 item3 的时候，元素自身宽度就相当于 `0` 了。
+
+```js
+容器剩余宽度 `600 - 50 = 550`
+
+item1: 550*(1/(0+1+7)) // 68.75
+
+item2: 550*(7/(0+1+7)) // 481.25
+```
+
+## 收缩(shrink)计算公式
+
+```css
+.container {
+  width: 300px;
+  height: 300px;
+  background-color: pink;
+  display: flex;
+}
+
+.item1 {
+  width: 50px;
+  background-color:blue;
+}
+
+.item2 {
+  flex: 1 1 100px;
+  background-color:red;
+}
+
+.item3 {
+  flex: 1 1 200px;
+  background-color:yellow;
+}
+```
+
+当空间不充足时，flex子项的宽度计算公式是： 
+
+`自身的基础宽度 - 超出宽度 *(自身宽度*收缩比例/总权重）`
+
+```js
+// 自身基础宽度 * 收缩比例, item1 没有设置收缩比例，收缩比例为 0
+总权重：200*1 + 100*1 + 50*0 = 300
+
+超出宽度：(200 + 100 + 50) - 300 = 50
+
+item1: 50 - 50*(200*0/300) // 50
+item2: 100 - 50*(100*1/300) // 83.34
+item3: 200 - 50*(200*1/300) // 166.66
+```
+
+<img src='./img/flex-shrink.png' />
+
+# padding 和 margin 区别
+
+margin是指从自身边框到另一个容器边框之间的距离，就是容器外距离，即外边距。
+
+padding是指自身边框到自身内部另一个容器边框之间的距离，就是容器内距离，即内边距。
+
+# vw 和 百分比
+
+父元素设置了width 50%，子元素 c1 设置width 50%，子元素宽度只有父元素的一般（百分比相对于父元素容器计算）
+
+c2 设置的 50vw，它是相对于视口的，所以宽度和父元素宽度一样，不会被父元素影响。
+
+```html
+<template>
+  <div class="box">
+    <div class="c1">
+      c1
+    </div>
+     <div class="c2">
+      c2
+    </div>
+  </div>
+</template>
+
+<style scoped>
+  div {
+    width: 50%;
+    background: blue;
+  }
+  
+  .c1 {
+    width: 50%;
+    height: 100px;
+    background: red;
+  }
+  .c2 {
+    width: 50vw;
+    height: 100px;
+    background: yellow;
+  }
+</style>
+```
+
+# 如何让 chrome 浏览器显示更小的字体（默认最小 12px）
+
+- zoom: 0.5;
+
+支持块级元素、行内元素
+
+- transform: scale(0.5)
+
+支持块级元素，不支持行内元素
+

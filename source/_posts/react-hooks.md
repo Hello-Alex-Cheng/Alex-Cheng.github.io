@@ -16,6 +16,98 @@ https://zh-hans.react.dev/reference/react/useCallback
 1. 只在最顶层使用 Hook
 2. 只在 React 函数中调用 Hook。（或：在自定义 Hook 中调用其他 Hook）
 
+# useEffect
+
+useEffect接收一个方法作为第一个参数，该方法会在每次渲染完成之后被调用。
+
+它还会接收一个数组作为第二个参数，这个数组里的每一项内容都会被用来进行渲染前后的对比，如果没有变化，则不会调用该副作用。
+
+useEffect 的依赖如果是个空数组，只会在 DOM 渲染后触发一次，以后都不会触发，相当于 `componentDidMount`。可以看做是 `componentDidMount、componentDidUpdate、componentWillUnmount` 三个钩子的组合。
+
+useEffect可以返回一个函数，用于清除副作用的回调。`每当组件卸载，或者组件重新render，都会触发这个函数。`而且是先执行 `return 函数`，再执行 `useEffect` 内部逻辑。
+
+## 注意事项
+
+1. 对于传入的对象类型，React只会判断引用是否改变，不会判断对象的属性是否改变，所以建议依赖数组中传入的变量都采用基本类型。
+
+2. useEffect的清除函数在每次重新渲染时都会执行，而不是只在卸载组件的时候执行。
+
+# useLayoutEffect
+
+在使用方式上，和 `useEffect` 一样。大部分情况只使用 `useEffect` 即可，当 useEffect 处理 DOM 相关逻辑时，出现问题了，再使用 `useLayoutEffect`。
+
+至于出现什么问题，我们先来看一下它俩的执行时机。
+
+## 组件更新过程
+
+浏览器中 JS 线程和渲染线程是互斥的，渲染线程必须等待 JS 线程执行完毕，才开始渲染组件。
+
+而我们的组件从 state 变化到渲染，大概可以分为如下几步：
+
+1. 改变 state，触发更新 state 变量的方法
+
+2. React 根据组件返回的 vDOM 进行 diff 对比，得到新的 Virtual DOM
+
+3. 将新的 VDom 交给渲染线程处理，绘制到浏览器上
+
+4. 用户看到新的内容
+
+而 `useEffect` 是在第 3 步之后执行的，也就是在浏览器绘制之后才调用。`而且 useEffect 还是异步执行的，所谓异步就是被 requestIdleCallback 封装，只在浏览器空闲时候才会执行，保证了不会阻塞浏览器的渲染过程。`
+
+`useLayoutEffect` 就不一样，它会在`第二步`之后（`diff 出新的 vDOM 之后`），第三步之前执行，也就是渲染之前同步执行的，所以会等它执行完再渲染页面到浏览器上。
+
+如果我们要操作 DOM，或者不想出现 `内容闪烁` 的问题，我们就是用 `useLayoutEffect`
+
+`明显的闪烁问题`
+
+```js
+useEffect(() => {
+  async function fn() {
+    if (num === 1) {
+      let count = 0;
+      console.time();
+      for (let i = 0; i < 99999999; i++) {
+        count++;
+      }
+      console.timeEnd();
+      setNum(Math.random());
+    }
+  }
+  fn();
+  return () => {
+    console.log("useEffect tail function");
+  };
+}, [num]);
+```
+
+`没有闪烁问题`
+
+```js
+useLayoutEffect(() => {
+  async function fn() {
+    if (num === 1) {
+      let count = 0;
+      console.time();
+      for (let i = 0; i < 99999999; i++) {
+        count++;
+      }
+      console.timeEnd();
+      setNum(Math.random());
+    }
+  }
+  fn();
+  return () => {
+    console.log("useLayoutEffect tail function");
+  };
+}, [num]);
+```
+
+## 总结
+
+1. 优先使用 useEffect，因为它是异步执行的，不会阻塞渲染
+2. 会影响到渲染的操作尽量放到 useLayoutEffect中去，避免出现闪烁问题
+3. useLayoutEffect和componentDidMount是等价的，会同步调用，阻塞渲染
+4. 在服务端渲染的时候 useLayoutEffect 无效，使用 useEffect
 
 # 性能优化—— useCallback、useMemo、memo
 
@@ -247,10 +339,11 @@ function MyComponent() {
 }
 ```
 
-# 测量 DOM节点？
+# 编写一个获取 DOM信息的 hook
+
+假如我们想要获取一个 dom 的 `getBoundingClientRect` 信息，我可能这样做：
 
 ```js
-
 const getHeight = useMemo(() => {
   return (node: HTMLObjectElement) => {
     if (node) {
@@ -269,7 +362,7 @@ const getHeight = useCallback((node: HTMLObjectElement) => {
 
 ```
 
-`将 ref 逻辑抽离成一个 Hook`
+但是，获取 DOM 信息的逻辑其实很通用，所以考虑下，`将 ref 逻辑抽离成一个 Hook`。
 
 ```js
 // hook
@@ -283,9 +376,11 @@ const useClientRect = () => {
 
   return [rect, ref]
 }
+```
 
-// 使用
+使用
 
+```js
 const [rect, ref] = useClientRect()
 
 <h1 ref={ref}>是 H1 标签 {count}</h1>
@@ -345,7 +440,79 @@ const ref = React.createRef()
 // 通过 ref 获取到 useImperativeHandle 暴露的方法
 ref.current.focus()
 ref.current.scrollIntoView()
+```
 
+# useReducer & useContext(组件级的状态管理)
+
+```js
+// reducers/app-reducer.js
+
+import { createContext } from "react";
+
+// 创建上下文
+export const AppContext = createContext(null);
+
+// 定义 app reducer
+export const appReducer = (state, action) => {
+  switch (action.type) {
+    case "UPDATE_AGE":
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          age: action.payload
+        }
+      };
+    case "UPDATE_NAME":
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          name: action.payload
+        }
+      };
+    default:
+      return state;
+  }
+};
+```
+
+使用上下文，可以使用 `AppContext.consumer`，但是有了 `useContext` 了就没必要了。
+
+根组件使用 `AppContext.Provider` 提供状态 `initState`
+
+```js
+import { appReducer, AppContext } from "./reducers/app-reducer.js";
+
+function App() {
+  const initState = {
+    type: "person",
+    user: {
+      age: 18,
+      name: "alex.cheng"
+    }
+  };
+  const [state, dispatch] = useReducer(appReducer, initState);
+
+  return (
+    <AppContext.Provider value={state}>
+      <Child1 />
+    </AppContext.Provider>
+  );
+}
+```
+
+子孙子组件通过 `useContext(AppContext)` 获取上下文提供的状态。
+
+```js
+const Child = () => {
+  const context = useContext(AppContext);
+  return (
+    <>
+      <p>{JSON.stringify(context)}</p>
+    </>
+  );
+};
 ```
 
 # 参考资料

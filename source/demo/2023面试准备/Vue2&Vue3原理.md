@@ -1,9 +1,10 @@
+
+
 # 如何理解 MVVM
 
 > Model–view–viewmodel
 
 <img src="./img/mvvm.jpg" />
-
 数据驱动视图。
 
 修改 Model 的数据（plain objects），Vue 的 ViewModel 会帮我们处理数据、监听数据变化等，异步渲染、更新 DOM。避免了我们手动去操作 DOM。
@@ -25,6 +26,11 @@ MVVM实现了View和Model的自动同步，当Model的属性改变时，不再�
 在MVVM架构下，View 和 Model 之间并没有直接的联系，而是通过ViewModel进行交互，Model 和 ViewModel 之间的交互是双向的。
 
 **View 可以通过 ViewModel 中`事件绑定` 的方式影响 Model，Model 可以通过 ViewModel 中 `数据绑定` 的方式去影响 View。**
+
+# 生命周期
+
+
+<img src="./img/vue-lifecycle.png" />
 
 # Vue 三要素
 

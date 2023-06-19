@@ -4,6 +4,7 @@ const { koaBody } = require('koa-body')
 const router = require('./router')
 const staticServe = require('koa-static') // 静态文件服务
 const log = require('./middlewares/querystring')
+const errHandler = require('./app/errHandle')
 
 // 连接数据库
 require('./db')
@@ -42,5 +43,8 @@ app.use(
 
 // 路由
 app.use(router.routes())
+
+// 统一的错误处理
+app.on('error', errHandler)
 
 app.listen(3000)

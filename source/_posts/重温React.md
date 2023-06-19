@@ -40,7 +40,7 @@ excerpt: React
 
 单组件生命周期
 
-<img src="/img/react-lifecycle.jpg" />
+<img src="../img/react-lifecycle.jpg" />
 
 
 ## componentDidMount
@@ -352,7 +352,7 @@ React 元素的事件处理和 DOM 元素的很相似，但是有一点语法上
 
   React并不是将click事件绑在该div的真实DOM上，而是在document处监听所有支持的事件，当事件发生并`冒泡至document`处时，React将事件内容封装并交由真正的处理函数运行。
 
-<img src="/img/react-event.jpg" />
+<img src="../img/react-event.jpg" />
 
 ## event 对象（合成事件）
 

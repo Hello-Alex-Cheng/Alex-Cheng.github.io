@@ -4,9 +4,9 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "dev": "node main.js"
+    "dev": "node main.js",
+    "start:webpack": "nodemon ./webpack/index.js"
   },
-  "type": "module",
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -16,5 +16,8 @@
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.7.0",
     "babel-runtime": "^6.26.0"
+  },
+  "dependencies": {
+    "@babel/parser": "^7.22.5"
   }
 }

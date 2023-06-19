@@ -1,6 +1,30 @@
 const fs = require('fs')
 const http = require('http')
 
+
+
+const buf1 = Buffer.alloc(5)
+
+buf1.fill('123123123')
+
+console.log(buf1);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // require("@babel/core").transformSync("code", {
 //   plugins: [
 //     ["@babel/plugin-proposal-decorators", { version: "2023-01" }],
@@ -290,31 +314,76 @@ const http = require('http')
 // p.sayName()
 
 
-function privateDecorator(value, { kind, name }) {
-  if (kind === 'accessor') {
-    let { get, set } = value
+// function privateDecorator(value, { kind, name }) {
+//   if (kind === 'accessor') {
+//     let { get, set } = value
 
-    return {
-      get() {
-        console.log('getting name ')
-        return get.call(this)
-      },
-      set(val) {
-        console.log('??? ', val)
+//     return {
+//       get() {
+//         console.log('getting name ')
+//         return get.call(this)
+//       },
+//       set(val) {
+//         console.log('??? ', val)
 
-        return set.call(this, val)
-      }
-    }
-  }
-}
-class Person {
-  @privateDecorator accessor name = 'alex.cheng'
-  static accessor age = 18
-}
+//         return set.call(this, val)
+//       }
+//     }
+//   }
+// }
+// class Person {
+//   @privateDecorator accessor name = 'alex.cheng'
+//   static accessor age = 18
+// }
 
 
-const p = new Person()
+// const p = new Person()
 
-p.name = 'hello world'
+// p.name = 'hello world'
 
-// console.log(Person.age)
+// // console.log(Person.age)
+
+
+
+
+// const rs = fs.createReadStream('./doc.txt', {
+//   flags: 'r', // readable,
+//   encoding: null, // 如果是null，表示输出 buffer
+//   start: 0, // 读取的起始位置
+//   // end: 3, // 结束位置
+//   highWaterMark: 2, // 每次取几个字符
+// })
+
+
+
+
+// const rs = fs.createReadStream('./doc.txt', {
+//   highWaterMark: 4 // 一个汉字占 3 个字节，highWaterMark 设置为 4 的话，表示一次可以取一个汉字多一点
+// })
+
+// const ws = fs.createWriteStream('./copy-doc.txt', {
+//   highWaterMark: 1
+// })
+
+
+// ws.write('1')
+// ws.write('2')
+// ws.write('3')
+
+// rs.pipe(ws)
+
+// let flag = true
+
+// rs.on('data', chunk => {
+//   flag = ws.write(chunk, () => {
+//     console.log('写完了');
+//   })
+
+//   if (!flag) {
+//     rs.pause()
+//   }
+// })
+
+// ws.on('drain', () => {
+//   rs.resume()
+// })

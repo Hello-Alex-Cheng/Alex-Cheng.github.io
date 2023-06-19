@@ -16,6 +16,66 @@
 
 nextTick的原理是什么，和setImmaite有什么区别？
 
+# 浏览器的事件循环
+
+- 同步代码
+
+- 异步代码
+  1. 宏任务
+  2. 微任务
+
+## 执行流程
+
+1. 从上之下执行同步代码
+
+2. 遇到宏任务，将其添加到宏任务队列，遇到微任务，将其添加至微任务队列
+
+3. 同步代码执行完毕。
+
+4. 检查微任务队列，如果存在，就开始清空队列里面的回调函数，保持 `先进先出` 的原则
+
+  - 如果微任务回调函数包含了其它的异步代码，将其添加至相应的队列中，等待执行。
+
+5. 微任务队列清空完毕
+
+6. 检查宏任务队列，如果存在，就开始清空队列里面的回调函数，保持 `先进先出` 的原则
+
+  - 如果宏任务回调函数包含了其它的异步代码，将其添加至相应的队列中，等待执行。
+
+7. `每当一个宏任务执行完毕，立马去检查微任务队列是否存在微任务，如果存在，继续清空微任务队列`
+
+8. 微任务队列清空完毕，接着执行宏任务代码
+
+9. 循环操作
+
+```js
+setTimeout(() => {
+  console.log('s1')
+
+  Promise.resolve().then(() => {
+    console.log('p2')
+  })
+
+  Promise.resolve().then(() => {
+    console.log('p3')
+  })
+})
+
+Promise.resolve().then(() => {
+  console.log('p1')
+
+  setTimeout(() => {
+    console.log('s2')
+  })
+  setTimeout(() => {
+    console.log('s3')
+  })
+})
+
+
+// =>>>>>>> p1 s1 p2 p3 s2 s3
+```
+
 # 事件循环
 
 事件循环同样运行在单线程环境下，JavaScript的事件循环是依靠浏览器实现的，而Node作为另一种运行时，事件循环由底层的libuv实现。
@@ -24,15 +84,15 @@ Nodejs 事件循环分成了6个不同的阶段，其中每个阶段都维护着
 
 1. **timers**（定时器阶段）：处理定时器回调函数，例如 `setTimeout` 和 `setInterval`。
 
-2. **pending callbacks**（待定回调阶段）：处理系统级回调函数，例如网络请求的回调。
+2. **pending callbacks**（待定回调阶段）：处理系统级回调函数，例如网络请求的回调。(tcp、UDP)
 
 3. **idle, prepare**（空闲和准备阶段）：内部使用，一般不需要关注。
 
-4. **poll**（轮询阶段）：等待新的 I/O 事件到达，执行 I/O 回调函数。在此阶段阻塞的地方是等待 I/O 事件到达，同时也是定时器的触发阶段。
+4. **poll**（轮询阶段）：等待新的 I/O 事件到达，执行 I/O 回调函数。在此阶段阻塞的地方是等待 I/O 事件到达，同时也是定时器的触发阶段。（文件的读取、写入）
 
 5. **check**（检查阶段）：执行 `setImmediate` 的回调函数。
 
-6. **close callbacks**（关闭回调阶段）：执行关闭回调函数，例如 `socket.on('close', ...)`。
+6. **close callbacks**（关闭回调阶段）：执行 close 回调函数，例如 `socket.on('close', ...)`。
 
 每次循环称为一个 Tick。在每个阶段中，都会执行相应的回调函数。事件循环会不断重复运行，直到没有回调函数需要执行。
 
@@ -44,17 +104,23 @@ Node.js 的事件循环（Event Loop）是 Node.js 运行时的核心机制之�
 
 下面是 Node.js 事件循环的详细过程：
 
-1. **执行全局脚本（Main Script）：** 当 Node.js 进程启动时，会先执行全局脚本。全局脚本中的同步代码会依次执行，遇到异步操作时会将其注册到相应的事件回调队列中。
+1. **执行全局脚本（Main Script）：** 当 Node.js 进程启动时，会先执行全局脚本。全局脚本中的`同步代码`会依次执行，遇到异步操作时会将其注册到相应的事件回调队列中。
 
-2. **执行事件回调函数队列：** 执行全局脚本后，开始执行事件回调函数队列。事件回调函数队列包括 timers、pending callbacks、idle, prepare 等阶段的回调函数队列。事件循环按照顺序检查并执行每个阶段的回调函数队列。
+> 同步代码执行完毕，先检查微任务队列，检查是否存在微任务，如果有就清空队列。
+
+2. **执行事件回调函数队列：** 执行全局脚本后，`并且微任务队列没有可执行函数了`，开始执行事件回调函数队列。事件回调函数队列包括 timers、pending callbacks、idle, prepare 等阶段的回调函数队列。事件循环`按照顺序检查`并`执行`每个阶段的回调函数队列。
+
+> 注意：再完成队列切换之前，也会先检查 `微任务` 队列是否存在可执行函数，如果有就清空队列。
 
 3. **Timers 阶段：** 在 timers 阶段，执行已经到期的定时器回调函数。这些定时器是通过 `setTimeout()`、`setInterval()` 等函数注册的。
+
+> 切换队列，先检查微任务
 
 4. **I/O callbacks 阶段：** 在 I/O callbacks 阶段，执行准备好的异步 I/O 操作的回调函数。例如，当网络请求返回结果、文件读写完成时，相应的回调函数会在这个阶段执行。
 
 5. **闲置阶段（idle、prepare）：** 这是一个内部使用的阶段，一般不需要关注。
 
-6. **轮询（Poll）阶段：** 在 poll 阶段，Node.js 会检查是否有新的 I/O 事件需要处理。如果有新的 I/O 事件到达，会依次处理这些事件的回调函数。如果没有新的 I/O 事件到达，则会等待一段时间，等待期间如果有定时器到期或者有被 `setImmediate()` 注册的回调函数，则会跳过 poll 阶段，直接进入 check 阶段。
+6. **轮询（Poll）阶段：** 在 poll 阶段，Node.js 会检查是否有新的 I/O 事件需要处理。如果有新的 I/O 事件到达，会依次处理这些事件的回调函数。如果没有新的 I/O 事件到达，则会等待一段时间，等待期间如果有定时器到期或者有被 `setImmediate()` 注册的回调函数，则会`跳过 poll 阶段`，直接进入 check 阶段。
 
 7. **Check 阶段：** 在 check 阶段，执行被 `setImmediate()` 注册的回调函数。
 
@@ -62,10 +128,158 @@ Node.js 的事件循环（Event Loop）是 Node.js 运行时的核心机制之�
 
 9. **定时器检测阶段（Timers Check）：** 在每次事件循环的末尾，会进行定时器的检测和处理。如果有定时器到期，则会执行相应的回调函数。
 
-以上是 Node.js 事件循环的基本过程。需要注意的是，事件循环的过程是一个不断重复的过程，直到没有任务可执行或满足退出条件。
+> 关于 `process.nextTick` 要注意的一点是：`在事件循环的任何阶段`，如果 nextTickQueue 不为空，都会在`当前阶段操作结束后 *优先* 执行` nextTickQueue中的回调函数
 
-上述过程是基于 Node.js 12.x 版本的事件循环机制，不同版本的 Node.js 可能会有微小的差异，但总体流程是相似的。
 
+我们来看下面这个例子：
+
+```js
+// timers 阶段
+setTimeout(() => {
+  console.log('s1')
+
+  process.nextTick(() => {
+    console.log('s1 inner nextTick')
+  })
+  
+  Promise.resolve().then(() => {
+    console.log('s1 p1')
+  })
+});
+
+setTimeout(() => {
+  console.log('s2')
+
+  process.nextTick(() => {
+    console.log('s2 inner nextTick')
+  })
+  
+  Promise.resolve().then(() => {
+    console.log('s2 p2')
+  })
+});
+
+// poll 阶段
+fs.readFile('./doc.txt', (err, data) => {
+  console.log('fs ', data.toString())
+})
+
+// check 阶段
+setImmediate(() => {
+  console.log('setImmediate')
+})
+
+// 微任务，任意阶段执行完成后执行，优先级高于 promise
+process.nextTick(() => {
+  console.log('outer nextTick')
+})
+
+// 微任务，待同步代码执行完毕后执行
+Promise.resolve().then(() => {
+  console.log('p0')
+})
+```
+
+代码执行顺序如下：
+
+1. 从上之下，同步代码执行完毕。
+
+```js
+// 各个队列信息
+
+timers: `s1, s2`
+
+poll: `'fs ', data.toString()`
+
+check: `setImmediate`
+
+nextTickQueue: `outer nextTick`
+
+微任务队列: `p0`
+```
+
+2. 立即检查 `nextTickQueue`，打印 `outer nextTick`
+
+3. 开始检查微任务队列，存在 Promise.then，打印 `p0`
+
+4. 接着进入到 `timers` 阶段，执行 `setTimeout` 回调，打印 `s1`，并注册`nextTick` 和 `promise`。接着执行 `s2`，打印 `s2`，并注册 `nextTick` 和 `promise`
+
+5. timers 阶段执行完毕。
+
+6. 先检查微任务队列，nextTick 优先级高，所以先打印 s1 的 nextTick `s1 inner nextTick`，接着执行 s2 的 nextTick `s2 inner nextTick`，然后执行 `promise`，先打印 `s1 p1`，再打印 `s2 p2`
+
+7. 微任务队列清空了。
+
+8. 切换队列，进入到 `poll` 阶段，如果没有新的 I/O 事件到达，则会等待一段时间，等待期间如果有定时器到期或者有被 `setImmediate()` 注册的回调函数，则会`跳过 poll 阶段`，直接进入 `check` 阶段。打印 `setImmediate`
+
+9. 切换至 `poll` 阶段，打印 `fs  hello world`.
+
+10. 循环结束。
+
+```js
+outer nextTick
+p0
+s1
+s2
+s1 inner nextTick
+s2 inner nextTick
+s1 p1
+s2 p2
+setImmediate
+fs  hello world
+```
+
+上述过程是基于 Node.js 10.14.2 版本的事件循环机制，不同版本的 Node.js 可能会有微小的差异，但总体流程是相似的。
+
+`Node > 11`
+
+需要注意的差异点，在于 `timers 阶段执行完一个 cb 后，会立马去查看微任务队列`，也就是和 `浏览器` 的执行顺序保持一致了。
+
+```js
+// timers 阶段
+setTimeout(() => {
+  console.log('s1')
+
+  process.nextTick(() => {
+    console.log('s1 inner nextTick')
+  })
+  
+  Promise.resolve().then(() => {
+    console.log('s1 p1')
+  })
+});
+
+setTimeout(() => {
+  console.log('s2')
+
+  process.nextTick(() => {
+    console.log('s2 inner nextTick')
+  })
+  
+  Promise.resolve().then(() => {
+    console.log('s2 p2')
+  })
+});
+```
+
+在 Node > 11 的环境下，这段代码执行顺序和 `浏览器环境下保持一致`。
+
+1. 同步代码执行完毕，timers 阶段有两个定时器 `s1, s2`
+
+2. 开始清空 timers
+
+3. 执行 s1，由于内部注册了 `nextTick` 和 `promise`，并且 `nextTick` 优先级高，所以打印 `s1`、`s1 inner nextTick`、`s1 p1`
+
+4. 执行 s2，由于内部注册了 `nextTick` 和 `promise`，并且 `nextTick` 优先级高，所以打印 `s2`、`s2 inner nextTick`、`s2 p2`
+
+```js
+s1
+s1 inner nextTick
+s1 p1
+s2
+s2 inner nextTick
+s2 p2
+```
 
 # process.nextTick
 
@@ -111,32 +325,63 @@ setImmediate(args => {
 
 # setImmediate 和 setTimeout
 
-将二者放在一个IO操作的callback中，则永远是setImmediate先执行。
-
-这是因为readFile的回调执行时，事件循环位于 poll 阶段，因此事件循环会先进入 check阶段执行setImmediate的回调，然后再进入timers阶段执行setTimeout的回调。
-
-`3 4 2 1`
+将二者放在一个 I/O 操作的callback中，则永远是 `setImmediate` 先执行。
 
 ```js
+// poll
 fs.readFile('./index.html', () => {
+  // timers
   setTimeout(() => {
-    console.log('set timeout1')
+    console.log('set timeout 1')
     
   }, 0);
   
+  // check
   setImmediate(() => {
-    console.log('setImmediate2!')
+    console.log('setImmediate 2!')
   })
 })
 
 setTimeout(() => {
-  console.log('set timeout3')
+  console.log('set timeout 3')
 }, 0);
 
 setImmediate(() => {
-  console.log('setImmediate4!')
+  console.log('setImmediate 4!')
 })
 ```
+
+这是因为 readFile 的回调执行时，事件循环位于 poll 阶段，因此事件循环会先进入 check阶段执行setImmediate的回调，然后再进入timers阶段执行setTimeout的回调。
+
+如果不是放在 `I/O` 中，它俩的顺序可能不确定了。
+
+## 注意
+
+当 setTimeout 、setImmediate 在一起使用时，执行顺序不确定。
+
+```js
+setTimeout(() => {
+  console.log('timeout')
+});
+
+setImmediate(() => {
+  console.log('setImmediate!')
+})
+```
+
+当你多次执行代码，会发现有时候 `timeout` 执行在前，有时候执行在后，这是为什么呢？
+
+按理说，在不给 `setTimeout` 设置时间间隔时，应该先执行 `setTimeout`，因为它处于 `timers` 阶段，而 `setImmediate` 处于 `check` 阶段。
+
+它俩执行顺序取决于事件循环的状态和系统资源的使用情况，`setTimeout` 可能会被系统资源占用的情况导致阻塞执行，从而晚于 `setImmediate`.
+
+# 浏览器和Node事件循环的区别
+
+1. 任务队列数，浏览器（2），NodeJS（6）
+
+2. 微任务执行时机（NodeJS < 11 任务队列切换之前，检查微任务），NodeJS > 11 的环境中，两者保持一致了。（`即每一个宏任务执行完毕，就去检查微任务队列。`）
+
+3. NodeJS 中微任务有优先级（nextTick优先级高）
 
 # 模块
 
@@ -190,37 +435,31 @@ this 指向 module.exports
 
 4. 块级作用域
 
-# Buffer
+# Buffer 缓冲区
 
-主要用来处理二进制数据
-
-在文件操作和网络操作中，如果不显式声明编码格式，其返回数据的默认类型就是Buffer
+主要用来处理二进制数据，`I/O`，在文件操作和网络操作中，如果不显式声明编码格式，其返回数据的默认类型就是 Buffer。
 
 > 在最新的Node API中，Buffer()方法被标记为Deprecated，表示已经不推荐使用，因为这个方法在某些情况下可能不安全（参考https://github.com/nodejs/node/issues/4660），并且会在将来的版本中将其移除。
 
-使用Buffer.from来初始化一个Buffer
+> https://zhuanlan.zhihu.com/p/398967492
 
-```js
-Buffer.from('Hello world')
-```
+## 为什么要有 Buffer 缓冲区？
 
-## toString
+从一个文件中读取数据，并写入到磁盘的另一个地方去，读取的操作称为 `生产者`，写入的那个文件称为 `消费者`。
 
-如果想把一个Buffer对象转成字符串形式，需要使用toString方法
+存在的问题是：有时候数据的生产者无法满足消费者的消费速度，又或者消费者的消费速度比生产者的生产的速度慢许多，那么无论是那种情况，都会出现数据的等待过程（生产、消费），`等待的数据存放在哪？`，这个时候就用到了 Buffer 缓冲区了（`内存空间`）。
 
-```js
-buffer.toString([encoding], start, end)
+注意：
 
-- encoding 目标编码格式
+1. Buffer 不占据 v8 堆内存大小的内存空间，直接由 c++ 层面进行分配
 
-- start 起始位置
+2. 内存的使用由 NodeJS 来控制，由 v8 的 GC 回收
 
-- end 结束位置
-```
+3. 一般配合 stream 流使用，充当缓冲区
 
-```js
-Buffer.from('Hello world').toString('utf-8', 0, 3) // Hel
-```
+<img src='./img/buffer.png' />
+
+## 编码类型
 
 Buffer支持的编码类型种类有限，只有以下6种：
 
@@ -230,11 +469,43 @@ Buffer支持的编码类型种类有限，只有以下6种：
 
 - Binary
 
-- Hex
+- Hex // 将每个字节编码为两个十六进制字符
 
 - UTF-8
 
 - UTF-16LE/UCS-2
+
+## Buffer.alloc()
+
+创建长度为 10 的以零填充的缓冲区。
+
+```js
+const buf1 = Buffer.alloc(10);
+
+// <Buffer 00 00 00 00 00 00 00 00 00 00>
+```
+
+## Buffer.from
+
+使用 `Buffer.from` 来初始化一个Buffer，表示创建了一个包含字节 `Hello world` 的缓冲区。
+
+将 Buffer 转换为字符串通常称为编码，将字符串转换为 Buffer 通常称为解码。
+
+```js
+Buffer.from('Hello world') // 默认 encoding 是 utf-8
+
+Buffer.from('helo world', 'utf-8').toString('base64') // aGVsbyB3b3JsZA==
+```
+
+`Buffer 长度`
+
+一个中文字符占 3 个字节，比如 `Buffer.from('中')` 是 `<Buffer e4 bd a0>`
+
+```js
+console.log(Buffer.from('中').length); // 3
+console.log(Buffer.from('a').length); // 1
+console.log(Buffer.from('1').length); // 1
+```
 
 ## 拼接 buffer
 
@@ -244,8 +515,9 @@ body+=chunk相当于body+= chunk.toString()
 
 `但如果字符串中包含中文或者其他语言，由于toString方法默认使用utf-8编码，这时就有可能出现乱码`
 
-
 官方的推荐做法是使用push方法来拼接Buffer。
+
+`Buffer.concat(bufferList, totalLength)`: 返回新的 Buffer，它是将 list 中的所有 Buffer 实例连接在一起的结果。
 
 ```js
 const data = []
@@ -262,6 +534,58 @@ rs.on('end', () => {
 ```
 
 上面的代码在拼接过程中不会有隐式的编码转换，首先将Buffer放到数组里面，等待传输完成后再进行转换，这样就不会出现乱码了。
+
+
+## Buffer 实例方法
+
+- fill(data, start, end): 使用数据填充 buffer。`[start, end)`
+
+- write: 向 buffer 写入数据（与 fill 稍有不同）
+
+- toString(encoding): 从 buffer 中提取数据，转化为指定的格式
+
+- slice: 截取 buffer（类似数组的操作）
+
+- indexOf: 在 buffer 中查找数据
+
+- copy: 复制 buffer 中的数据
+
+## buf.toString(encoding)
+
+如果想把一个Buffer对象转成字符串形式，需要使用toString方法
+
+```js
+buffer.toString([encoding], start, end)
+
+- encoding 目标编码格式
+
+- start 起始位置
+
+- end 结束位置
+```
+
+```js
+Buffer.from('Hello world').toString('utf-8', 0, 3) // Hel
+```
+## 缓冲区与迭代器
+
+可以使用 for..of 语法迭代 Buffer 实例：
+
+```js
+const { Buffer } = require('node:buffer');
+
+const buf = Buffer.from([1, 2, 3]);
+
+for (const b of buf) {
+  console.log(b);
+}
+// 打印:
+//   1
+//   2
+//   3
+```
+
+此外，buf.values()、buf.keys() 和 buf.entries() 方法可用于创建迭代器。
 
 # File system
 
@@ -378,7 +702,275 @@ fs.readdir(__dirname, (err, res) => {
     }
   }
 })
+```
 
+7. fs.copyFile
+
+一次性读取，一次性写入
+
+```js
+fs.copyFile('./doc.txt', './copy-doc.txt')
+```
+
+# stream（流）
+
+主要用来处理比较大的数据，分段读取、分段写入等等。也可以配合 `管道pipe` 实现数据的分段传输。
+
+- Readable 可读流
+
+- Writeable 可写流
+
+- Duplex 双工流（既可读，又可写）
+
+- Transform 转换流（通常用于输入数据和输出数据不要求匹配的场景）
+
+## Readable stream
+
+可读流：生产供程序消费数据的流
+
+```js
+const rs = fs.createReadStream('./doc.txt')
+
+rs.setEncoding('utf8')
+
+rs.pipe(process.stdout)  // 控制台输出
+```
+
+`传递参数`，可以设置编码、读取的起始位置、结束位置以及 `highWaterMark`
+
+通过 `事件监听`，流的操作 `可中断，可恢复`
+
+```js
+const rs = fs.createReadStream('./doc.txt', {
+  flags: 'r', // readable,
+  encoding: null, // 如果是null，表示输出 buffer
+  start: 0, // 读取的起始位置
+  end: 3, // 结束位置
+  highWaterMark: 2, // 每次取几个字符
+})
+
+// 覆盖 options
+rs.setEncoding('utf8')
+
+rs.on('data', (chunk) => {
+  console.log('data ', chunk.toString().toUpperCase())
+
+  // 可暂停
+  rs.pause()
+
+  setTimeout(() => {
+    // 恢复流
+    rs.resume()
+  }, 1000);
+})
+
+rs.on('open', () => {
+  console.log('只要调用了 createReadStream 方法，就会触发 open 事件。')
+})
+
+rs.on('end', () => {
+  console.log('数据读取完毕<----end')
+})
+
+rs.on('close', () => {
+  console.log('关闭文件')
+})
+
+rs.on('error', () => {
+  console.log('读取文件报错了')
+})
+```
+
+我们也可以通过监听 `readable` 并通过 `rs.read` 方法来获取数据。
+
+不过要注意的是，当 `rs.read()` 读取完数据后，最后会返回一个 `null`
+
+```js
+rs.on('readable', () => {
+  const data = rs.read()
+  console.log(data)
+})
+
+===>
+
+he
+ll
+null
+<----end
+读取完成
+```
+
+所以我们可以通过 `while` 来判断
+
+```js
+rs.on('readable', () => {
+  let data
+  while ((data = rs.read()) !== null) {
+    console.log(data.toString())
+  }
+})
+```
+
+实际过程中，不应该在 `on data` 或者 `on readable` 事件中处理数据，而是放到 `on end` 事件中，这个阶段表示已经完成所有数据的读取。
+
+```js
+const bufferArr = []
+
+rs.on('data', (chunk) => {
+  bufferArr.push(chunk)
+})
+
+
+rs.on('end', () => {
+  const buffer = Buffer.concat(bufferArr)
+
+  console.log(buffer.toString())
+})
+```
+
+## Writeable stream
+
+可写流：用于消费数据的流
+
+```js
+// 创建一个可读流
+const rs = fs.createReadStream('./doc.txt')
+
+rs.setEncoding('utf8')
+
+// 没有文件的话，会自动创建文件
+// 创建一个可写流
+const ws = fs.createWriteStream('./copy-doc.txt')
+rs.pipe(ws) // 将 doc 的内容写进 copy-doc
+```
+
+和 `Readable` 一样，`createWriteStream` 也支持传递 `options`
+
+```js
+const ws = fs.createWriteStream('./copy-doc.txt', {
+  flags: 'w',
+  encoding: 'utf-8',
+  start: 0,
+})
+
+ws.write('写入了一些东西', () => {
+  console.log('写入了')
+})
+```
+
+需要注意的是，`write` 的第一个参数 `The "chunk" argument must be one of type string or Buffer. Received type number`。
+
+如果你传入了一个数字或者其他类型的数据，会报错。
+
+还有一点要注意的是，`on close` 并不是 `write` 成功后就会触发，而是手动调用了 `ws.end()` 之后，才会触发 `on close`
+
+```js
+ws.on('close', () => {
+  console.log('close')
+})
+
+ws.end()
+```
+
+`ws.end()`
+
+当我们手动调用了 `ws.end()`，表示文件写入已经完成，我们不能在 `end` 之后再执行 `write` 操作，那样会报错！
+
+如果我们想要在 `end` 之后，还想写入内容该怎么办呢？
+
+你可以把内容直接放到 `end(xxxx)` 中，它会将收到的参数写入到文件中。
+
+```js
+ws.end('最后再写入有点内容。')
+```
+
+### write 执行流程 
+
+1. 搞懂 `ws.write('xxxx')` 返回值的意义
+
+2. `highWaterMark` 起到了什么作用
+
+3. 为什么 `ws.write` 返回值为 `false` 时，才会触发 `on drain` 事件？
+
+4. `on drain` 事件有什么用？
+
+5. 如何控制 `写入速度`？
+
+6. `pipe` 方法
+
+## 背压机制 - Backpressure
+
+为什么需要背压机制？
+
+```js
+const rs = fs.createReadStream('./doc.txt')
+const ws = fs.createWriteStream('./copy-doc.txt')
+
+rs.on('data', chunk => {
+  ws.write(chunk)
+})
+```
+
+乍一看这段代码没有什么问题，但是要知道的是，`数据从磁盘读取出来的速度，要远远大于写入磁盘的速度`。这样就会出现 `产能过剩` 的问题，而 `Writeable` 内部维护了一个队列，在它不能实时的去 `消费` 由上游所传输过来的数据时，它就会将不能被 `消化` 掉的数据缓存到队列里。但是队列的内存大小有上限，如果不做 `背压机制`，很有可能就会造成 `内存溢出、GC频繁调用、占用进程导致其它进程变慢`。
+
+基于以上原因，就需要一种 `数据在生产者和消费者之间平滑流动` 的机制，这就是 `背压机制`。
+
+我们来简单模拟一下 `pipe` 的背压机制
+
+定义好 `doc.txt` 文件并写好内容：
+
+```js
+// doc.txt
+
+你好世界
+```
+
+```js
+// doc.txt
+
+const rs = fs.createReadStream('./doc.txt', {
+  highWaterMark: 4 // 一个汉字占 3 个字节，highWaterMark 设置为 4 的话，表示一次可以取一个汉字 + 1 个字节
+})
+
+const ws = fs.createWriteStream('./copy-doc.txt', {
+  highWaterMark: 1
+})
+
+let flag = true
+
+rs.on('data', chunk => {
+  flag = ws.write(chunk, () => {
+    console.log('写完了');
+  })
+
+  if (!flag) {
+    rs.pause()
+  }
+})
+
+ws.on('drain', () => {
+  rs.resume()
+})
+```
+
+当写入的数据长度 大于设置的 highWaterMark，`ws.write` 就会返回 `false`，然后通过 `rs.pause()` 方法，暂停可读流的读取操作。
+
+这个时候，就会触发 `drain` 事件，我们可以在这里重新启动 `读取数据` 的操作，从而达到分批、限流的目的。
+
+实际开发中，我们可能不必这样做，因为 `pipe` 已经帮我们处理好了，上面的代码也是 `pipe` 的内部实现原理。
+
+我们只需要调用 `pipe` 方法，传入 `可写流` 的实例即可。
+
+```js
+const rs = fs.createReadStream('./doc.txt', {
+  highWaterMark: 4 
+})
+
+const ws = fs.createWriteStream('./copy-doc.txt', {
+  highWaterMark: 1
+})
+
+rs.pipe(ws)
 ```
 
 # HTTP服务
@@ -1387,3 +1979,4 @@ pm.test("Status code is 200", function () {
 1. [文件上传攻略](https://juejin.cn/post/6844903968338870285)
 2. [大文件上传和断点续传](https://juejin.cn/post/6844904046436843527)
 3. [koa 项目: 代码组织、目录结构、node api](https://github.com/jj112358/node-api) [对应视频 [视频](https://www.bilibili.com/video/BV13A411w79h?p=1)]
+4. [NodeJS高级编程](https://www.bilibili.com/video/BV1sA41137qw?p=1&vd_source=a9f38e58a519cc0570c2dacd34ad7ebe)

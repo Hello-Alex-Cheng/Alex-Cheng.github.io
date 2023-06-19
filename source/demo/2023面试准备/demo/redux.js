@@ -9,7 +9,10 @@ const createStore = function(reducer, initialState = {}) {
   }
 
   store.dispatch = function(action) {
+    // 改变状态
     store.state = reducer(store.state, action)
+
+    // 触发监听器
     store.listeners.forEach(listener => listener())
   }
 

@@ -1,173 +1,100 @@
-// const obj = {}
-// let name = ''
-
-// Object.defineProperty(obj, 'name', {
-//   get: function() {
-//     console.log('触发 get')
-
-//     return name
-//   },
-//   set: function(value) {
-//     console.log('触发 set')
-//     name = value
-//   }
-// })
-
-// console.log('打印： ', obj.name)
-
-// obj.name = '你好，世界'
-
-// console.log('打印： ', obj.name)
-
-
-// const o = {
-//   name: '对象',
-//   age: 19,
-//   favor: ['sing', 'dance']
-// }
-
-// const proxy = new Proxy(o, {
-//   get(target, key, receiver) {
-//     console.log('有人来获取属性啦：', target, key)
-
-//     return target[key]
-//   },
-//   set(target, key, value) {
-//     target[key] = value
-//   }
-// })
-
-// // console.log(proxy.name)
-
-// // proxy.name = '123'
-
-// // console.log(proxy.name)
-
-// proxy.favor.push('hahahahahah')
-
-// console.log(proxy.favor)
-
-
-
-
-
-
-
-
-
-// console.log([] instanceof Array)
-
-// function instance_of(instance, obj) {
-//   let prototype = Object.getPrototypeOf(instance)
-
-//   while(true) {
-//     if (prototype === null) return false
-
-//     if (prototype === obj.prototype) {
-//       return true
-//     }
-
-//     prototype = Object.getPrototypeOf(prototype)
-//   }
-// }
-
-
-// new
-
-// 1. 创建一个全新的对象
-// 2. 这个对象的 __proto__ 指向构造函数的 prototype
-// 3. 执行构造函数内部的内容
-// 4. 返回这个新对象
-
-// function myNew(fn, ...args) {
-//   const instance = Object.create(fn.prototype)
-
-//   const res = fn.apply(this, args)
-
-//   // 以防万一 fn 函数返回值不是对象
-//   return typeof instance === 'object' ? res : instance
-// }
-
-
-
-
-
-
-// React Fiber 也称协程、或者纤程。 
-// Ruby就将协程称为 Fiber。后来发现很多语言都有类似的机制
-// 例如Lua 的Coroutine,
-// 还有前端开发者比较熟悉的 ES6 新增的Generator。
-
-// function calculate() {
-
-//   console.log('先计算')
-
-//   return 3 * 3
-// }
-
-// function *myGenerator() {
-//   if (true) {
-//     yield calculate()
-//   }
-
-//   console.log('再执行。')
-// }
-
-// const g = myGenerator()
-
-// console.log(g.next())
-// console.log(g.next())
-
-
-
-
-
-// async function async1 () {
-//   console.log('async1 start')
-//   await async2()
-//   console.log('async1 end')
-// }
-
-// async function async2 () {
-//   console.log('async2')
-// }
-
-// console.log('script start')
-// async1()
-// console.log('script end')
-
-// async function sayName() {
-//   // return 'name' // 相当于 return Promise.resolve('name')
-//   return Promise.resolve('name')
-// }
-
-// console.log(sayName()) // Promise { 'name' }
-
-// sayName().then(res => console.log(res)) // name
-
-
-
-
-
-
-
-
-
-
-const o = {
-  fn: function (params) { // 方法会丢失
-      console.log('is fn')
-  },
-  reg: /\.js$/ig, // 空对象: {}
-  date: new Date(), // 时间会被计算出来: "2023-05-24T03:07:23.547Z"
-  n: null, // null
-  u: undefined, // 丢失
-  name: 'hello alexCc', // 'hello alexCc'
-  s: new Set([1,1,2,2,3,3]), // 空对象: {}
-  m: new Map() // 空对象: {}
+const fn = (res = 0) => {
+  return new Promise(r => {
+    setTimeout(() => {
+      console.log(1)
+      r(11 + res)
+    }, 1000)
+  })
 }
 
+function run(list) {
+  // 递归
+  // const f = list.shift()
+  // if (f) {
+  //   f().then(res => {
+  //     console.log(res)
+  //     run(list)
+  //   })
+  // }
+  
+  // 循环
+  // 首先创建一个初始值为 resolved 状态的 Promise 对象 promise，
+  // 每次将当前 Promise 对象和下一个函数 fn 组合成一个新的 Promise 对象，
+  // 并将其赋值给 promise。
+  // 这样，每次循环都会生成一个新的 Promise 对象
+  // 它的状态取决于上一个 Promise 对象和当前函数的执行结果。
+  // 最后返回的是最后一个 Promise 对象，它的状态取决于所有函数的执行结果。
+  // 这个函数的作用是实现 Promise 链式调用
+  // 可以方便地处理多个异步操作的依赖关系。
+  let promise = Promise.resolve(0)
+  console.log(promise)
+  for(const fn of list) {
+    promise = promise.then(fn)
+  }
+  return promise
+}
+// run([fn, fn, fn, fn])
 
-structuredClone(o)
 
 
+// let obj = {}
+// let obj1 = obj
+// const wm = new WeakMap()
+// wm.set(obj1, '123123')
+// obj = null
+// console.log(wm.get(obj1))
+
+function asyncFn (timeout) {
+  return new Promise(r => {
+    setTimeout(r, timeout, timeout);
+  })
+}
+
+const tasks = [
+  () => asyncFn(1000),
+  () => asyncFn(4000),
+  () => asyncFn(2000),
+  () => asyncFn(3000),
+]
+// async function limitRequest(tasks, limit = 2) {
+//   const taskPool = new Set()
+//   for (const task of tasks) {
+//     const promise = task()
+//     taskPool.add(promise)
+//     promise.then(res => {
+//       console.log(res)
+//       taskPool.delete(promise)
+//     })
+//     if (taskPool.size >= limit) {
+//       await Promise.race(taskPool)
+//     }
+//   }
+// }
+// limitRequest(tasks)
+
+
+
+function * oneByOne(tasks) {
+
+  yield console.log(1)
+
+  for (let fn of tasks) {
+    yield fn().then(res => {
+      console.log(res)
+    })
+  }
+
+  yield console.log(2)
+}
+
+const res = oneByOne(tasks)
+
+console.log(res)
+res.next()
+res.next()
+res.next()
+res.next()
+res.next()
+const done = res.next()
+
+console.log(done)
