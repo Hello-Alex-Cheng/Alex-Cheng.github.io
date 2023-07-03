@@ -36,8 +36,6 @@
   }
 </style>
 
-
-
 <body>
   <div class="outer">
     <div class="inner">
@@ -45,6 +43,75 @@
   </div>
 </body>
 ```
+
+# 三栏布局
+
+1. flex 布局
+
+```css
+.container {
+  display: flex;
+  justify-content: space-between;
+}
+.left {
+  width: 200px;
+}
+.right {
+  width: 200px;
+}
+.center {
+  flex: 1;
+}
+```
+
+2. 浮动布局 + margin
+
+```css
+.container {
+  overflow: hidden;
+}
+
+.left {
+  float: left;
+  width: 200px;
+}
+.right {
+  float: right;
+  width: 200px;
+}
+.center {
+  overflow: hidden;
+  margin: 0 200px; // 重点
+}
+```
+
+<img src='./img/css-float.png' />
+
+因为 `div` 是块级元素，占据一行，所以 `.right` 右浮动时，你会发现它和其它两个元素不在一排，不过我们可以通过 `inline-block` 来修复这个问题。
+
+3. 浮动布局 + calc
+
+```css
+.left {
+  display: inline-block;
+  width: 100px;
+  background-color: red;
+  float: left;
+}
+.right {
+  width: 100px;
+  display: inline-block;
+  background-color: blue;
+  float: right;
+}
+.mid {
+  width: calc(100% - 200px); // 重点
+  background-color: yellow;
+  display: inline-block;
+}
+```
+
+<img src='./img/css-calc.png' />
 
 # css 权重值
 
@@ -162,9 +229,9 @@ BFC 是 CSS 布局的一个概念，是一块独立的渲染区域，是一个�
 1. 浮动（ float 的值不为 none ）
 2. 绝对定位元素（ position 的值为 absolute 或 fixed ）
 3. 行内块（ display 为 inline-block ）
-4. 表格单元（ display 为 table、table-cell、table-caption、inline-block 等 HTML 表格相关的属性 )
-5. 弹性盒（ display 为 flex 或 inline-flex ）
-6. 默认值。内容不会被修剪，会呈现在元素框之外（overflow 不为 visible）
+4. 表格单元`display: table、table-cell、table-caption、inline-block 等`
+5. display 为 flex 或 inline-flex
+6. 设置元素的`overflow`属性为除了visible以外的值，例如 auto、scroll、hidden等。
 
 # 两个div上下排列，都设margin，有什么现象？
 
@@ -254,6 +321,14 @@ BFC 是 CSS 布局的一个概念，是一块独立的渲染区域，是一个�
 
 我们设置 floatDiv 浮动后，floatDiv 覆盖在 normalDiv 之上，要想 normalDiv 不被覆盖，触发 normalDiv BFC 即可。
 
+```js
+.normalDiv {
+  width: 100px;
+  height: 100px;
+  background-color: red;
+  overflow: hidden;
+}
+```
 # 瀑布流
 
 - multi-column 实现
@@ -663,3 +738,151 @@ c2 设置的 50vw，它是相对于视口的，所以宽度和父元素宽度一
 
 支持块级元素，不支持行内元素
 
+# block、inline、inline-block 有什么区别
+
+1. block元素为块级元素，独占一行，对其设置宽高属性会生效，如果不设置宽度，默认宽度为 100%
+
+  ```html
+  div/form/header/ul/canvas/footer/video/audio
+  ```
+
+2. inline 元素为行内元素，宽高由内容撑开，不会独占一行，多个 inline 元素排成一排，设置其宽高属性不会生效。
+
+3. inline-block 为行内块级元素，可以设置宽高，还能和其它 inline 元素并排显示
+
+# position: sticky (粘性定位元素)
+
+position: sticky的使用方式和position: fixed类似，但是它的固定位置是相对于父容器而不是相对于视口。
+
+粘性定位可以被认为`是相对定位和固定定位的混合`。
+
+须指定 top, right, bottom 或 left 四个阈值其中之一，才可使粘性定位生效。`否则其行为与相对定位相同`。
+
+`使用场景`: 用于定位字母列表的头部元素。
+
+```html
+<div>
+  <dl>
+    <dt>A</dt>
+    <dd>Andrew W.K.</dd>
+    <dd>Apparat</dd>
+    <dd>Arcade Fire</dd>
+    <dd>At The Drive-In</dd>
+    <dd>Aziz Ansari</dd>
+  </dl>
+  <dl>
+    <dt>C</dt>
+    <dd>Chromeo</dd>
+    <dd>Common</dd>
+    <dd>Converge</dd>
+    <dd>Crystal Castles</dd>
+    <dd>Cursive</dd>
+  </dl>
+  <dl>
+    <dt>E</dt>
+    <dd>Explosions In The Sky</dd>
+  </dl>
+  <dl>
+    <dt>T</dt>
+    <dd>Ted Leo & The Pharmacists</dd>
+    <dd>T-Pain</dd>
+    <dd>Thrice</dd>
+    <dd>TV On The Radio</dd>
+    <dd>Two Gallants</dd>
+  </dl>
+</div>
+```
+
+css
+
+```css
+dt {
+  background: #B8C1C8;
+  border-bottom: 1px solid #989EA4;
+  border-top: 1px solid #717D85;
+  color: #FFF;
+  font: bold 18px/21px Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 2px 0 0 12px;
+  position: -webkit-sticky;
+  position: sticky;
+  top: -2px;
+}
+
+dd {
+  font: bold 20px/45px Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0 0 0 12px;
+  white-space: nowrap;
+}
+
+dd + dd {
+  border-top: 1px solid #CCC
+}
+```
+
+<img src="./img/position-sticky.gif" />
+
+# window.scrollY & window.pageYOffset
+
+window.scrollY: `返回文档在垂直方向已滚动的像素值。`
+
+window.pageYOffset: `只读属性 pageYOffset 是 scrollY 属性的别名`。为了跨浏览器兼容，请使用 window.pageYOffset 代替 window.scrollY。另外，旧版本 IE（<9）两个属性都不支持
+
+# element.offsetHeight
+
+`offsetHeight` 是一个只读属性，它返回该元素的像素高度，`高度包含该元素的垂直内边距和边框`，且是一个整数。
+
+# 不用 position sticky 如何实现吸顶效果?
+
+通过监听 `scroll`，动态设置需要吸顶元素的样式，通过 `position: fixed;` 将其固定在顶部。
+
+```html
+<header>
+  <nav>
+    导航栏内容
+  </nav>
+</header>
+```
+
+css
+
+```css
+header {
+  height: 100px; /* header的高度 */
+}
+
+nav {
+  height: 50px; /* 导航栏的高度 */
+  position: relative; /* 相对定位 */
+  z-index: 1; /* 显示在页面最上层 */
+  background-color: #69c;
+}
+
+.sticky {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+```
+
+监听滚动条变化
+
+```js
+var header = document.querySelector('header');
+var nav = document.querySelector('nav');
+var navOffsetTop = nav.offsetTop; // 记录导航栏距离顶部的距离，一开始是 0
+
+window.addEventListener('scroll', () => {
+  if (window.pageYOffset >= navOffsetTop) {
+    nav.classList.add('sticky')
+
+    // 避免 nav 遮挡内容，否则在滚动页面时，内容出现明显的抖动。
+    header.style.paddingTop = nav.offsetHeight + 'px';
+  } else {
+    nav.classList.remove('sticky')
+    header.style.paddingTop = 0;
+  }
+})
+```

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * { margin: 0; padding: 0; }
+    #app {
+      width: 100%;
+      height: 100vh;
+      background-color: antiquewhite;
+      font-size: 0.53rem;
+    }
+    .test {
+      width: 50vw;
+      height: 100vh;
+      background-color: aqua;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <span>123</span>
+    <div class="test"></div>
+  </div>
+
+  <script>
+    function setRootRem() {
+      const root = document.documentElement;
+      /** 以iPhone6为例：布局视口为375px，我们把它分成10份，则1rem = 37.5px，
+       * 这时UI给定一个元素的宽为375px（设备独立像素），
+       * 我们只需要将它设置为375 / 37.5 = 10rem。
+      */
+      // console.log(window.innerWidth);
+      console.log(window.screen.width);
+      const scale = root.clientWidth / 10
+      root.style.fontSize = scale + 'px'  
+    }
+    setRootRem()
+    window.addEventListener('resize', setRootRem)
+  </script>
+</body>
+</html>

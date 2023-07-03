@@ -74,27 +74,35 @@ const tasks = [
 
 
 
-function * oneByOne(tasks) {
+// function * oneByOne(tasks) {
+//   yield console.log(1)
+//   for (let fn of tasks) {
+//     yield fn().then(res => {
+//       console.log(res)
+//     })
+//   }
+//   yield console.log(2)
+// }
+// const res = oneByOne(tasks)
+// console.log(res)
+// res.next()
+// res.next()
+// res.next()
+// res.next()
+// res.next()
+// const done = res.next()
+// console.log(done)
 
-  yield console.log(1)
 
-  for (let fn of tasks) {
-    yield fn().then(res => {
-      console.log(res)
-    })
+
+
+const arr = [1, 2, 3, 4]
+
+for (const v of arr) {
+  console.log(v)
+  if (v > 2) {
+    return true
   }
-
-  yield console.log(2)
+  return false
 }
 
-const res = oneByOne(tasks)
-
-console.log(res)
-res.next()
-res.next()
-res.next()
-res.next()
-res.next()
-const done = res.next()
-
-console.log(done)

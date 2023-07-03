@@ -888,7 +888,25 @@ React Fiber 是 React 中的一种新的协调引擎（reconciliation engine）�
 
 React Fiber 的架构使得在渲染过程中可以`中断、暂停和恢复`渲染任务，这为实现`异步渲染`、`增量更新`和`并发渲染`提供了基础。它还支持 `优先级调度`，使得 React 能够根据任务的紧急程度动态地分配时间片，保证优先处理重要的任务，提高响应能力。
 
+主要用到了两个原生的 API `requesetAnimationFrame 和 requesetIdleCallback`
+
+## 为什么要 fiber
+
+当我们触发了状态的更新，那么整个组件树会触发重新 渲染，而构建 DOM树是同步递归的过程，那么组件如果很庞大且嵌套很深的话，那么构建过程可能就很长了，就容易出现明显的卡顿，阻塞其他进程执行，甚至卡死浏览器。
+
+优化：pureComponent，shouldUpdateComponent，useMemo，useCallback
+
+指标不治本，还是需要 Fiber
+
+
+## generator 也可以实现
+react 源码庞大，不适用 generator + yield
+
+generator 内部有状态，可能后面的依赖前面的结果，后面的执行后，前面的又更新了，导致状态不可控。
+
 ## 基于 requestAnimationFrame 实现任务调度和时间切片
+
+<img src="https://img-blog.csdnimg.cn/img_convert/de36c884d07ce8f674e2f29f8b91419e.png" />
 
 React Fiber 依赖了 `requestAnimationFrame` 这个 API，它是在浏览器环境中提供的用于执行动画的定时器函数。`requestAnimationFrame` 方法会在浏览器下一次重绘之前调用指定的回调函数，用于实现平滑的动画效果。
 
@@ -913,6 +931,46 @@ React Fiber 使用 `requestAnimationFrame` 来进行**任务调度和时间切�
 4. 如果在 `callback` 函数中再次调用 `requestAnimationFrame`，浏览器会安排下一次回调在下一次重绘之前执行，形成一个循环，从而实现动画的持续更新。
 
 通过使用 `requestAnimationFrame`，可以有效利用浏览器的绘制时机，避免了过早或过晚执行动画帧的问题，提供了更平滑和高效的动画效果。同时，由于浏览器会自动调整重绘频率，节省了资源和电能的消耗。
+
+## requestAnimationFrame VS setInterval 
+
+- 更好的性能
+
+requestAnimationFrame使用浏览器的刷新频率来执行回调函数，它能够在每一帧之前进行优化，避免不必要的绘制操作，以提高性能。而setInterval则是固定的时间间隔执行回调函数，无法充分利用浏览器的优化机制，可能导致过多的绘制操作，影响性能。
+
+- 自动适应页面可见性
+
+`requestAnimationFrame`会在`页面不可见`时`自动停止执行`，而 setInterval 会一直执行，无论页面是否可见。这样可以避免在后台标签页或不可见的页面上消耗不必要的计算资源。
+
+> 当页面被切换到后台标签页、最小化窗口或者切换到其他应用程序时，浏览器会将页面标记为不可见状态。在不可见状态下，浏览器会暂停或减少对页面的渲染和计算资源的分配，以节省电量和提高性能。
+
+- 更精确的时间控制
+
+requestAnimationFrame的回调函数会在每一帧之前执行，时间间隔由浏览器决定，通常为16毫秒（60帧每秒），可以保证动画的流畅性。而setInterval的时间间隔是固定的，可能会因为JavaScript线程的阻塞、页面负载等原因导致回调函数的执行时间不准确。
+
+- 避免掉帧现象
+
+requestAnimationFrame能够自动调整帧率，如果浏览器性能较差无法达到60帧每秒，它会自动降低帧率，避免掉帧现象。而setInterval无法自动调整帧率，可能导致动画不流畅或卡顿。
+
+## 如何判断任务的优先级？
+应该是浏览器控制的吧，一帧内任务还没有执行完，控制权就交给浏览器去分配。
+
+## 浏览器一帧内要做那些事情？
+
+layout布局、绘制、执行 js、requestAnimationFrame
+
+如果一帧内执行完了这些事情，剩余的时间，就用来执行 `requestIdleCallback`
+
+## 一帧是多少 ms ？以 60 Hz 为例
+
+每秒 60帧，每帧就是 1000/60 = 16.7ms
+## requestIdleCallback(callback, options)
+
+window.requestIdleCallback() 方法插入一个函数，`这个函数将在浏览器空闲时期被调用`。这使开发者能够在主事件循环上执行后台和低优先级工作，而不会影响延迟关键事件，如动画和输入响应。
+
+`判断一帧内是否还有剩余时间，有的话，就用来执行 requestIdleCallback`
+
+requestIdleCallback 返回一个 ID，`可以把它传入 Window.cancelIdleCallback() 方法来结束回调。`
 
 # React 如何做权限控制？
 

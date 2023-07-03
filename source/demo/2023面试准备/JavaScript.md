@@ -32,11 +32,13 @@ var sum = (b = a++ + --a) + a-- + b++;
 ## 创建数组
 
 ```js
-var arr = [1,2,3]
-var arr = new Array()
+const arr1 = [1,2,3]
 
-var arr = new Array(9)
-var arr = new Array('first', 'second', 'name')
+const arr2 = new Array()
+
+const arr3 = new Array(9)
+
+const arr4 = new Array('first', 'second', 'name')
 ```
 
 ## 数组方法
