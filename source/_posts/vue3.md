@@ -501,6 +501,38 @@ Vue.component('Comp', {
 <Comp v-model="compValue" />
 ```
 
+在 Vue2 中，`v-model` 默认只能双向绑定一个值，如果我们想要绑定多个值，那么就需要使用 `.sync` 修饰符（Vue3 移除了）
+
+```js
+<comp :value.sync="value" :value1.sync="value1" />
+```
+
+`comp` 组件内部通过 `this.$emit('update:value', 'xxx')` 和 `this.$emit('update:value1', 'xxx')` 来修改 value 的值。
+
+`.sync` 也只是一个语法糖，我们来看看编译后的结果：
+
+```js
+function render() {
+  with(this) {
+    return _c('comp', {
+      attrs: {
+        "value": value,
+        "value1": value1
+      },
+      on: {
+        "update:value": function ($event) {
+          value = $event
+        },
+        "update:value1": function ($event) {
+          value1 = $event
+        }
+      }
+    })
+  }
+}
+```
+
+相当于给 `comp` 组件传递了两个属性 `value、value1`，并且传递了两个事件方法 `update:value、update:value1`，这也是为什么我们可以直接在 `comp` 组件内部通过 `this.$emit('update:xxx')` 来更新属性了。
 ## 在自定义组件上使用（Vue3）
 
 而当 v-model 使用在一个自定义组件上时，v-model 会被展开为如下的形式：
@@ -534,7 +566,7 @@ defineProps(['title'])
 defineEmits(['update:title'])
 ```
 
-我们还可以绑定多个 v-model:
+我们还可以绑定多个 v-model（`Vue2中通过 .sync 修饰符绑定多个属性`）
 
 ```js
 <UserName
@@ -542,8 +574,6 @@ defineEmits(['update:title'])
   v-model:last-name="last"
 />
 ```
-
-
 
 # $nextTick
 
