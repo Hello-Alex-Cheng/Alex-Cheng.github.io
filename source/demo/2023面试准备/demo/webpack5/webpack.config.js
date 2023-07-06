@@ -17,7 +17,9 @@ module.exports = {
   mode: 'none',
   devtool: 'eval-cheap-module-source-map',
   // devtool: 'source-map',
-  // cache: true,
+  cache: {
+    type: 'filesystem'
+  },
   entry: {
     main: './index.js',
     another: './another-module.js'
@@ -35,7 +37,10 @@ module.exports = {
   },
   optimization: {
     minimize: true, // 开发环境下启用 JS、CSS 优化
-    minimizer: [new TerserWebpackPlugin(), new CssMinimizerPlugin()],
+    minimizer: [new TerserWebpackPlugin({
+      minify: TerserWebpackPlugin.swcMinify, // 使用 swc 压缩代码，需要安装 @swc/core 包
+      terserOptions: {}
+    }), new CssMinimizerPlugin()],
     splitChunks: {
       cacheGroups: {
         styles: {
