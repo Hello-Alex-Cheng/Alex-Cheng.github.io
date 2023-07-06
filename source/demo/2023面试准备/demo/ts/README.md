@@ -10,7 +10,9 @@ tsc -w 监视文件
 
 tsc --init
 
-# vscode 终端：运行任务
+# vscode
+
+> 终端：运行任务
 
 前提是生成了 tsconfig.json
 

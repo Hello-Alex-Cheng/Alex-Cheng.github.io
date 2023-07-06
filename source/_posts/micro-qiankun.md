@@ -600,6 +600,56 @@ console.log(p2.proxyWindow.city) // '杭州'
 console.log(window.city) // '北京'
 ```
 
+# 应用间通信
+
+我们可以通过 `initGlobalState` 来`定义全局状态，并返回通信方法`，建议在主应用使用，微应用通过 props 获取通信方法。
+
+```js
+import { initGlobalState, MicroAppStateActions } from 'qiankun';
+
+// 初始化 state
+const actions: MicroAppStateActions = initGlobalState(state);
+```
+
+微应用可以在导出的 `mounted` 钩子函数中获取 `props`，这个 `props` 中就包含了 `onGlobalStateChange` 和 `setGlobalState` 方法，当我们通过 `setGlobalState` 去设置全局的状态，就会触发 `onGlobalStateChange` 方法。
+
+```js
+export async function mount(props) {
+  console.log('[vue] props from main framework', props);
+}
+```
+
+`offGlobalStateChange: () => boolean，移除当前应用的状态监听，微应用 umount 时会默认调用`
+
+## 在微应用中监听全局状态
+
+微应用 index.js
+
+```js
+
+function watchGlobalStateChange(props) {
+  props.onGlobalStateChange && props.onGlobalStateChange(
+    (value, prev) => console.log(`[监听 - ${props.name}]:`, value, prev),
+    true, // true 立即触发 callback
+  );
+
+  // 两秒过后，更新全局状态，首先会触发主应用的 `onGlobalStateChange` callback
+  // 接着会触发上面定义的 onGlobalStateChange callback
+  setTimeout(() => {
+    props.setGlobalState && props.setGlobalState({
+      app: {
+        name: props.name,
+      },
+    });
+  }, 2000);
+}
+
+export async function mount(props) {
+  watchGlobalStateChange(props)
+  render(props)
+}
+```
+
 # qiankun 的样式问题
 
 如果不启动样式隔离，主应用、子应用所有的样式都是全局环境下，意味着，如果我在主应用里面设置了高权重的 css 样式，是会直接影响到子应用的。

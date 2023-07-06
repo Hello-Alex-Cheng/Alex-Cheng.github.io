@@ -11,7 +11,7 @@ console.log('🔥', dotMeContent)
 
 obj.count++
 
-import('./test').then(module => {
+import(/* webpackChunkName: "dynamic-test" */ './test').then(module => {
   module.default()  
 })
 

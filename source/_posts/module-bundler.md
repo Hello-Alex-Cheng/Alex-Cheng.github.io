@@ -240,7 +240,7 @@ http://127.0.0.1:5500/source/demo/webpack5/assets/1.bundle.js
 http://127.0.0.1:5500/source/demo/webpack5/assets/2.bundle.js
 ```
 
-<img src="../img/publicPath.jpg" />
+<img src="/img/publicPath.jpg" />
 
 原来，浏览器是从 `assets` 目录下加载了这两个资源文件，而我们根本没有创建这个 `assets` 目录，并且 `1.bundle.js, 2.bundle.js` 是在 `dist` 目录下，所以找不到资源了。
 
@@ -314,6 +314,25 @@ output: {
 ```js
 66ba79be0b67ead70ee6.js
 ```
+
+我们也可以给 `chunk` 设定名字，如果 `webpack.config.js` 中配置了 `chunkFilename`，那么会结合配置的名字，如果没有配置 `webpack.config.js`，那么打包出来的 `chunk` 就是你设置的名字：
+
+`通过 webpackChunkName 给动态模块（懒加载）设置名字`
+
+```js
+// main.js
+import(/* webpackChunkName: "dynamic-test" */ './test').then(module => {
+  module.default()  
+})
+
+// webpack.config.js
+output: {
+  ...
+  chunkFilename: '[name].[chunkhash].js', // 新增
+},
+```
+
+最终打包出来的 `chunk 名字` 就是这样的格式：`dynamic-test-5dd1091ec28cc80b219f.js`
 
 ## webpack预处理器 Loader
 
