@@ -728,6 +728,12 @@ c2 设置的 50vw，它是相对于视口的，所以宽度和父元素宽度一
 </style>
 ```
 
+# rem em vw vh %
+
+vw、vh 是相对于视口的，比如说 `50vh`，就是占据屏幕一般的高度
+
+rem 是根据根元素（html）的 `font-size` 来设置大小，而 `em、%`是根据父元素来设置大小
+
 # 如何让 chrome 浏览器显示更小的字体（默认最小 12px）
 
 - zoom: 0.5;
@@ -737,6 +743,73 @@ c2 设置的 50vw，它是相对于视口的，所以宽度和父元素宽度一
 - transform: scale(0.5)
 
 支持块级元素，不支持行内元素
+
+- 使用 rem
+
+给根组件设置指定的 `font-size`，其他元素的单位使用 `rem` 作为单位
+
+# 移动端适配：使用 rem 作为单位，如何自动将 px 转为 rem 单位?
+
+比如我们的跟标签设置了 `font-size` 为 16px（浏览器默认），那么 1rem 就是 `16px`。
+
+假设我想给某一个元素设置 `12px` 大小的 `font-size`，我们可以通过 `16 / 12 = 1.333`，那么这个 `font-size` 就可以设置为 `1.333rem`。
+
+但是问题来了，页面上有很多元素都要设置大小，它们的 `px` 大多都不一样，我们每次都要手动计算吗？
+
+这时，我们就可以使用 `postcss` 的一个插件 `postcss-rem`
+
+> https://www.npmjs.com/package/postcss-rem
+
+编写 css 时可以这样写：
+
+```css
+.demo {
+  font-size: rem(24px); /* Simple */
+  padding: rem(5px 10px); /* Multiple values */
+  margin: rem(10px 0.5rem); /* Existing rem */
+  border-bottom: rem(1px solid black); /* Multiple mixed values */
+  box-shadow: rem(
+    0 0 2px #ccc,
+    inset 0 0 5px #eee
+  ); /* Comma-separated values */
+  text-shadow: rem(1px 1px) #eee, rem(-1px) 0 #eee; /* Alternate use */
+}
+```
+
+`postcss-rem` 自动帮我们计算了，输出的结果是：
+
+```css
+.demo {
+  font-size: 1.5rem; /* Simple */
+  padding: 0.3125rem 0.625rem; /* Multiple values */
+  margin: 0.625rem 0.5rem; /* Existing rem */
+  border-bottom: 0.0625rem solid black; /* Multiple mixed values */
+  box-shadow: 0 0 0.125rem #ccc, inset 0 0 0.3125rem #eee; /* Comma-separated values */
+  text-shadow: 0.0625rem 0.0625rem #eee, -0.0625rem 0 #eee; /* Alternate use */
+}
+```
+
+`具体用法`
+
+安装 `yarn add postcss-rem -D`
+
+配置 `postcss`，以 `vite.config.js` 为例
+
+```js
+import PostcssRem from 'postcss-rem'
+
+export default defineConfig({
+  ...
+
+  css: {
+    postcss: {
+      plugins: [PostcssRem]
+    }
+  }
+})
+```
+
+配置完后，我们在写 css 时就可以直接使用 `rem方法` 自动将 `px` 转为 `rem` 了。
 
 # block、inline、inline-block 有什么区别
 
@@ -829,9 +902,24 @@ window.scrollY: `返回文档在垂直方向已滚动的像素值。`
 
 window.pageYOffset: `只读属性 pageYOffset 是 scrollY 属性的别名`。为了跨浏览器兼容，请使用 window.pageYOffset 代替 window.scrollY。另外，旧版本 IE（<9）两个属性都不支持
 
-# element.offsetHeight
+# 目标元素的位置信息
 
-`offsetHeight` 是一个只读属性，它返回该元素的像素高度，`高度包含该元素的垂直内边距和边框`，且是一个整数。
+
+1. clientWidth：目标元素的width+padding(左右两侧)
+2. offsetWidth:目标元素的width+padding(左右两侧)+border(左右两侧)
+
+  `offsetHeight` 是一个只读属性，它返回该元素的像素高度，`高度包含该元素的垂直内边距和边框`，且是一个整数。
+3. clientLeft:目标元素左边框border的宽度
+4. offsetLeft:目标元素左边框离其具有定位的父元素之间的距离
+5. clientX：鼠标相对于浏览器窗口可视区域的X坐标（横向)
+6. offsetX：鼠标相对于绑定事件元素的X坐标
+7. pageX：鼠标相对于文档的X坐标，会计算滚动距离；如果没有滚动距离，
+值与clientX一样
+8. screenX：鼠标相对于显示器屏幕左侧的X坐标
+9. getBoundingClientRect().left:目标元素左边框相对于浏览器可视区域的距
+离，可能为负值
+
+[介绍](https://www.bilibili.com/video/BV1pG4y1W7Td/?spm_id_from=333.337.search-card.all.click&vd_source=a9f38e58a519cc0570c2dacd34ad7ebe)
 
 # 不用 position sticky 如何实现吸顶效果?
 

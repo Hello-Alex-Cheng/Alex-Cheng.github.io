@@ -686,6 +686,28 @@ res.writeHead(200, {
 res.end('console.log("Javascript loaded!!!")')
 ```
 
+## Http-Only sameSite domain
+
+`Http-Only`、`SameSite`和`Domain`是用于设置和控制浏览器中的 Cookie 的属性。它们的作用和区别如下：
+
+1. `Http-Only`: `Http-Only` 是一个 Cookie 属性，用于限制客户端（浏览器）脚本访问 Cookie 的能力。当设置为 `Http-Only` 时，浏览器只会在进行 HTTP 请求时自动发送 Cookie，而不允许通过 JavaScript 访问 Cookie。这可以提高应用程序的安全性，防止跨站点脚本攻击（XSS）。
+
+2. `SameSite`: `SameSite` 是一个 Cookie 属性，用于控制浏览器在发送跨站点请求时是否附带 Cookie。它有以下几个可选值：
+   - `Strict`: 当设置为 `Strict` 时，浏览器仅在目标网站与源网站完全相同的情况下，才会在跨站点请求中附带 Cookie。这有助于防止跨站点请求伪造（CSRF）攻击。
+   - `Lax`: 当设置为 `Lax` 时，浏览器将在顶级导航（例如通过链接点击）以及 GET 方法提交的表单请求中附带 Cookie。对于 POST、PUT、DELETE 等非安全方法的请求，以及跨域的 AJAX 请求，不会附带 Cookie。这是默认的 `SameSite` 值。
+   - `None`: 当设置为 `None` 时，浏览器会在所有跨站点请求中都附带 Cookie。但为了安全考虑，还需要同时设置 `Secure` 属性，表示只有在通过 HTTPS 连接发送请求时才会附带 Cookie。
+
+3. `Domain`: `Domain` 是一个 Cookie 属性，用于指定可以访问该 Cookie 的域名。默认情况下，Cookie 的 `Domain` 属性与当前页面的域名相同。通过设置 `Domain` 属性，可以使 Cookie 在多个子域名之间共享，或者限制 Cookie 的作用域。例如，设置 `Domain` 为 ".example.com" 可以使 Cookie 在所有以 ".example.com" 结尾的子域名下都可访问。
+
+> 域名的级别是从后往前算的，比如 `.example.com` 是一级域名，`a.example.com` 则是二级域名，二级域名可以访问一级域名中的 cookie，但是反过来不行。
+
+总结：
+- `Http-Only` 限制了客户端脚本对 Cookie 的访问，提高安全性。
+- `SameSite` 控制了在跨站点请求中是否附带 Cookie，防止 CSRF 攻击。
+- `Domain` 指定了可以访问该 Cookie 的域名，可以实现跨子域的共享或限制作用域。
+
+这些属性的使用可以根据具体的需求和安全考虑进行配置。
+
 # Session
 
 Session（会话）是指在客户端与服务器之间建立的一种状态管理机制。

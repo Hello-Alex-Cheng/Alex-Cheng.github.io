@@ -93,16 +93,50 @@ const tasks = [
 // const done = res.next()
 // console.log(done)
 
+function debounce(fn, timeout, immediate = false) {
+  let timer = null
+  let count = 0
+  let callnow = true
+  let originImmediate = immediate
 
-
-
-const arr = [1, 2, 3, 4]
-
-for (const v of arr) {
-  console.log(v)
-  if (v > 2) {
-    return true
+  return function(...args) {
+    count++
+    if (timer) {
+      clearTimeout(timer)
+    }
+    if (immediate) {
+      if (callnow) {
+        fn.apply(this, [count])
+        callnow = false
+        immediate = false
+      }
+    } else {
+      timer = setTimeout(() => {
+        fn.apply(this, [count])
+        callnow = true
+        immediate = originImmediate
+      }, timeout);
+    }
   }
-  return false
 }
+
+function throttle(fn, delay) {
+  let now = Date.now()
+  return function(...args) {
+    if (Date.now() - now > delay) {
+      now = Date.now()
+      fn.apply(this, args)
+    }
+  }
+}
+
+// const handleWindowResize = (...args) => {
+//   console.log(this, args);
+// }
+// window.addEventListener('resize', debounce(handleWindowResize, 1000))
+
+const container = document.querySelector('.container')
+container.onmousemove = debounce(function(value) {
+  this.innerHTML = value
+}, 300, true)
 

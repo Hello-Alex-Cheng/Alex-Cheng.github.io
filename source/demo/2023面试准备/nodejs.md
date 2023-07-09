@@ -76,7 +76,7 @@ Promise.resolve().then(() => {
 // =>>>>>>> p1 s1 p2 p3 s2 s3
 ```
 
-# 事件循环
+# NodeJS 事件循环
 
 事件循环同样运行在单线程环境下，JavaScript的事件循环是依靠浏览器实现的，而Node作为另一种运行时，事件循环由底层的libuv实现。
 
@@ -182,11 +182,9 @@ Promise.resolve().then(() => {
 
 代码执行顺序如下：
 
-1. 从上之下，同步代码执行完毕。
+1. 从上之下，同步代码执行完毕。`各个队列信息如下`
 
 ```js
-// 各个队列信息
-
 timers: `s1, s2`
 
 poll: `'fs ', data.toString()`
