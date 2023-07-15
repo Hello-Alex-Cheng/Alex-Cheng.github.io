@@ -150,6 +150,35 @@ onMounted(() => {
 </style>
 ```
 
+## 监听 scroll 事件（不推荐了）
+
+不推荐：`scroll` 回调函数执行太多次了
+
+1. 使用自定义属性（`data-*`）来表示图片的 src，浏览器不会处理这个 `data-src` 的属性值
+
+2. 监听 `scroll`，当图片出现在视图中，将 `data-src` 赋值给 `src`
+
+```html
+<img v-for="item in 10" :key="item" :data-src="item + '.jpg'" />
+```
+
+```js
+const imgs = document.querySelectorAll('img')
+
+window.addEventListener('scroll', function() {
+  imgs.forEach(img => {
+    const imgTop = img.getBoundingClientRect().top // 图片距离窗口顶部的距离
+    if (imgTop < window.innerHeight) {
+      // 表示图片进入到窗口内部了
+
+      const data_src = img.getAttribute('data-src')
+
+      img.setAttribute('src', data_src)
+    }
+  })
+})
+```
+
 # 文本动态划线效果
 
 <img src='../img/dynamic-highlight.gif' />
