@@ -1,11 +1,11 @@
 ---
 layout: IntersectionObserver
-title: 加载更多功能、图片懒加载
+title: 更优雅的实现[加载更多功能、图片懒加载]
 date: 2023-07-15 21:40:06
 tags: IntersectionObserver
 banner_img: /img/intersection-observer.png
 index_img: /img/intersection-observer.png
-excerpt: IntersectionObserver 接口: 一种异步观察目标元素与其祖先元素或顶级文档视口（viewport）交叉状态的方法。其祖先元素或视口被称为根（root）。
+excerpt: IntersectionObserver接口： 一种异步观察目标元素与其祖先元素或顶级文档视口（viewport）交叉状态的方法。其祖先元素或视口被称为根（root）。
 ---
 
 # 加载更多
