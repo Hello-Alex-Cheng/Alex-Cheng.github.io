@@ -7,6 +7,12 @@ index_img: /img/chicken.jpg
 excerpt: React Native 、H5移动端开发实践
 ---
 
+# react native
+
+React Native 是一个使用React和应用平台的原生功能来构建 Android 和 iOS 应用的开源框架。通过 React Native，您可以使用 JavaScript 来访问移动平台的 API，以及使用 React 组件来描述 UI 的外观和行为：一系列可重用、可嵌套的代码。你可以在下一节了解更多关于 React 的信息。但首先，让我们介绍一下组件在 React Native 中是如何工作的。
+
+
+
 # react-native-cli
 
 方便在命令行执行一些命令
@@ -49,7 +55,11 @@ yarn react-native run-ios
 1. remote js debugge
 2. enable hot reloading
 
+也可以安装 `react native debugger.app` 来调试
+
 # 处理 ios 和 android 兼容性
+
+## 特定平台后缀
 
 方式一，创建指定平台的 `入口文件`
 
@@ -59,7 +69,24 @@ index.ios.js
 index.android.js
 ```
 
-方式二，适用于细粒度控制兼容性
+某个组件
+
+```js
+BigButton.ios.js
+BigButton.android.js
+```
+
+去掉平台后缀直接引用，`React Native 会根据运行平台的不同自动引入正确对应的组件。`
+
+```js
+import BigButton from './BigButton';
+```
+
+## Platform
+
+适用于细粒度控制兼容性 `Platform`
+
+`.OS`在 iOS 上会返回ios，而在 Android 设备或模拟器上则会返回android。
 
 ```js
 import { Platform } from 'react-native';
@@ -67,10 +94,42 @@ import { Platform } from 'react-native';
 Platform.OS === 'ios' ? ...
 ```
 
+还有个实用的方法是 `Platform.select()`，它可以以 Platform.OS 为 key，从传入的对象中返回对应平台的值
 
-也可以安装 `react native debugger.app` 来调试
+```js
+import {Platform, StyleSheet} from 'react-native';
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    ...Platform.select({
+      ios: {
+        backgroundColor: 'red',
+      },
+      android: {
+        backgroundColor: 'blue',
+      },
+    }),
+  },
+});
+```
+
+这一方法可以接受任何合法类型的参数，因此你也可以直接用它针对不同平台返回不同的组件，像下面这样：
+
+```js
+// 返回特定平台的 组件
+const Component = Platform.select({
+  ios: () => require('ComponentIOS'),
+  android: () => require('ComponentAndroid'),
+})();
+
+<Component />;
+```
 
 # WebView
+
+> https://github.com/UnPourTous/react-native-0.51.0/blob/master/Libraries/Components/WebView/WebView.ios.js#L559
+
 现在 Android App大多嵌入了 Android Webview 组件进行 Hybrid 开发，它具备开发周期短、灵活性好的优点，但是缺点也很明显，加载速度慢 & 消耗流量。引起缺点的主要原因如下：
 
   1. js解析效率，以及手机硬件设备的性能
@@ -87,6 +146,84 @@ Platform.OS === 'ios' ? ...
 
 Hybrid App的本质，其实是在原生的 App 中，使用 WebView 作为容器直接承载 Web页面。因此，最核心的点就是 Native端 与 H5端 之间的双向通讯层，其实这里也可以理解为我们需要一套跨语言通讯方案，来完成 Native(Java/Objective-c/...) 与 JavaScript 的通讯。这个方案就是我们所说的 `JSBridge(JS桥接)`，而实现的关键，便是作为容器的 WebView，一切的原理都是基于 WebView 的机制。
 
+## 优势
+
+- 快速更新
+
+一般来说， App 一个功能的上线需要经过漫长流程，版本的发布存在铺量的问题；而 WebView 加载远端页面的方式，远端页面一经发布，立即全量。所以，页面需要频繁更新时可以考虑 WebView 实现。
+
+- 缩小 App 安装包大小
+
+H5 页面是远端资源，能有效减少 App 安装包的大小。
+
+- 页面复用
+
+一次开发，多处运行。新开发的 H5 页面可以在 RN App WebView、微信/QQ的内置浏览器、微信小程序 WebView 等 WebView 组件上运行。页面在 iOS/Android 上都能获得不错表现。
+
+# 原生组件
+
+在 Android 开发中是使用 Kotlin 或 Java 来编写视图；
+
+在 iOS 开发中是使用 Swift 或 Objective-C 来编写视图。
+
+在 React Native 中，则使用 React 组件通过 JavaScript 来调用这些视图。在运行时，React Native 为这些组件创建相应的 Android 和 iOS 视图。
+
+由于 `React Native 组件就是对原生视图的封装`，因此使用 React Native 编写的应用外观、感觉和性能与其他任何原生应用一样。我们将这些平台支持的组件称为原生组件。
+
+# 核心组件
+
+React Native 具有许多核心组件，从表单控件到活动指示器，应有尽有。
+
+# 长列表
+
+React Native 提供了几个适用于展示长列表数据的组件，一般而言我们会选用FlatList或是SectionList。
+
+`FlatList更适于长列表数据，且元素个数可以增删。和ScrollView不同的是，FlatList并不立即渲染所有元素，而是优先渲染屏幕上可见的元素。`
+
+FlatList组件必须的两个属性是data和renderItem。data是列表的数据源，而renderItem则从数据源中逐个解析数据，然后返回一个设定好格式的组件来渲染。
+
+```js
+import React from 'react';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
+
+const styles = StyleSheet.create({
+  container: {
+   flex: 1,
+   paddingTop: 22
+  },
+  item: {
+    padding: 10,
+    fontSize: 18,
+    height: 44,
+  },
+});
+
+const FlatListBasics = () => {
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={[
+          {key: 'Devin'},
+          {key: 'Dan'},
+          {key: 'Dominic'},
+          {key: 'Jackson'},
+          {key: 'James'},
+          {key: 'Joel'},
+          {key: 'John'},
+          {key: 'Jillian'},
+          {key: 'Jimmy'},
+          {key: 'Julie'},
+        ]}
+        renderItem={({item}) => <Text style={styles.item}>{item.key}</Text>}
+      />
+    </View>
+  );
+}
+```
+
+# awesome-react-native
+
+https://github.com/jondot/awesome-react-native
 
 # 使用 Expo 创建项目
 
@@ -145,6 +282,8 @@ const styles = StyleSheet.create({
   },
 });
 ```
+
+`如果要渲染的是一组需要分组的数据，也许还带有分组标签的，那么SectionList将是个不错的选择`
 
 # StatusBar
 
@@ -689,6 +828,51 @@ button.addEventListener('click', () => {
 })
 ```
 
+## 处理 H5 的消息类型
+
+WebView `onMessage`
+
+```js
+onMessage = (event) => {
+  const data = JSON.parse(event.nativeEvent.data)
+  const { type } = data
+  switch (type) {
+    case 'route':
+      // 路由跳转
+      break
+    case 'emitCallback':// h5触发回调
+      const routeParams = this.props?.navigation?.state?.params
+
+      routeParams[callbackName] && routeParams[callbackName](callbackResult)
+      break
+    case 'tel':
+      // 拨打电话
+      break
+    case 'captureCheck':
+      // 检查照相机权限
+      break
+    case 'msg':
+      // 发短信
+      break
+    case 'upload':
+      // 上传图片
+      this.beforeUpload(data)
+      break
+    case 'eventEmit':// 事件监听-触发
+      key && RCTDeviceEventEmitter.emit(key, params)
+      break
+    case 'console':
+      // 控制台输出信息
+      const [ tag, ...restVal ] = val
+      if (typeof tag === 'string' && tag.startsWith('console.')) {
+        const type = tag.replace('console.', '')
+        console[type].call?.(this, ...restVal)
+      } else console.log(...val)
+      break
+  }
+}
+```
+
 ## 自定义 headers, sessions, and cookies
 
 ### Setting Custom Headers
@@ -789,9 +973,445 @@ http
   .listen(port);
 ```
 
+## renderError 渲染错误的 WebView 页面
+
+`renderError` 函数返回一个视图以显示是否存在错误。
+
+`注意`: 渲染错误的容器 `view`，样式需要设置 `height: '100%'`，而不是 `flex: 1`，否则 `错误页面显示不全。`
+
+```jsx
+<WebView
+  originWhitelist={[ '*' ]}
+  source={{
+    uri: 'http://127.0.0.1:1500/components/webview/h5.html'
+  }}
+  renderError={() => {
+    return (
+      <TouchableOpacity style={styles.errorPage}>
+        <Text style={styles.errorContent}>Error Page</Text>
+      </TouchableOpacity>
+    )
+  }}
+/>
+
+const styles = StyleSheet.create({
+  errorPage: {
+    height: '100%', // 注意
+    backgroundColor: '#333',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  errorContent: {
+    textAlign: 'center',
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#fff',
+  }
+})
+```
+
+当出现错误到了错误页面之后，我们可以点击错误页面，刷新 `webview`
+
+```js
+<TouchableOpacity
+  style={styles.errorPage}
+  onPress={() => {
+    // Alert.alert('错误啦，刷新下试试')
+    webviewRef.current?.reload()
+  }}
+>
+  <Text style={styles.errorContent}>Error Page</Text>
+</TouchableOpacity>
+```
+
+我们来给错误页面，加个背景图，并且给背景图设置`透明度`
+
+```js
+renderError={() => {
+  return (
+    <ImageBackground
+      source={require('../../assets/avatar.jpg')}
+      style={styles.errorPage}
+      contentFit='fill'
+      imageStyle={{
+        opacity: 0.5, // 背景图片设置透明度
+      }}
+    >
+      <TouchableOpacity
+        onPress={() => {
+          webviewRef.current?.reload()
+
+          // 或者返回
+
+          props.navigation.goBack()
+        }}
+      >
+        <Text style={styles.errorContent}>Error Page...</Text>
+      </TouchableOpacity>
+    </ImageBackground>
+  )
+}}
+```
+
+效果如下
+
+<img src='../img/webview-error-page.png' width="200" />
+
 # Expo Router
 
 > https://docs.expo.dev/routing/introduction/
+
+# [React Navigation](https://reactnavigation.org/docs/4.x/getting-started)
+
+> React Navigation 版本 > 4.x
+
+建立两个组件 Home 和 HomeDetails
+
+```js
+import { createAppContainer } from 'react-navigation'
+import { createStackNavigator } from 'react-navigation-stack'
+
+const AppNavigator = createStackNavigator({
+  Home: HomeScreen,
+  HomeDetails: HomeDetailsScreen
+})
+export default createAppContainer(AppNavigator)
+```
+
+跳转路由，可以通过组件 props 上的 `this.props.navigation.navigate` 方法
+
+```js
+<Button
+  onPress={() => {
+    this.props.navigation.navigate('HomeDetails')
+  }}
+  title='Home Details'
+/>
+```
+
+完整示例如下：
+
+```js
+import React, { Component } from 'react'
+import { Text, StyleSheet, View, Button } from 'react-native'
+import { createAppContainer } from 'react-navigation'
+import { createStackNavigator } from 'react-navigation-stack'
+
+class HomeDetailsScreen extends React.Component {
+  render() {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text>Details Screen</Text>
+      </View>
+    );
+  }
+}
+
+class HomeScreen extends Component {
+  render() {
+    return (
+      <View>
+        <Text> HomeScreen </Text>
+        <Button
+          onPress={() => {
+            this.props.navigation.navigate('HomeDetails')
+          }}
+          title='Home Details'
+        />
+      </View>
+    )
+  }
+}
+
+const AppNavigator = createStackNavigator({
+  Home: HomeScreen,
+  HomeDetails: HomeDetailsScreen
+})
+
+const styles = StyleSheet.create({})
+
+export default createAppContainer(AppNavigator)
+```
+
+`回退`
+
+```js
+<Button
+  onPress={() => {
+    this.props.navigation.goBack()
+  }}
+  title='Go Back'
+/>
+<Button
+  onPress={() => {
+    this.props.navigation.navigate('Home')
+  }}
+  title='Go Home'
+/>
+```
+
+## 路由参数
+
+`navigate` and `push` accept an optional `second argument` to let you pass parameters to the route you are navigating to. For example: this.props.navigation.navigate('RouteName', {paramName: 'value'}).
+
+```js
+<Button
+  onPress={() => {
+    this.props.navigation.navigate('HomeDetails', {
+      itemId: 86,
+      otherParam: 'anything you want here',
+    })
+  }}
+  title='Home Details'
+/>
+```
+
+目标页面，获取路由参数
+
+```js
+// 方式1
+const { navigation } = this.props;
+navigation.getParam('otherParam', 'default value') // 获取路由的单个参数
+
+// 方式2
+this.props.navigation.state.params // 获取路由的所有参数，如果未指定任何参数，则为 null。
+```
+
+## 设置页面的 Header title
+```js
+class HomeScreen extends React.Component {
+  static navigationOptions = {
+    title: 'Home',
+  };
+
+  /* render function, etc */
+}
+
+class DetailsScreen extends React.Component {
+  static navigationOptions = {
+    title: 'Details',
+  };
+
+  /* render function, etc */
+}
+```
+
+`navigationOptions` 也可以配置成函数，函数的参数是 `navigation`，等同于组件内的 `this.props.navigation`
+
+```js
+static navigationOptions = ({ navigation }) => {
+  return {
+    title: `首页详情 itemId:${navigation.getParam('itemId', '0')}`,
+  }
+}
+```
+
+我们还可以动态的改变路由参数，路由参数变化，会引起组件的重新渲染。
+
+```js
+<Button
+  onPress={() => {
+    this.props.navigation.setParams({
+      itemId: 99
+    })
+  }}
+  title='更新Params'
+/>
+```
+
+## 调整页面 Header 样式
+
+```js
+static navigationOptions = ({ navigation }) => {
+  return {
+    title: `首页详情 itemId:${navigation.getParam('itemId', '0')}`,
+    headerStyle: {
+      backgroundColor: 'pink'
+    },
+    headerTintColor: '#fff', // 文字、返回按钮都会应用此颜色
+    headerTitleStyle: {
+      fontWeight: 'bold',
+      fontSize: 20,
+    },
+  }
+}
+```
+
+## 夸屏幕共享公共的 navigationOptions
+
+我们不希望每个 Header 的样式都不一样，我们可以配置通用的 Header Style
+
+`createStackNavigator` 第二个参数，可以配置通用的 Header style
+
+```js
+const AppNavigator = createStackNavigator(
+  {
+    Home: HomeScreen,
+    Details: DetailsScreen,
+  },
+  {
+    initialRouteName: 'Home',
+    /* The header config from HomeScreen is now here */
+    defaultNavigationOptions: {
+      headerStyle: {
+        backgroundColor: '#f4511e',
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
+    },
+  }
+);
+```
+
+## 自定义 Header Title
+
+```js
+const HomeTitle = () => {
+  return (
+    <Image
+      source={require('../../assets/icon.png')}
+      style={{ width: 50, height: 35 }}
+    />
+  );
+}
+
+class HomeScreen extends React.Component {
+  static navigationOptions = {
+    // headerTitle instead of title
+    // title: () => <HomeTitle />,
+    headerTitle: () => <HomeTitle />,
+  };
+
+  /* render function, etc */
+}
+```
+
+## Header Buttons
+
+```js
+static navigationOptions = {
+  headerTitle: <HomeTitle />,
+  headerRight: () => (
+    <Button
+      onPress={() => alert('This is a button!')}
+      title="Info"
+      color="#000"
+    />
+  ),
+  headerLeft: () => (
+    <Button
+      onPress={() => alert('This is a button!')}
+      title="返回"
+      color="#000"
+    />
+  ),
+}
+```
+
+## 跳转到 H5 页面
+
+我们先定义好 H5 页面（`WebView`），如果 H5 页面中，不想要看到 `Header`，可以单独给 `H5Demo` 配置 `navigationOptions`，其中 `headerShown` 就可以控制 `Header` 的显示隐藏。
+
+想要返回的话，从屏幕左侧向右滑动即可。
+
+
+<img src='../img/injectedJavaScript.png' width='300px' />
+
+```js
+import WebviewDemo from '../webview/webview-demo'
+
+const AppNavigator = createStackNavigator({
+  Home: HomeScreen, // 首页
+  HomeDetails: HomeDetailsScreen, // 首页详情
+  H5Demo: { // H5页面
+    screen: WebviewDemo,
+    navigationOptions: {
+      headerShown: null, // 不显示 header
+    }
+  }
+}, {
+  initialRouteName: 'Home',
+  defaultNavigationOptions: {
+    headerStyle: {
+      backgroundColor: '#fff'
+    },
+    headerTintColor: '#000',
+  }
+})
+```
+
+## H5如何打开 RN 页面？
+
+`其实就是 H5 和 RN 通信的逻辑，只不过是在 RN 侧做了路由的处理`
+
+首先，我们可以在 `injectedJavaScript` 向 Web 端`window对象`注入一个全变量 `isRN`，在 Web 端通过 `window.isRN` 判断当前 Web 页面是不是通过 `RN` 内嵌的。
+
+```js
+const injectedJavaScript = `
+  window.isRN = true;
+  document.body.style.backgroundColor = 'pink';
+  window.sayHello = function() { alert('我是 RN 通过 injectedJavaScript 注入的方法') };
+  true
+`
+
+<WebView
+  source={localH5}
+  onMessage={(event) => {
+    if (event.nativeEvent.data) {
+      const data = JSON.parse(event.nativeEvent.data)
+      console.log('', data)
+    }
+  }}
+  injectedJavaScript={injectedJavaScript}
+/>
+```
+
+localH5.html
+
+H5这边通过 `window.ReactNativeWebView.postMessage` 将路由信息发送到 `RN` 这边，路由信息比如包括 `type: route`、`path: ComponentName`、以及可选的参数
+
+如下示例，表示 H5 页面跳转到 `RN` 的 `HomeDetails` 页面。
+
+```js
+goBackBtn.addEventListener('click', () => {
+  if (window.isRN) {
+    const routeInfo = {
+      type: 'route',
+      path: 'HomeDetails',
+      params: {
+        itemId: 11,
+      }
+    }
+    
+    // 注意：传递的参数是 string 类型
+    window.ReactNativeWebView.postMessage(JSON.stringify(routeInfo))
+  }
+})
+```
+
+RN 这边，通过 `WebView` 的 `onMessage` 函数接收消息，在函数内部通过判断当前参数是不是路由信息，如果是路由信息，则通过 `props` 上的 `navigation` 去操控路由跳转。
+
+```js
+<WebView
+  source={localH5}
+  onMessage={(event) => {
+    if (event.nativeEvent.data) {
+      const data = JSON.parse(event.nativeEvent.data)
+
+      if (data.type === 'route') {
+        props.navigation.navigate(data.path, {
+          itemId: data.query.itemId
+        })
+      }
+    }
+  }}
+  injectedJavaScript={injectedJavaScript}
+/>
+```
+
+
 
 # 参考资料
 [^1]: [Android Webview H5 秒开方案实现](https://juejin.cn/post/6844903673697402887)
