@@ -1664,3 +1664,26 @@ async function sayName() {
 
 sayName().then(res => console.log(res))
 ```
+
+# 迭代器 Symbol.iterator
+
+不改变等式代码，如何让下面这个等式成立？
+
+`let [a, b, c] = { a: 1, b: 2 }`
+
+对象是不具备 `Symbol.iterator` 迭代器工厂函数的，我们可以手动创建一个。
+
+```js
+Object.prototype[Symbol.iterator] = function () {
+  return Object.values(this)[Symbol.iterator]()
+}
+
+let [a, b, c] = { a: 1, b: 2 }
+
+console.log('result ', a, b, c)
+```
+
+解构操作，调用迭代器方法。
+
+
+

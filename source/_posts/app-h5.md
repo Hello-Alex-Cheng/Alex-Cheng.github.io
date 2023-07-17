@@ -789,8 +789,14 @@ http
   .listen(port);
 ```
 
+# Expo Router
+
+> https://docs.expo.dev/routing/introduction/
+
 # 参考资料
 [^1]: [Android Webview H5 秒开方案实现](https://juejin.cn/post/6844903673697402887)
 
 [^2]: [英文 Expo构建App教程](https://www.bilibili.com/video/BV1NT41167zK?p=3&vd_source=a9f38e58a519cc0570c2dacd34ad7ebe)
 > https://github.com/adrianhajdin/project_react_native_jobs/blob/main/README.md
+
+[^3]: [Mosh React Native on Expo](https://www.bilibili.com/video/BV1yi4y137u5/?spm_id_from=333.788.top_right_bar_window_history.content.click&vd_source=a9f38e58a519cc0570c2dacd34ad7ebe)
