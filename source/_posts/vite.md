@@ -287,7 +287,7 @@ app.use(async (ctx) => {
 })
 ```
 
-# css modules
+# css.modules
 
 任何以 .module.css 为后缀名的 CSS 文件都被认为是一个 CSS modules 文件。
 
@@ -346,6 +346,107 @@ interface CSSModulesOptions {
     | 'dashes' // 横杠
     | 'dashesOnly' // 只展示横杠
     | null
+}
+```
+
+# 配置 CSS 预处理器（less、scss）
+
+> https://cn.vitejs.dev/config/shared-options.html#css-preprocessoroptions
+
+`css.preprocessorOptions`
+
+math 可用的四个选项是：
+
+- always（3.x 默认值）- 支持各种形式的运算
+- parens-division （默认 4.0） - 使用 / 运算符不在括号外执行除法（但可以在括号外使用 `./` 运算符进行 "forced" - `./` 已弃用）
+- parens | strict - 所有数学表达式都需要括号。
+- strict-legacy（在 4.0 中删除）- 在某些情况下，如果无法计算表达式的任何部分，则不会计算数学。
+
+
+`设置全局变量`，而不是定义在一个单独的文件里频繁的导入。
+
+```js
+export default defineConfig({
+  css: {
+    preprocessorOptions: {
+      less: {
+        math: 'always', // `任何时候都能计算`,
+        globalVars: {
+          mainColor: 'red' // 全局变量
+        }
+      },
+    },
+  },
+})
+```
+
+使用的时候，依然使用 `@mainColor` 形式。
+
+# css.devSourcemap
+
+在开发过程中是否启用 sourcemap。
+
+默认情况下 `css.devSourcemap` 是 false，我们编写的 css 文件会被编译到 `style` 标签内，并插入到 head 标签中。
+
+如果想要知道我们的 `css`、`less` 文件的原始内容、编写的位置，可以将 `css.devSourcemap` 设置为 true。
+
+# css.postcss
+
+> https://www.npmjs.com/package/postcss-cli
+
+单独使用 `postcss` 来编译 css
+
+`npm i -D postcss postcss-cli`
+
+需要添加 `postcss.config.js` 配置文件
+
+执行命令
+
+```css
+npx postcss input.sss -p sugarss -o output.css -m
+```
+
+
+## [postcss-plugins列表](https://github.com/postcss/postcss/blob/main/docs/plugins.md)
+
+比较常用的 `postcss-preset-env`，它可以将现代 CSS 转换为大多数浏览器都能理解的内容，根据目标浏览器或运行时环境确定所需的填充。和 `babel-preset/env` 一样，它是一套插件的集合。
+
+## postcss 停止处理 less、sass了
+
+less 和 sass 等一系列预处理器的 postcss 插件已经停止维护了，我们需要用 less 或 sass 自己的编译器将代码处理完，编译结果给到 postcss。
+
+所以，业内也说，postcss 是 `后处理器`
+
+不维护的主要原因是，`less` 或 `sass` 经常更新，postcss 官方也必须得跟着更新对应的插件，否则会出现问题。这样一来，就导致维护成本高，postcss 官方也觉得没有必要自己去维护。
+
+目前来说，大多数 less 或 sass 的 postcss plugin 是有社区人员维护的。
+
+# 配置别名 ts 报错问题
+
+导入 `nodejs` 内置模块时可能提示找不到模块，安装 `yarn add @types/node -D`
+
+```js
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, './src')
+    }
+  }
+})
+```
+
+但是导入模块时 ts 提示依然报错，`修改 tsconfig.json`
+
+```json
+{
+  "compilerOptions": {
+    // ...
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
 }
 ```
 

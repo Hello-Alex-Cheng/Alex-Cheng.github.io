@@ -2,6 +2,8 @@ const http = require('http')
 
 const fs = require('fs')
 
+let count = 1
+
 const server = http.createServer((req, res) => {
   // if (req.url === '/') {
   //   const html = fs.readFileSync('index.html')
@@ -31,15 +33,24 @@ const server = http.createServer((req, res) => {
       'Content-Type': 'text/html',
       // 'Location': '/new',
       // 'Content-Security-Policy': "default-src http: https:"
-      'Content-Security-Policy': "default-src \'self\'; report-uri /report"
+      // 'Content-Security-Policy': "default-src \'self\'; report-uri /report"
     })
     const html = fs.readFileSync('index.html')
     res.end(html)
   } else {
     res.writeHead(200, {
-      'Content-Type': 'application/javascript',
+      'Content-Type': 'application/json',
+      'Cache-Control': 'max-age=5, stale-while-revalidate=10'
     })
-    res.end("console.log('javascript loaded')")
+    setTimeout(() => {
+      res.end({
+        count
+      })
+
+      console.log('count  ---- ', count)
+
+      count = count + 1
+    }, 2000);
   }
 
   if (req.url === '/new') {
