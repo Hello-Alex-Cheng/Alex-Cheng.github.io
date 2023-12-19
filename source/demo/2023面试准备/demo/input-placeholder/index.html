@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+    body {
+      background-color:#fff;
+      height: 100%;
+      width: 100%;
+      padding: 50px;
+    }
+    .input-group {
+      position: relative;
+    }
+
+    .input {
+      padding: 10px;
+      background-color: #fff;
+      border-radius: 3px;
+      outline: none;
+      color: #444;
+      border: 1px solid blue;
+    }
+
+    .placeholder {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      font-size: 14px;
+      padding: 0 5px;
+      color: blue;
+      transition: .3s;
+      pointer-events: none;
+    }
+
+    input:focus + .placeholder,
+    input:not(:placeholder-shown) + .placeholder {
+      top: -10px;
+      background-color: #fff;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+  <div class="input-group">
+    <input type="text" class="input" placeholder=" " />
+    <label class="placeholder">
+      Username
+    </label>
+  </div>
+</body>
+</html>
+
