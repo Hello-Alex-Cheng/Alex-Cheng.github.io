@@ -2,9 +2,9 @@
 
 `考点：padding-bottom 的 百分比 使用`
 
-设置成百分比：定义基于父元素宽度的百分比下内边距。
+设置成百分比：定义`基于父元素宽度`的百分比下内边距。
 
-具体来说，当设置 `padding-bottom: 50%` 时，表示元素的 `高度` 被设置为其`宽度的50%`。这样做的效果是，.inner 元素的高度被限制在其宽度的一半，同时保持宽高比为1:2（高度是宽度的一半）。
+具体来说，当元素设置 `padding-bottom: 50%` 时，表示元素的 `高度` 被设置为其`父元素宽度的50%`。这样做的效果是，.inner 元素的高度被限制在其父元素宽度的一半，同时保持宽高比为1:2（高度是宽度的一半）。
 
 ```html
 <style>
@@ -23,14 +23,13 @@
     width: 600px;
     height: 100%;
     background: pink;
-    margin: 0 auto; /* 子元素水平居中 */
+    margin: 0 auto; /* 元素水平居中 */
     display: flex;
     align-items: center; /* 子元素垂直居中 */
   }
 
   .inner {
     width: 100%;
-    height: 0;
     padding-bottom: 50%; /* 定义基于父元素宽度的百分比下内边距 */
     background: #ccc;
   }
@@ -43,6 +42,32 @@
   </div>
 </body>
 ```
+
+防止文本区域上下抖动（图片加载时），通过此方法占位。
+
+```css
+.outer {
+  width: 50%;
+  height: 100%;
+  background: pink;
+  margin: 0 auto;
+}
+
+.inner {
+  width: 100%;
+  padding-bottom: 50%; /* inner 的高度，永远是 outer 元素 width 的一半 */
+  background: #ccc;
+  position: relative;
+}
+
+.inner img {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+```
+
+![Alt text](image.png)
 
 # 三栏布局
 

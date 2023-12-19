@@ -99,6 +99,8 @@ props 的更新，会触发子组件的 componentWillReceiveProps 生命周期�
 本质还是 JS。
 
 > JSX 是 JavaScript 语法扩展，可以让你在 JavaScript 文件中书写类似 HTML 的标签。
+>
+> 代码更简洁，更具有可读性，更贴近 HTML。
 
 React 中 JSX 只是一种表现形式，可以让你以一种更方便的方式动态的创建组件。JSX 最终会被转化成 JS 代码。
 

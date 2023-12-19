@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+    }
+
+    .outer {
+      width: 50%;
+      height: 100%;
+      background: pink;
+      margin: 0 auto;
+    }
+
+    .inner {
+      width: 100%;
+      padding-bottom: 50%; /* 定义基于父元素宽度的百分比下内边距 */
+      background: #ccc;
+      position: relative;
+    }
+
+    .inner img {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+    }
+  </style>
+</head>
+<body>
+  <div class="outer">
+    <div class="inner">
+      <img src="./script-async-defer.png" alt="" />
+    </div>
+    <h1>标题标题标题</h1>
+    <div>
+      <p>我是内容区域</p>
+    </div>
+  </div>
+</body>
+</html>
