@@ -1,0 +1,501 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Hello_AlexCc">
+  <meta name="keywords" content="Full stack engineer">
+  
+    <meta name="description" content="IntersectionObserver接口： 一种异步观察目标元素与其祖先元素或顶级文档视口（viewport）交叉状态的方法。其祖先元素或视口被称为根（root）。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="更优雅的实现[加载更多功能、图片懒加载]">
+<meta property="og:url" content="http://yoursite.com/post/IntersectionObserver.html">
+<meta property="og:site_name" content="Hello_AlexCc">
+<meta property="og:description" content="IntersectionObserver接口： 一种异步观察目标元素与其祖先元素或顶级文档视口（viewport）交叉状态的方法。其祖先元素或视口被称为根（root）。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/img/intersection-observer.png">
+<meta property="article:published_time" content="2023-07-15T13:40:06.000Z">
+<meta property="article:modified_time" content="2024-06-11T08:52:17.162Z">
+<meta property="article:author" content="Hello_AlexCc">
+<meta property="article:tag" content="IntersectionObserver">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://yoursite.com/img/intersection-observer.png">
+  
+  
+  <title>更优雅的实现[加载更多功能、图片懒加载] - Hello_AlexCc</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Hello_AlexCc</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/intersection-observer.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="更优雅的实现[加载更多功能、图片懒加载]">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2023-07-15 21:40" pubdate>
+        2023年7月15日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      6.2k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      52 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">更优雅的实现[加载更多功能、图片懒加载]</h1>
+            
+            <div class="markdown-body">
+              <h1 id="加载更多"><a href="#加载更多" class="headerlink" title="加载更多"></a>加载更多</h1><img src='../img/intersectionObserver-loading.png' />
+
+<p>设置目标元素<code>loading</code>与边界盒交叉的比值 <code>threshold</code>，达到后触发 callback，执行我们的逻辑。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></div></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;intersection-container&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;box&quot;</span> <span class="hljs-attr">v-for</span>=<span class="hljs-string">&quot;(item, idx) in listLength&quot;</span>&gt;</span><br>      &#123;&#123; item &#125;&#125;<br>    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">Loading</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;loading&quot;</span> /&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">setup</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&#x27;ts&#x27;</span>&gt;</span><span class="language-javascript"></span><br><span class="language-javascript"><span class="hljs-keyword">import</span> &#123;ref, onMounted&#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span></span><br><span class="language-javascript"><span class="hljs-keyword">import</span> <span class="hljs-title class_">Loading</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@/components/Loading.vue&#x27;</span>;</span><br><span class="language-javascript"></span><br><span class="language-javascript"><span class="hljs-keyword">const</span> listLength = <span class="hljs-title function_">ref</span>(<span class="hljs-number">10</span>)</span><br><span class="language-javascript"></span><br><span class="language-javascript"><span class="hljs-title function_">onMounted</span>(<span class="hljs-function">() =&gt;</span> &#123;</span><br><span class="language-javascript">  <span class="hljs-keyword">const</span> ob = <span class="hljs-keyword">new</span> <span class="hljs-title class_">IntersectionObserver</span>(<span class="hljs-keyword">function</span>(<span class="hljs-params">entries</span>) &#123;</span><br><span class="language-javascript">    <span class="hljs-keyword">const</span> options = entries[<span class="hljs-number">0</span>]</span><br><span class="language-javascript">    <span class="hljs-comment">// intersectionRatio 为0，表示目标在视野外</span></span><br><span class="language-javascript">    <span class="hljs-comment">// isIntersecting 为 true，表示目标进入视野，为false表示离开视野区域，离开时不执行逻辑</span></span><br><span class="language-javascript">    <span class="hljs-keyword">if</span> (options.<span class="hljs-property">intersectionRatio</span> &lt;= <span class="hljs-number">0</span> &amp;&amp; !options.<span class="hljs-property">isIntersecting</span>) <span class="hljs-keyword">return</span>;</span><br><span class="language-javascript"></span><br><span class="language-javascript">    listLength.<span class="hljs-property">value</span> = listLength.<span class="hljs-property">value</span> + <span class="hljs-number">10</span></span><br><span class="language-javascript">  &#125;, &#123;</span><br><span class="language-javascript">    <span class="hljs-attr">threshold</span>: <span class="hljs-number">0.5</span></span><br><span class="language-javascript">  &#125;)</span><br><span class="language-javascript"></span><br><span class="language-javascript">  <span class="hljs-comment">// 监听目标元素</span></span><br><span class="language-javascript">  ob.<span class="hljs-title function_">observe</span>(<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;.loading&#x27;</span>)!)</span><br><span class="language-javascript">&#125;)</span><br><span class="language-javascript"></span><br><span class="language-javascript"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">style</span> <span class="hljs-attr">scoped</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;less&quot;</span>&gt;</span><span class="language-css"></span><br><span class="language-css"><span class="hljs-selector-class">.intersection-container</span> &#123;</span><br><span class="language-css"></span><br><span class="language-css">  <span class="hljs-attribute">display</span>: flex;</span><br><span class="language-css">  <span class="hljs-attribute">flex-wrap</span>: wrap;</span><br><span class="language-css">  <span class="hljs-attribute">justify-content</span>: flex-start;</span><br><span class="language-css">  <span class="hljs-attribute">width</span>: <span class="hljs-number">100%</span>;</span><br><span class="language-css"></span><br><span class="language-css">  <span class="hljs-selector-class">.box</span> &#123;</span><br><span class="language-css">    <span class="hljs-attribute">width</span>: <span class="hljs-number">20%</span>;</span><br><span class="language-css">    <span class="hljs-attribute">height</span>: <span class="hljs-number">300px</span>;</span><br><span class="language-css">    <span class="hljs-attribute">background-color</span>: black;</span><br><span class="language-css">    <span class="hljs-attribute">flex-shrink</span>: <span class="hljs-number">0</span>;</span><br><span class="language-css">    <span class="hljs-attribute">margin</span>: <span class="hljs-number">20px</span>;</span><br><span class="language-css">    <span class="hljs-attribute">text-align</span>: center;</span><br><span class="language-css">    <span class="hljs-attribute">line-height</span>: <span class="hljs-number">300px</span>;</span><br><span class="language-css">    <span class="hljs-attribute">color</span>: <span class="hljs-number">#fff</span>;</span><br><span class="language-css">    <span class="hljs-attribute">font-size</span>: <span class="hljs-number">24px</span>;</span><br><span class="language-css">    <span class="hljs-attribute">font-weight</span>: bold;</span><br><span class="language-css">  &#125;</span><br><span class="language-css">&#125;</span><br><span class="language-css"></span><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="图片懒加载"><a href="#图片懒加载" class="headerlink" title="图片懒加载"></a>图片懒加载</h1><p>假如页面上要渲染 1000 个图片，当用户一打开页面，可能只显示了 10 个图片，剩余的 990 张图片没有显示在屏幕上，那么这 990 张图片，是完全不需要发起网络请求去加载图片的。</p>
+<img src='../img/lazy-load-img.png' />
+
+<p>源码如下</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;intersection-container&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;box&quot;</span> <span class="hljs-attr">v-for</span>=<span class="hljs-string">&quot;(item, idx) in listLength&quot;</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;img&quot;</span> <span class="hljs-attr">:src</span>=<span class="hljs-string">&quot;vueLogo&quot;</span> <span class="hljs-attr">alt</span>=<span class="hljs-string">&quot;&quot;</span> /&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">setup</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&#x27;ts&#x27;</span>&gt;</span><span class="language-javascript"></span><br><span class="language-javascript"><span class="hljs-keyword">import</span> &#123;ref, onMounted, <span class="hljs-title class_">ImgHTMLAttributes</span>&#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span></span><br><span class="language-javascript"></span><br><span class="language-javascript"><span class="hljs-comment">// 默认的占位图片</span></span><br><span class="language-javascript"><span class="hljs-keyword">import</span> vueLogo <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../assets/imgs/vue.svg&#x27;</span></span><br><span class="language-javascript"></span><br><span class="language-javascript"><span class="hljs-comment">// 渲染100个 img</span></span><br><span class="language-javascript"><span class="hljs-keyword">const</span> listLength = <span class="hljs-title function_">ref</span>(<span class="hljs-number">1000</span>)</span><br><span class="language-javascript"></span><br><span class="language-javascript"><span class="hljs-title function_">onMounted</span>(<span class="hljs-function">() =&gt;</span> &#123;</span><br><span class="language-javascript">  <span class="hljs-comment">// 监听图片是否出现在可视区域</span></span><br><span class="language-javascript">  <span class="hljs-keyword">const</span> imgOb = <span class="hljs-keyword">new</span> <span class="hljs-title class_">IntersectionObserver</span>(<span class="hljs-keyword">function</span>(<span class="hljs-params">entries</span>) &#123;</span><br><span class="language-javascript">    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">const</span> entry <span class="hljs-keyword">of</span> entries) &#123;</span><br><span class="language-javascript">      <span class="hljs-comment">// true 表示进入可视范围内</span></span><br><span class="language-javascript">      <span class="hljs-keyword">if</span> (entry.<span class="hljs-property">isIntersecting</span>) &#123;</span><br><span class="language-javascript">        <span class="hljs-keyword">const</span> img = entry.<span class="hljs-property">target</span>;</span><br><span class="language-javascript">        </span><br><span class="language-javascript">        (img <span class="hljs-keyword">as</span> <span class="hljs-title class_">ImgHTMLAttributes</span>).<span class="hljs-property">src</span> = <span class="hljs-string">`https://picsum.photos/300/500?r=<span class="hljs-subst">$&#123;<span class="hljs-built_in">Math</span>.random()&#125;</span>`</span></span><br><span class="language-javascript"></span><br><span class="language-javascript">        <span class="hljs-comment">// 图片加载后，要取消监听，防止再次修改图片的 src 属性</span></span><br><span class="language-javascript">        imgOb.<span class="hljs-title function_">unobserve</span>(img)</span><br><span class="language-javascript">      &#125;</span><br><span class="language-javascript">    &#125;</span><br><span class="language-javascript">  &#125;, &#123;</span><br><span class="language-javascript">    <span class="hljs-attr">threshold</span>: <span class="hljs-number">0.1</span></span><br><span class="language-javascript">  &#125;)</span><br><span class="language-javascript"></span><br><span class="language-javascript">  <span class="hljs-keyword">const</span> imgs = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.img&#x27;</span>)</span><br><span class="language-javascript">  imgs.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">img</span> =&gt;</span> &#123;</span><br><span class="language-javascript">    imgOb.<span class="hljs-title function_">observe</span>(img)</span><br><span class="language-javascript">  &#125;)</span><br><span class="language-javascript">&#125;)</span><br><span class="language-javascript"></span><br><span class="language-javascript"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">style</span> <span class="hljs-attr">scoped</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;less&quot;</span>&gt;</span><span class="language-css"></span><br><span class="language-css"><span class="hljs-selector-class">.intersection-container</span> &#123;</span><br><span class="language-css"></span><br><span class="language-css">  <span class="hljs-attribute">display</span>: flex;</span><br><span class="language-css">  <span class="hljs-attribute">flex-wrap</span>: wrap;</span><br><span class="language-css">  <span class="hljs-attribute">justify-content</span>: flex-start;</span><br><span class="language-css">  <span class="hljs-attribute">width</span>: <span class="hljs-number">100%</span>;</span><br><span class="language-css"></span><br><span class="language-css">  <span class="hljs-selector-class">.box</span> &#123;</span><br><span class="language-css">    <span class="hljs-attribute">width</span>: <span class="hljs-number">20%</span>;</span><br><span class="language-css">    <span class="hljs-attribute">height</span>: <span class="hljs-number">282.33px</span>;</span><br><span class="language-css">    <span class="hljs-attribute">background-color</span>: black;</span><br><span class="language-css">    <span class="hljs-attribute">flex-shrink</span>: <span class="hljs-number">0</span>;</span><br><span class="language-css">    <span class="hljs-attribute">margin</span>: <span class="hljs-number">20px</span>;</span><br><span class="language-css">    <span class="hljs-attribute">text-align</span>: center;</span><br><span class="language-css">    <span class="hljs-attribute">line-height</span>: <span class="hljs-number">300px</span>;</span><br><span class="language-css">    <span class="hljs-attribute">color</span>: <span class="hljs-number">#fff</span>;</span><br><span class="language-css">    <span class="hljs-attribute">font-size</span>: <span class="hljs-number">24px</span>;</span><br><span class="language-css">    <span class="hljs-attribute">font-weight</span>: bold;</span><br><span class="language-css"></span><br><span class="language-css">    <span class="hljs-selector-tag">img</span> &#123;</span><br><span class="language-css">      <span class="hljs-attribute">width</span>: <span class="hljs-number">100%</span>;</span><br><span class="language-css">    &#125;</span><br><span class="language-css">  &#125;</span><br><span class="language-css">&#125;</span><br><span class="language-css"></span><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="监听-scroll-事件（不推荐了）"><a href="#监听-scroll-事件（不推荐了）" class="headerlink" title="监听 scroll 事件（不推荐了）"></a>监听 scroll 事件（不推荐了）</h2><p>不推荐：<code>scroll</code> 回调函数执行太多次了</p>
+<ol>
+<li><p>使用自定义属性（<code>data-*</code>）来表示图片的 src，浏览器不会处理这个 <code>data-src</code> 的属性值</p>
+</li>
+<li><p>监听 <code>scroll</code>，当图片出现在视图中，将 <code>data-src</code> 赋值给 <code>src</code></p>
+</li>
+</ol>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">v-for</span>=<span class="hljs-string">&quot;item in 10&quot;</span> <span class="hljs-attr">:key</span>=<span class="hljs-string">&quot;item&quot;</span> <span class="hljs-attr">:data-src</span>=<span class="hljs-string">&quot;item + &#x27;.jpg&#x27;&quot;</span> /&gt;</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> imgs = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;img&#x27;</span>)<br><br><span class="hljs-variable language_">window</span>.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;scroll&#x27;</span>, <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<br>  imgs.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">img</span> =&gt;</span> &#123;<br>    <span class="hljs-keyword">const</span> imgTop = img.<span class="hljs-title function_">getBoundingClientRect</span>().<span class="hljs-property">top</span> <span class="hljs-comment">// 图片距离窗口顶部的距离</span><br>    <span class="hljs-keyword">if</span> (imgTop &lt; <span class="hljs-variable language_">window</span>.<span class="hljs-property">innerHeight</span>) &#123;<br>      <span class="hljs-comment">// 表示图片进入到窗口内部了</span><br><br>      <span class="hljs-keyword">const</span> data_src = img.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;data-src&#x27;</span>)<br><br>      img.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;src&#x27;</span>, data_src)<br>    &#125;<br>  &#125;)<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<h1 id="文本动态划线效果"><a href="#文本动态划线效果" class="headerlink" title="文本动态划线效果"></a>文本动态划线效果</h1><img src='../img/dynamic-highlight.gif' />
+
+<p>对于刚进入窗口的 <code>mark</code> 标签，动态划线</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">let</span> observer = <span class="hljs-keyword">new</span> <span class="hljs-title class_">IntersectionObserver</span>(<span class="hljs-function">(<span class="hljs-params">entries, observer</span>) =&gt;</span> &#123;<br>  entries.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">entry</span> =&gt;</span> &#123;<br>    <span class="hljs-keyword">if</span> (entry.<span class="hljs-property">isIntersecting</span>) &#123;<br>      <span class="hljs-comment">// 当 mark 标签进入到可视区域，动态添加类名</span><br>      entry.<span class="hljs-property">target</span>.<span class="hljs-property">classList</span>.<span class="hljs-title function_">add</span>(<span class="hljs-string">&#x27;animate&#x27;</span>)<br>      observer.<span class="hljs-title function_">unobserve</span>(entry.<span class="hljs-property">target</span>)<br>    &#125;<br>  &#125;)<br>&#125;)<br><br><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;mark&#x27;</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">mark</span> =&gt;</span> &#123;<br>  observer.<span class="hljs-title function_">observe</span>(mark)<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>css 部分，添加动画 <code>animation</code></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-tag">html</span> &#123;<br>  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">12px</span>;<br>&#125;<br><br><span class="hljs-selector-tag">body</span> &#123;<br>  <span class="hljs-attribute">font-family</span>: Helvetica;<br>  <span class="hljs-attribute">color</span>: <span class="hljs-number">#333</span>;<br>  <span class="hljs-attribute">width</span>: <span class="hljs-number">60%</span>;<br>  <span class="hljs-attribute">margin</span>: auto;<br>&#125;<br><br><span class="hljs-selector-tag">h1</span> &#123;<br>  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">4rem</span>;<br>  <span class="hljs-attribute">margin</span>: <span class="hljs-number">10rem</span> <span class="hljs-number">0</span> <span class="hljs-number">3rem</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-selector-tag">p</span> &#123;<br>  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">2rem</span>;<br>  <span class="hljs-attribute">line-height</span>: <span class="hljs-number">3.8rem</span>;<br>  <span class="hljs-attribute">margin</span>: <span class="hljs-number">2.6rem</span> <span class="hljs-number">0</span>;<br>  <span class="hljs-attribute">letter-spacing</span>: .<span class="hljs-number">05rem</span>;<br>&#125;<br><br><span class="hljs-selector-tag">mark</span> &#123;<br>  <span class="hljs-attribute">background-color</span>: transparent;<br>  <span class="hljs-attribute">color</span>: inherit;<br>  <span class="hljs-attribute">background-image</span>: <span class="hljs-built_in">linear-gradient</span>(<span class="hljs-number">#73FFA0</span>, <span class="hljs-number">#73FFA0</span>);<br>  <span class="hljs-attribute">background-repeat</span>: no-repeat;<br>  <span class="hljs-attribute">background-size</span>: <span class="hljs-number">0%</span> <span class="hljs-number">38%</span>;<br>  <span class="hljs-attribute">background-position</span>: <span class="hljs-number">0</span> <span class="hljs-number">100%</span>;<br>&#125;<br><br><span class="hljs-selector-tag">mark</span><span class="hljs-selector-class">.animate</span> &#123;<br>  <span class="hljs-attribute">animation</span>: <span class="hljs-number">2s</span> highlight ease-in-out forwards;<br>&#125;<br><br><span class="hljs-keyword">@keyframes</span> highlight &#123;<br>  <span class="hljs-selector-tag">to</span> &#123;<br>    <span class="hljs-attribute">background-size</span>: <span class="hljs-number">100%</span> <span class="hljs-number">38%</span>;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>JavaScript 的歷史及現況<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>1990 年，科學家 Tim Berners-Lee 在互聯網的基礎上發明了萬維網 (World Wide Web)，<span class="hljs-tag">&lt;<span class="hljs-name">mark</span>&gt;</span>World Wide Web 這個詞在互聯網早期經常提到，還一直影響至今，大家記得網址開端一般都是以 www 起首的嗎？就是 World Wide Web 的簡寫。<span class="hljs-tag">&lt;/<span class="hljs-name">mark</span>&gt;</span>發明了 www，從此我們可以在網上互傳檔案。但這個時候的只能通過命令行模式 (Command Mode) 存取網絡，而且只能顯示文字，顯然是不方便的。<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>1992 年史上第一個圖形化的網頁瀏覽器 Mosaic 誕生，1994 年改名為 Netscape Navigator (網景) 並推出 1.0 版本，市場佔有率超過 90%。<span class="hljs-tag">&lt;<span class="hljs-name">mark</span>&gt;</span>由於當時的互聯網速度很慢，而且上網費昂貴，Netscape 公司為了優化瀏覽體驗，覺得有必要研發一套腳本語言，是在瀏覽器端運行的。<span class="hljs-tag">&lt;/<span class="hljs-name">mark</span>&gt;</span>例如我們在一個網站登入會員，忘了填寫用戶名稱就點擊了「登入」，這是候網頁再次載入，才提醒需要填寫用戶名稱，這顯然晚了一點。瀏覽器應該可以在用戶點擊「登入」時就進行初步檢查，在檢查到錯誤時及時彈出提示訊息讓用戶修正。<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Netscape 公司對於這種基於瀏覽器的腳本語言的想法是：功能不需要太強，語法較簡單，容易學習和應用。公司聘請了 Brendan Eich 研發這個腳本語言，<span class="hljs-tag">&lt;<span class="hljs-name">mark</span>&gt;</span>據說他只用了 10 天，就設計好這個語言的第一版<span class="hljs-tag">&lt;/<span class="hljs-name">mark</span>&gt;</span>，最初命名為 Mocha，及後改名為 LiveScript。<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>而據說當時 Sun 公司的 Java 語言相當受歡迎，出於市場推廣的原因，固意將這門語言與 Java 在名義上扯上關係（而實際上幾乎沒有）。Netscape 與 Sun 公司達成「合作協議」允許將 LiveScript 命名為 JavaScript。大家還記得當時有 JavaApplet 這種瀏覽器插件嗎？JavaApplet 是 Sun 公司發展出來，真正使用 Java 語言編寫，在瀏覽器端運行的應用程式，當時期望 JavaScript 的角色是像膠水一樣將各部份連接起來。<span class="hljs-tag">&lt;<span class="hljs-name">mark</span>&gt;</span>後來 JavaApplet 失敗了，JavaScript 卻發揚光大了。<span class="hljs-tag">&lt;/<span class="hljs-name">mark</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>1996 年 JavaScript 隨著 Netscape 2.0 正式推出。<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>1996 年 8 月 Microsoft 仿效 Netscape，於自己的 IE 瀏覽器發展出一門與 JavaScript 相近的腳本語言，取命 JScript。一山不能藏二虎，<span class="hljs-tag">&lt;<span class="hljs-name">mark</span>&gt;</span>Netscape 公司將 JavaScript 提交給 ECMA International（歐洲電腦製造商協會）進行標準化，它就是 ECMAScript。<span class="hljs-tag">&lt;/<span class="hljs-name">mark</span>&gt;</span>不過基於歷史原因及市場原因，大家都習慣用 JavaScript 這個名字而非 ECMAScript。我們現在說的 JavaScript ES5 / ES6 等等，ES 就是 ECMAScript 版本的簡寫，後面的是版本號。<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>ECMAScript 一直持續發展，但由於瀏覽器的支援滯後，在好長一段時間內一直流行 ECMAScript 3。直至 2012 年出現轉捩點，<span class="hljs-tag">&lt;<span class="hljs-name">mark</span>&gt;</span>各大網站開始停止對舊版 IE 瀏覽器的支援<span class="hljs-tag">&lt;/<span class="hljs-name">mark</span>&gt;</span>，以及 Chrome 與 Firefox 等瀏覽器的佔有率開始提升，使得 ECMAScript 5 流行起來。<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>在 2018 年的今天，即使 ECMAScript 6 在瀏覽器端還未正式普及，<span class="hljs-tag">&lt;<span class="hljs-name">mark</span>&gt;</span>但有轉譯工具可以幫助我們今天起就編寫 ES6 的 JavaScript<span class="hljs-tag">&lt;/<span class="hljs-name">mark</span>&gt;</span>，而 Node.js 陣型（如 React Native）使用 ES6 已非常普遍了。<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/IntersectionObserver/">IntersectionObserver</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/post/visibility-change.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">监听浏览器 Tab 切换</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/post/%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F%E6%8E%92%E6%9F%A5%E6%96%B9%E5%BC%8F.html">
+                        <span class="hidden-mobile">内存泄漏排查方式</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    
+      <script type="text/javascript">
+        var disqus_config = function() {
+          this.page.url = 'http://yoursite.com/post/IntersectionObserver.html';
+          this.page.identifier = '/post/IntersectionObserver.html';
+        };
+        Fluid.utils.loadComments('#disqus_thread', function() {
+          var d = document, s = d.createElement('script');
+          s.src = '//' + 'helloalexcc' + '.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', new Date());
+          (d.head || d.body).appendChild(s);
+        });
+      </script>
+    
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hello-alex-cheng.github.io/" target="_blank" rel="nofollow noopener"><span>I</span></a> <i class="iconfont icon-love"></i> <a href="https://hello-alex-cheng.github.io/" target="_blank" rel="nofollow noopener"><span>YOU</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

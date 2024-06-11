@@ -1,0 +1,1 @@
+const dog = 'is dog'

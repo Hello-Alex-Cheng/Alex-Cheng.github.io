@@ -1,0 +1,660 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Hello_AlexCc">
+  <meta name="keywords" content="Full stack engineer">
+  
+    <meta name="description" content="Module在ES6之前，社区制定了一些模块加载方案，最主要的有CommonJS和AMD两种。前者用于服务器，后者用于浏览器。 ES6在语言规格的层面上实现了模块功能，而且实现得相当简单，完全可以取代现有的CommonJS和AMD规范，成为浏览器和服务器通用的模块解决方案。 stage1 文件划分方式，约定每一个 js 文件就是一个独立的模块  12345678910&lt;script src&#x3D;">
+<meta property="og:type" content="website">
+<meta property="og:title" content="page.title">
+<meta property="og:url" content="http://yoursite.com/demo/2023%E9%9D%A2%E8%AF%95%E5%87%86%E5%A4%87/%E6%A8%A1%E5%9D%97%E5%8C%96.html">
+<meta property="og:site_name" content="Hello_AlexCc">
+<meta property="og:description" content="Module在ES6之前，社区制定了一些模块加载方案，最主要的有CommonJS和AMD两种。前者用于服务器，后者用于浏览器。 ES6在语言规格的层面上实现了模块功能，而且实现得相当简单，完全可以取代现有的CommonJS和AMD规范，成为浏览器和服务器通用的模块解决方案。 stage1 文件划分方式，约定每一个 js 文件就是一个独立的模块  12345678910&lt;script src&#x3D;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/demo/2023%E9%9D%A2%E8%AF%95%E5%87%86%E5%A4%87/img/babel.jpg">
+<meta property="og:image" content="http://yoursite.com/demo/2023%E9%9D%A2%E8%AF%95%E5%87%86%E5%A4%87/img/ast.jpg">
+<meta property="article:published_time" content="2024-06-11T08:52:17.488Z">
+<meta property="article:modified_time" content="2024-06-11T08:52:17.488Z">
+<meta property="article:author" content="Hello_AlexCc">
+<meta property="article:tag" content="Full stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://yoursite.com/demo/2023%E9%9D%A2%E8%AF%95%E5%87%86%E5%A4%87/img/babel.jpg">
+  
+  
+  <title>page.title - Hello_AlexCc</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  <header style="height: 60vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Hello_AlexCc</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="page.title">
+              
+            </span>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      <div class="container nopadding-x-md">
+        <div class="py-5" id="board"
+          >
+          
+          <div class="container">
+            <div class="row">
+              <div class="col-12 col-md-10 m-auto">
+                
+
+<article class="page-content">
+  <h1 id="Module"><a href="#Module" class="headerlink" title="Module"></a>Module</h1><p>在ES6之前，社区制定了一些模块加载方案，最主要的有CommonJS和AMD两种。前者用于服务器，后者用于浏览器。</p>
+<p>ES6在语言规格的层面上实现了模块功能，而且实现得相当简单，完全可以取代现有的CommonJS和AMD规范，成为浏览器和服务器通用的模块解决方案。</p>
+<h2 id="stage1"><a href="#stage1" class="headerlink" title="stage1"></a>stage1</h2><blockquote>
+<p>文件划分方式，约定每一个 js 文件就是一个独立的模块</p>
+</blockquote>
+<figure class="highlight html"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;./lib.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;./main.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript"></span><br><span class="language-javascript">  <span class="hljs-comment">// 直接使用导入文件中的变量与方法</span></span><br><span class="language-javascript">  <span class="hljs-title function_">method1</span>()</span><br><span class="language-javascript"></span><br><span class="language-javascript">  <span class="hljs-comment">// 模块成员可以被修改</span></span><br><span class="language-javascript">  count = <span class="hljs-number">2</span></span><br><span class="language-javascript"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>缺点：</p>
+<ol>
+<li>污染全局作用域</li>
+<li>命名冲突</li>
+<li>无法管理模块间的依赖关系</li>
+<li>模块成员可以在外部直接修改</li>
+</ol>
+<h2 id="stage2"><a href="#stage2" class="headerlink" title="stage2"></a>stage2</h2><blockquote>
+<p>命名空间，减少命名冲突</p>
+</blockquote>
+<p>每个文件中，通过一个命名对象来包裹所有的变量和方法</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// module a 相关的数据和方法</span><br><br><span class="hljs-keyword">const</span> moduleA = &#123;<br>  <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;module a&#x27;</span>,<br>  <span class="hljs-attr">count</span>: <span class="hljs-number">1</span>,<br>  <span class="hljs-title function_">incCount</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">count</span> ++<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>缺点：</p>
+<ol>
+<li>污染全局作用域</li>
+<li>无法管理模块间的依赖关系</li>
+<li>模块成员可以在外部直接修改</li>
+</ol>
+<h2 id="stage3"><a href="#stage3" class="headerlink" title="stage3"></a>stage3</h2><blockquote>
+<p>IIFE（立即执行函数）</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs js">;(<span class="hljs-keyword">function</span>(<span class="hljs-params">$</span>)&#123;<br>  <span class="hljs-keyword">const</span> name = <span class="hljs-string">&#x27;moduleA&#x27;</span><br>  <span class="hljs-keyword">let</span> count = <span class="hljs-number">1</span><br>  <span class="hljs-keyword">function</span> <span class="hljs-title function_">incCount</span>(<span class="hljs-params"></span>) &#123;<br>    count++<br>  &#125;<br><br>  <span class="hljs-variable language_">window</span>.<span class="hljs-property">moduleA</span> = &#123;<br>    incCount<br>  &#125;<br>&#125;)(jQuery)<br></code></pre></td></tr></table></figure>
+
+<p>通过闭包的方式，模块内部的变量只能被模块内部修改，外部无法修改。</p>
+<p>通过 IIFE 的传参，我们可以传递一些依赖包给模块使用。</p>
+<h1 id="模块化规范"><a href="#模块化规范" class="headerlink" title="模块化规范"></a>模块化规范</h1><ul>
+<li><p>CommonJS（NodeJS）</p>
+<ol>
+<li>一个文件就是一个模块</li>
+<li>每个模块都有单独的作用域</li>
+<li>通过 module.exports 导出成员</li>
+<li>通过 require 函数加载成员</li>
+</ol>
+</li>
+</ul>
+<p>以同步的方式加载模块，如果放在浏览器中，那么会出现大量的文件请求，有时候并不是立马就需要的文件也会被加载，从而造成性能问题，不适合在浏览器中使用。</p>
+<ul>
+<li><p>AMD（Asyncronous module definition）</p>
+<p>异步的模块定义</p>
+</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 定义一个模块</span><br><span class="hljs-comment">// 第二个参数表示当前模块的依赖项</span><br><span class="hljs-title function_">define</span>(<span class="hljs-string">&#x27;module1&#x27;</span>, [<span class="hljs-string">&#x27;lodash&#x27;</span>, <span class="hljs-string">&#x27;./module2&#x27;</span>], <span class="hljs-keyword">function</span>(<span class="hljs-params"><span class="hljs-string">&#x27;lodash&#x27;</span>, <span class="hljs-string">&#x27;module2&#x27;</span></span>) &#123;<br>  <br>  <span class="hljs-comment">// 导出成员，外部可以方法 start 方法</span><br>  <span class="hljs-keyword">return</span> &#123;<br>    <span class="hljs-attr">start</span>:<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<br>      <span class="hljs-comment">// lodash</span><br><br>      <span class="hljs-title function_">module2</span>()<br>    &#125;<br>  &#125;<br>&#125;)<br><br>  <span class="hljs-comment">// 加载模块</span><br><br>  <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;./module1&#x27;</span>, <span class="hljs-keyword">function</span>(<span class="hljs-params">module1</span>) &#123;<br>    module1.<span class="hljs-title function_">start</span>()<br>  &#125;)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><p>CMD规范（类似 CommonJS）</p>
+</li>
+<li><p>ES Modules（浏览器）</p>
+</li>
+</ul>
+<h1 id="ES6-模块化"><a href="#ES6-模块化" class="headerlink" title="ES6 模块化"></a>ES6 模块化</h1><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;./main.js&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;module&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;module&quot;</span>&gt;</span><span class="language-javascript"></span><br><span class="language-javascript">  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-number">1</span>)</span><br><span class="language-javascript"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>特性：</p>
+<ul>
+<li>ES6的模块自动采用严格模式，不管有没有在模块头部加上＂use strict＂。</li>
+<li>每个 ES Module 都运行在私有作用域中</li>
+<li>ESM 是通过 CORS(跨域) 的方式去请求外部的 JS 资源的。（原 script 标签默认支持跨域）</li>
+<li>ESM 的 script 标签会延迟执行脚本（类似标签的 defer 属性），等待网页渲染完成后，再执行。<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 会比有 type=&quot;module&quot; 的script 先执行</span><br>&lt;script&gt;<br>  <span class="hljs-title function_">alert</span>(<span class="hljs-string">&#x27;hello&#x27;</span>)<br>&lt;/script&gt;<br><br><span class="hljs-comment">// 延迟执行</span><br><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;module&quot;</span>&gt;</span><span class="language-javascript"> <span class="hljs-comment">// 等同于加了 defer 属性</span></span></span><br><span class="language-javascript"><span class="language-xml">  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-number">1</span>)</span></span><br><span class="language-javascript"><span class="language-xml"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span><br></code></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>严格模式主要有以下限制：</p>
+<ul>
+<li>变量必须声明后再使用。</li>
+<li>函数的参数不能有同名属性，否则报错。</li>
+<li>不能使用with语句。</li>
+<li>不能对只读属性赋值，否则报错。</li>
+<li>不能使用前缀0表示八进制数，否则报错。</li>
+<li>不能删除不可删除的属性，否则报错。</li>
+<li>不能删除变量(delete prop)，会报错，只能删除属性(delete global[prop])。</li>
+<li>eval不会在其外层作用域引入变量。</li>
+<li>eval和arguments不能被重新赋值。</li>
+<li>arguments不会自动反映函数参数的变化。</li>
+<li>不能使用arguments.callee。</li>
+<li>不能使用arguments.caller。</li>
+<li>禁止this指向全局对象。</li>
+<li>不能使用fn.caller和fn.arguments获取函数调用的堆栈。</li>
+<li>增加了保留字（比如protected、static和interface）。</li>
+</ul>
+<h2 id="export-amp-import"><a href="#export-amp-import" class="headerlink" title="export &amp; import"></a>export &amp; import</h2><p>模块功能主要由两个命令构成：export和import。</p>
+<p>export命令用于规定模块的对外接口，import命令用于输入其他模块提供的功能。一个模块就是一个独立的文件。该文件内部的所有变量，外部无法获取。</p>
+<p>如果希望外部能够读取模块内部的某个变量，就必须使用export关键字输出该变量。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// test.js</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> myName = <span class="hljs-string">&#x27;Hello_AlexCC&#x27;</span><br><br><span class="hljs-comment">// 组合导出</span><br><span class="hljs-keyword">const</span> myAge = <span class="hljs-number">18</span><br><span class="hljs-keyword">const</span> sayMe = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`my name is <span class="hljs-subst">$&#123;myName&#125;</span>, and I&#x27;m <span class="hljs-subst">$&#123;myAge&#125;</span> years old!`</span>)<br>&#125;<br><br><span class="hljs-keyword">export</span> &#123;<br>  myAge,<br>  sayMe<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>如果在一个模块中先输入后输出同一个模块，import语句可以与export语句写在一起。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">export</span> &#123; sayName <span class="hljs-keyword">as</span> <span class="hljs-keyword">default</span>&#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./someModule&#x27;</span><br><br><span class="hljs-comment">// 等价于</span><br><br><span class="hljs-keyword">import</span> &#123; sayName &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./someModule&#x27;</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> sayName<br></code></pre></td></tr></table></figure>
+
+<p>另外，ES7有一个提案(<a target="_blank" rel="noopener" href="https://github.com/leebyron/ecmascript-more-export-from)，简化先输入后输出的写法，拿掉了输出时的大括号。">https://github.com/leebyron/ecmascript-more-export-from)，简化先输入后输出的写法，拿掉了输出时的大括号。</a></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 提案</span><br><span class="hljs-keyword">export</span> v <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;mod&#x27;</span><br><br><span class="hljs-comment">// 现在</span><br><span class="hljs-keyword">export</span> &#123; v &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;mod&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>import语句会执行所加载的模块</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;lodash&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="模块整体加载"><a href="#模块整体加载" class="headerlink" title="模块整体加载"></a>模块整体加载</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> myModule <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./myModule&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="module-命令"><a href="#module-命令" class="headerlink" title="module 命令"></a>module 命令</h2><p>module命令可以取代import语句，达到整体输入模块的作用。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-variable language_">module</span> myModule <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./myModule&#x27;</span><br><br>myModule.<span class="hljs-title function_">sayName</span>()<br></code></pre></td></tr></table></figure>
+
+<h2 id="动态加载模块"><a href="#动态加载模块" class="headerlink" title="动态加载模块"></a>动态加载模块</h2><p>返回的是 Promise</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-title function_">import</span>(<span class="hljs-string">&#x27;./moduleA.js&#x27;</span>).<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">module</span> =&gt;</span> &#123;<br>  ...<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<h2 id="ES6模块加载的实质"><a href="#ES6模块加载的实质" class="headerlink" title="ES6模块加载的实质"></a>ES6模块加载的实质</h2><p>ES6模块加载的机制与CommonJS模块完全不同。</p>
+<p>CommonJS模块输出的是一个值的拷贝，而ES6模块输出的是 <code>值的引用</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// lib.js</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">let</span> count = <span class="hljs-number">1</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">incCount</span>(<span class="hljs-params"></span>) &#123;<br>  count++<br>&#125;<br><br><span class="hljs-comment">// main.js</span><br><span class="hljs-keyword">import</span> &#123; count, incCount &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./lib.js&#x27;</span><br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(count) <span class="hljs-comment">// 1</span><br><br><span class="hljs-title function_">incCount</span>()<br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(count) <span class="hljs-comment">// 2</span><br></code></pre></td></tr></table></figure>
+
+
+<p>注意加上 type=”module”</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;./main.js&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;module&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="ES-Module-in-NodeJS"><a href="#ES-Module-in-NodeJS" class="headerlink" title="ES Module in NodeJS"></a>ES Module in NodeJS</h2><p>如何在 Nodejs 中使用 ES module!</p>
+<p>有两个步骤：</p>
+<ol>
+<li><code>.js</code> 后缀都改为 <code>.mjs</code></li>
+<li>执行脚本时，加上 <code>node --experimental-modules main.mjs</code></li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// node</span><br><br><span class="hljs-comment">// main.mjs</span><br><span class="hljs-keyword">import</span> fs <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;fs&#x27;</span><br><span class="hljs-keyword">import</span> _ <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;lodash&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>注意事项：</p>
+<ol>
+<li>在 node 环境中，我们可以使用 ES Module 导入 CommonJS 导出的成员</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// commonjs.js</span><br><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = &#123;<br>  <span class="hljs-attr">foo</span>: <span class="hljs-string">&#x27;commonjs exports foo&#x27;</span><br>&#125;<br><br><span class="hljs-comment">// esmodule.js</span><br><span class="hljs-keyword">import</span> mod <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./commonjs.js&#x27;</span><br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(mod.<span class="hljs-property">foo</span>)<br></code></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>在 node 环境中，CommonJS 中<code>不能</code>导入 ES Module 导出的成员</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> mod = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;./esmodule.js&#x27;</span>) <span class="hljs-comment">// 报错</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="CommonJS-与-ES-Module-差异"><a href="#CommonJS-与-ES-Module-差异" class="headerlink" title="CommonJS 与 ES Module 差异"></a>CommonJS 与 ES Module 差异</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// CommonJS</span><br><br><span class="hljs-built_in">require</span> <span class="hljs-comment">// 加载模块函数</span><br><br><span class="hljs-variable language_">module</span> <span class="hljs-comment">// 模块对象</span><br><br><span class="hljs-built_in">exports</span> <span class="hljs-comment">// 导出对象别名 exports.name = &#x27;hello world&#x27;</span><br><br>__filename <span class="hljs-comment">// 当前文件的绝对路径</span><br><br>__dirname <span class="hljs-comment">// 当前文件所在目录</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// ES Module</span><br><br><span class="hljs-keyword">import</span>.<span class="hljs-property">meta</span>.<span class="hljs-property">url</span> <span class="hljs-comment">// 文件路径信息</span><br><br><span class="hljs-comment">// 可以通过内置模块 url 和 path 处理，拿到 __filename 和 __dirname</span><br><span class="hljs-keyword">import</span> &#123; fileURLToPath &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;url&#x27;</span><br><span class="hljs-keyword">import</span> &#123; dirname &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;path&#x27;</span><br><br><span class="hljs-keyword">const</span> __filename = <span class="hljs-title function_">fileURLToPath</span>(<span class="hljs-keyword">import</span>.<span class="hljs-property">meta</span>.<span class="hljs-property">url</span>)<br><span class="hljs-keyword">const</span> __dirname = <span class="hljs-title function_">dirname</span>(__filename)<br></code></pre></td></tr></table></figure>
+
+<h2 id="高版本-NodeJS-已支持-ESM-Version-gt-12-10-0"><a href="#高版本-NodeJS-已支持-ESM-Version-gt-12-10-0" class="headerlink" title="高版本 NodeJS 已支持 ESM (Version &gt; 12.10.0)"></a>高版本 NodeJS 已支持 ESM (Version &gt; 12.10.0)</h2><p>不需要再写 <code>.mjs</code> 结尾了，直接 <code>.js</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// package.json</span><br>&#123;<br>  <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;module&quot;</span><br>&#125;<br><br><span class="hljs-comment">// 执行</span><br>node --experimental-modules main.<span class="hljs-property">js</span> <br></code></pre></td></tr></table></figure>
+
+<p>加上 type module 配置之后，如果我们还想用 <code>CommonJS</code> 规范，发现会报错了。因为我们已经使用了 ESM。</p>
+<p>如果继续使用 <code>CommonJS</code> 规范，那么就需要将 <code>.js</code> 改为 <code>.cjs</code>。</p>
+<h2 id="ESM-in-NodeJS-（babel-兼容方案）"><a href="#ESM-in-NodeJS-（babel-兼容方案）" class="headerlink" title="ESM in NodeJS （babel 兼容方案）"></a>ESM in NodeJS （babel 兼容方案）</h2><blockquote>
+<p>yarn add @babel/node @babel/preset-env –save-dev</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 通过 babel-node 命令执行脚本</span><br>yarn babel-node main.<span class="hljs-property">js</span><br></code></pre></td></tr></table></figure>
+
+<p>要注意的是，<code>babel/core</code> 并不会转换我们的代码，转换代码的工作交给 babel 内置的插件去实现的。也就是说，我们需要一个插件，去转换 ES6 中的一个新特性。</p>
+<img src="./img/babel.jpg" srcset="/img/loading.gif" lazyload />
+
+<p>而 <code>@bable/preset-env</code> 是插件的集合，所以不需要每个插件都安装一遍。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 命令行使用</span><br>yarn babel-node main.<span class="hljs-property">js</span> --presets=@bable/preset-env<br></code></pre></td></tr></table></figure>
+
+<p>结合 babel 配置文件使用</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// .babelrc</span><br>&#123;<br>  <span class="hljs-string">&quot;presets&quot;</span>: [<span class="hljs-string">&quot;@babel/presets-env&quot;</span>]<br>&#125;<br><br>yarn babel-node main.<span class="hljs-property">js</span><br></code></pre></td></tr></table></figure>
+
+<p>既然 <code>@babel/preset-env</code> 是插件的集合，而我不想要那么多，只是想处理 <code>ESM</code> 怎么办呢？</p>
+<p>我们卸载掉 <code>@babel/preset-env</code>，安装 <code>@babel/plugin-transform-modules-commonjs</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// .babelrc</span><br>&#123;<br>  <span class="hljs-string">&quot;presets&quot;</span>: [<span class="hljs-string">&quot;@babel/plugin-transform-modules-commonjs&quot;</span>]<br>&#125;<br><br>yarn babel-node main.<span class="hljs-property">js</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="babel"><a href="#babel" class="headerlink" title="babel"></a>babel</h1><blockquote>
+<p>编译器</p>
+</blockquote>
+<p>主要用于将ES6版本的JS代码转换为ES5等向后兼容的JS代码，从而使代码可以运行在低版本浏览器或其他环境中。</p>
+<blockquote>
+<p>npm install –save-dev babel-core babel-preset-es2015 babel-preset-latest –registry=<a target="_blank" rel="noopener" href="https://registry.npm.taobao.org">https://registry.npm.taobao.org</a></p>
+</blockquote>
+<p>配置文件 <code>.babelrc</code>（或者 babel.config.js || .babelrc.js）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs js">&#123;<br>  <span class="hljs-string">&quot;presets&quot;</span>: [<span class="hljs-string">&quot;es2015&quot;</span>, <span class="hljs-string">&quot;latest&quot;</span>], <span class="hljs-comment">// 安装包的别名，用来处理最新的 ES6 语法</span><br>  <span class="hljs-string">&quot;plugins&quot;</span>: []<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>安装 <code>babel-cli</code>，命令行编译工具，依赖 <code>babel/core</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js">npm install --save-dev babel-cli <br></code></pre></td></tr></table></figure>
+
+<p>查看 babel 版本（npx 是新版 NodeJS 附带的命令）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js">npx babel --version <span class="hljs-comment">// ===== node_modules/.bin/babel --version </span><br><br><span class="hljs-comment">// ====&gt; 6.26.0 (babel-core 6.26.3)</span><br></code></pre></td></tr></table></figure>
+
+<p>到这里，我们就可以使用 babel 来编译js 文件了。创建一个 babel.js 文件，写入一些 es6 的语法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// babel.js</span><br><br><span class="hljs-keyword">const</span> <span class="hljs-title function_">foo</span> = (<span class="hljs-params"></span>) =&gt; &#123;<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">3</span> * <span class="hljs-number">3</span><br>&#125;<br><br><span class="hljs-keyword">const</span> count = <span class="hljs-number">123</span><br></code></pre></td></tr></table></figure>
+
+<p>打开命令行工具：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js">npx babel babel.<span class="hljs-property">js</span> -o compiled.<span class="hljs-property">js</span> <span class="hljs-comment">// 等效 node_modules/.bin/babel babel.js -o compiled.js </span><br></code></pre></td></tr></table></figure>
+
+<p>转化后的结果：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-meta">&quot;use strict&quot;</span>;<br><br><span class="hljs-keyword">var</span> foo = <span class="hljs-keyword">function</span> <span class="hljs-title function_">foo</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">3</span> * <span class="hljs-number">3</span>;<br>&#125;;<br><br><span class="hljs-keyword">var</span> count = <span class="hljs-number">123</span>;<br></code></pre></td></tr></table></figure>
+
+<h2 id="Polyfill"><a href="#Polyfill" class="headerlink" title="Polyfill"></a>Polyfill</h2><p>Babel默认只转换新的JS语法（syntax），而不转换新的API（Promise、Map）。如果只是做语法转换，Promise 是不会被降级的，在低版本的浏览器中可能无法使用。</p>
+<p>引入 Polyfill，为当前环境提供一个“垫片”。所谓“垫片”，是指垫平不同浏览器之间差异的东西。polyfill提供了全局的ES6对象及通过修改原型链Array.prototype等来补充对实例的实现。</p>
+<h2 id="babel-版本"><a href="#babel-版本" class="headerlink" title="babel 版本"></a>babel 版本</h2><p>Babel版本主要是Babel 6和Babel 7这两个版本。</p>
+<p>提到Babel版本的时候，通常指的是@babel/core这个Babel核心包的版本。</p>
+<p>Babel 7的npm包都存放在babel域下，即在安装npm包的时候，我们安装的是名称以@babel/开头的npm包，如@babel/cli、@babel/core等。而在Babel 6中，我们安装的包名是babel-cli、babel-core等以babel-开头的npm包。其实它们本质上是一样的，都是Babel官方提供的cli命令行工具和core核心包。在平时开发和学习的过程中，碰到@babel/和babel-时应该认识到它俩是作用相同、内容接近的包，只是版本不一样而已。</p>
+<h2 id="babel-配置文件"><a href="#babel-配置文件" class="headerlink" title="babel 配置文件"></a>babel 配置文件</h2><blockquote>
+<p>指定编译的规则。</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js">.<span class="hljs-property">babelrc</span> || babel.<span class="hljs-property">config</span>.<span class="hljs-property">js</span> || .<span class="hljs-property">babelrc</span>.<span class="hljs-property">js</span> || package.<span class="hljs-property">json</span>（配置 babel 属性，配置项都是 一样的）<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// package.json</span><br><br>&#123;<br>  ...<br><br>  <span class="hljs-attr">babel</span>: &#123;<br>    <span class="hljs-string">&quot;presets&quot;</span>: [<span class="hljs-string">&quot;es2015&quot;</span>, <span class="hljs-string">&quot;react&quot;</span>],<br>    <span class="hljs-string">&quot;plugin&quot;</span>: [<span class="hljs-string">&quot;transform-class-properties&quot;</span>]<br>  &#125;,<br><br>  ...<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>推荐使用后缀名是js的配置文件来进行配置，因为可以使用该文件做一些逻辑处理，适用性更强。</p>
+<h2 id="插件-amp-预设"><a href="#插件-amp-预设" class="headerlink" title="插件 &amp; 预设"></a>插件 &amp; 预设</h2><p>plugin代表插件，preset代表预设。通常每个插件或预设都是一个npm包。</p>
+<p>Babel的插件实在太多了，假如只配置插件数组，那我们前端工程要把ES2015、ES2016、ES2017……下的所有插件都写到配置项里，这样的Babel配置文件会非常臃肿。</p>
+<p>preset预设就是帮我们解决这个问题的。预设是一组Babel插件的集合，通俗的说法就是插件包，例如babel-preset-es2015就是所有处理ES2015的二十多个Babel插件的集合。这样我们就不用写一大堆插件配置项了，只需要用一个预设代替就可以。另外，预设也可以是插件和其他预设的集合。</p>
+<p>Babel官方已经针对常用的环境做了如下这些preset包。</p>
+<p>1）@babel/preset-env.</p>
+<p>2）@babel/preset-react.</p>
+<p>3）@babel/preset-typescript.</p>
+<p>4）@babel/preset-stage-0.</p>
+<p>5）@babel/preset-stage-1.</p>
+<h2 id="插件与预设的简称"><a href="#插件与预设的简称" class="headerlink" title="插件与预设的简称"></a>插件与预设的简称</h2><p>如果插件的npm包名称的前缀为babel-plugin-，则可以省略其前缀。</p>
+<p>如果npm包名称的前缀带有npm作用域@，如@org/babel-plugin-xxx，则短名称可以写成@org/xxx。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs js">&#123;<br>  <span class="hljs-string">&quot;plugins&quot;</span>: [<span class="hljs-string">&quot;babel-plugin-transform-decorators-legacy&quot;</span>]<br>&#125;<br><br><span class="hljs-comment">// =====</span><br><br>&#123;<br>  <span class="hljs-string">&quot;plugins&quot;</span>: [<span class="hljs-string">&quot;transform-decorators-legacy&quot;</span>]<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>预设的短名称规则与插件的类似，预设npm包名称的前缀为babel-preset-或作用域@xxx/babel-preset-xxx的可以省略掉babel-preset-。</p>
+<h2 id="插件和预设执行顺序"><a href="#插件和预设执行顺序" class="headerlink" title="插件和预设执行顺序"></a>插件和预设执行顺序</h2><p>plugins插件数组和presets预设数组是有顺序要求的。如果两个插件或预设都要处理同一个代码片段，那么会根据插件和预设的顺序来执行。规则如下:</p>
+<p>1）插件比预设先执行。</p>
+<p>2）插件执行顺序是插件数组元素从前向后依次执行。</p>
+<p>3）预设执行顺序是预设数组元素从后向前依次执行。</p>
+<h2 id="预设的选择"><a href="#预设的选择" class="headerlink" title="预设的选择"></a>预设的选择</h2><p>babel-preset-latest，在Babel 6时期，是所有年代preset的集合，在Babel 6最后一个版本中，它是babel-preset-es2015、babel-preset-es2016、babel-preset-es2017的集合。</p>
+<p>@babel/preset-env<code>包含了babel-preset-latest的功能，并对其进行了增强</code>，现在@babel/preset-env完全可以替代babel-preset-latest。</p>
+<p>Babel 6 中是babel-preset-env，Babel 7版本开始，@babel/preset-env。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// babel 6</span><br>npm install babel-preset-env --save-dev<br><br><span class="hljs-comment">// .babelrc</span><br>&#123;<br>  <span class="hljs-string">&quot;presets&quot;</span>: [<span class="hljs-string">&quot;env&quot;</span>]<br>&#125;<br><br><span class="hljs-comment">// babel 7</span><br>npm install @babel/preset-env --save-dev<br><br><span class="hljs-comment">// .babelrc</span><br>&#123;<br>  <span class="hljs-string">&quot;presets&quot;</span>: [<span class="hljs-string">&quot;@babel/env&quot;</span>]<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>总结起来，Babel官方提供的预设，我们实际会用到的其实就只有四个。</p>
+<p>1）@babel/preset-env.</p>
+<p>2）@babel/preset-flow.</p>
+<p>3）@babel/preset-react.</p>
+<p>4）@babel/preset-typescript.</p>
+<h2 id="插件的选择"><a href="#插件的选择" class="headerlink" title="插件的选择"></a>插件的选择</h2><p>Babel 7 官方有九十多个插件，不过其中大多数都已经整合在@babel/preset-env和@babel/preset-react等预设里了，我们在开发的时候直接使用预设就可以。</p>
+<p>目前比较常用的插件只有@babel/plugin-transform-runtime。</p>
+<h2 id="browserslist"><a href="#browserslist" class="headerlink" title="browserslist"></a>browserslist</h2><p>在 package.json 中经常遇到这个配置项：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// package.json</span><br><br>&#123;<br>  <span class="hljs-string">&quot;browserslist&quot;</span>: [<br>    <span class="hljs-string">&quot;&gt; 1%&quot;</span>,<br>    <span class="hljs-string">&quot;not ie &lt;= 8&quot;</span><br>  ]<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>上面配置的含义是，该项目工程的目标环境是市场份额大于1%的浏览器并且不考虑IE 8及以下的IE浏览器。</p>
+<p>browserslist叫作目标环境配置表，除了写在package.json文件里，也可以单独写在工程目录下的.browserslistrc文件里。</p>
+<p>我们写一个含有箭头函数的 js 文件，如果我们在browserslist里指定目标环境是Chrome 60浏览器，再来看一下转换结果:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// package.json</span><br>&#123;<br>  <span class="hljs-string">&quot;browserslist&quot;</span>: [<span class="hljs-string">&quot;chrome 60&quot;</span>]<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>我们发现转换后的代码仍然是箭头函数，因为Chrome 60浏览器已经实现了箭头函数语法，所以不会转换成ES5的函数定义语法。</p>
+<h2 id="babel-runtime"><a href="#babel-runtime" class="headerlink" title="@babel/runtime"></a>@babel/runtime</h2><p>我们写个 js 文件，里面包含 es6 的 class 语法:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Person</span> &#123;<br>  <span class="hljs-title function_">sayName</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-title function_">alert</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>)<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>然后执行 babel 命令，查看转换后的结果 <code>npx babel babel.js -o compiled.js</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-meta">&quot;use strict&quot;</span>;<br><br><span class="hljs-keyword">var</span> _createClass = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123; <span class="hljs-keyword">function</span> <span class="hljs-title function_">defineProperties</span>(<span class="hljs-params">target, props</span>) &#123; <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; props.<span class="hljs-property">length</span>; i++) &#123; <span class="hljs-keyword">var</span> descriptor = props[i]; descriptor.<span class="hljs-property">enumerable</span> = descriptor.<span class="hljs-property">enumerable</span> || <span class="hljs-literal">false</span>; descriptor.<span class="hljs-property">configurable</span> = <span class="hljs-literal">true</span>; <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;value&quot;</span> <span class="hljs-keyword">in</span> descriptor) descriptor.<span class="hljs-property">writable</span> = <span class="hljs-literal">true</span>; <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">defineProperty</span>(target, descriptor.<span class="hljs-property">key</span>, descriptor); &#125; &#125; <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">Constructor, protoProps, staticProps</span>) &#123; <span class="hljs-keyword">if</span> (protoProps) <span class="hljs-title function_">defineProperties</span>(<span class="hljs-title class_">Constructor</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>, protoProps); <span class="hljs-keyword">if</span> (staticProps) <span class="hljs-title function_">defineProperties</span>(<span class="hljs-title class_">Constructor</span>, staticProps); <span class="hljs-keyword">return</span> <span class="hljs-title class_">Constructor</span>; &#125;; &#125;();<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">_classCallCheck</span>(<span class="hljs-params">instance, Constructor</span>) &#123; <span class="hljs-keyword">if</span> (!(instance <span class="hljs-keyword">instanceof</span> <span class="hljs-title class_">Constructor</span>)) &#123; <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">TypeError</span>(<span class="hljs-string">&quot;Cannot call a class as a function&quot;</span>); &#125; &#125;<br><br><span class="hljs-keyword">var</span> <span class="hljs-title class_">Person</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-keyword">function</span> <span class="hljs-title function_">Person</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-title function_">_classCallCheck</span>(<span class="hljs-variable language_">this</span>, <span class="hljs-title class_">Person</span>);<br>  &#125;<br><br>  <span class="hljs-title function_">_createClass</span>(<span class="hljs-title class_">Person</span>, [&#123;<br>    <span class="hljs-attr">key</span>: <span class="hljs-string">&quot;sayName&quot;</span>,<br>    <span class="hljs-attr">value</span>: <span class="hljs-keyword">function</span> <span class="hljs-title function_">sayName</span>(<span class="hljs-params"></span>) &#123;<br>      <span class="hljs-title function_">alert</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);<br>    &#125;<br>  &#125;]);<br><br>  <span class="hljs-keyword">return</span> <span class="hljs-title class_">Person</span>;<br>&#125;();<br></code></pre></td></tr></table></figure>
+
+<p>可以看到，转换后的代码上部增加了好几个函数声明，这些函数是Babel转码时注入的，我们称之为辅助函数。@babel/preset-env在做语法转换的时候，注入了这些函数声明，以便语法转换后使用。</p>
+<p>但这样做存在一个问题。在我们正常地进行前端工程开发的时候，少则有几十个JS文件，多则有上千个。如果每个文件里都使用了class类语法，那么会导致每个转换后的代码上部都会注入这些相同的函数声明。这会导致我们用构建工具打包出来的包体积非常大。</p>
+<p>那么应该怎么办呢？一个思路就是，我们把这些函数声明都放在一个npm包里，需要使用的时候直接从这个包里引入我们的文件。这样即使有上千个文件，也会从相同的包里引入这些函数。使用Webpack这一类的构建工具进行打包时，我们只需要引入一次npm包里的函数，这样就做到了复用，减小了包的体积。</p>
+<p><code>@babel/runtime</code> 就是上面说的这个npm包，<strong>@babel/runtime把所有语法转换会用到的辅助函数都集中在了一起。</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// babbel 6</span><br>npm install babel-runtime --save-dev <span class="hljs-comment">// /node_modules/babel-runtime/helpers/createClass.js</span><br><br><span class="hljs-comment">// babel 7</span><br>npm install @babel/runtime@<span class="hljs-number">7.12</span><span class="hljs-number">.5</span> --save-dev<br></code></pre></td></tr></table></figure>
+
+<p>然后到node_modules目录下看一下这个包的结构，找到 _classCallCheck、_defineProperties与_createClass这三个辅助函数的位置，我们直接引入即可。</p>
+<p>这时，我们就可以替换转换后自动创建的方法，而是使用 @babel/runtime/helpers 中已有的方法。</p>
+<p>不过，这么多辅助函数要一个个记住并手动引入，是很难做到的。这时Babel插件 <code>@babel/plugin-transform-runtime</code> 就可以用来帮我们解决这个问题。</p>
+<h2 id="babel-plugin-transform-runtime"><a href="#babel-plugin-transform-runtime" class="headerlink" title="@babel/plugin-transform-runtime"></a>@babel/plugin-transform-runtime</h2><p>辅助函数的自动引入。</p>
+<p>@babel/plugin-transform-runtime有三大作用，其中之一就是自动移除语法转换后内联的辅助函数（inline Babel helpers），而是使用@babel/runtime/helpers里的辅助函数来替代，这样就减少了我们手动引入的麻烦。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// babel6</span><br>npm install babel-plugin-transform-runtime --save-dev<br><br><span class="hljs-comment">// babel 7</span><br>npm install @babel/plugin-transform-runtime@<span class="hljs-number">7.12</span><span class="hljs-number">.10</span> --save-dev<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js">&#123;<br>  <span class="hljs-string">&quot;plugins&quot;</span>: [<span class="hljs-string">&quot;@babel/plugin-transform-runtime&quot;</span>] <span class="hljs-comment">// babel 6: &quot;babel-plugin-transform-runtime&quot;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>还是上面的例子，我们再看看转换后的结果，会发现插件已经自动帮我们处理了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-meta">&quot;use strict&quot;</span>;<br><br><span class="hljs-keyword">var</span> _classCallCheck2 = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;babel-runtime/helpers/classCallCheck&quot;</span>);<br><br><span class="hljs-keyword">var</span> _classCallCheck3 = <span class="hljs-title function_">_interopRequireDefault</span>(_classCallCheck2);<br><br><span class="hljs-keyword">var</span> _createClass2 = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;babel-runtime/helpers/createClass&quot;</span>);<br><br><span class="hljs-keyword">var</span> _createClass3 = <span class="hljs-title function_">_interopRequireDefault</span>(_createClass2);<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">_interopRequireDefault</span>(<span class="hljs-params">obj</span>) &#123; <span class="hljs-keyword">return</span> obj &amp;&amp; obj.<span class="hljs-property">__esModule</span> ? obj : &#123; <span class="hljs-attr">default</span>: obj &#125;; &#125;<br><br><span class="hljs-keyword">var</span> <span class="hljs-title class_">Person</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-keyword">function</span> <span class="hljs-title function_">Person</span>(<span class="hljs-params"></span>) &#123;<br>    (<span class="hljs-number">0</span>, _classCallCheck3.<span class="hljs-property">default</span>)(<span class="hljs-variable language_">this</span>, <span class="hljs-title class_">Person</span>);<br>  &#125;<br><br>  (<span class="hljs-number">0</span>, _createClass3.<span class="hljs-property">default</span>)(<span class="hljs-title class_">Person</span>, [&#123;<br>    <span class="hljs-attr">key</span>: <span class="hljs-string">&quot;sayName&quot;</span>,<br>    <span class="hljs-attr">value</span>: <span class="hljs-keyword">function</span> <span class="hljs-title function_">sayName</span>(<span class="hljs-params"></span>) &#123;<br>      <span class="hljs-title function_">alert</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);<br>    &#125;<br>  &#125;]);<br>  <span class="hljs-keyword">return</span> <span class="hljs-title class_">Person</span>;<br>&#125;();<br></code></pre></td></tr></table></figure>
+
+<p>实际进行前端开发时，我们除了安装@babel/runtime包，基本也会安装@babel/plugin-transform-runtime这个Babel插件。</p>
+<h1 id="Babel-原理与插件开发"><a href="#Babel-原理与插件开发" class="headerlink" title="Babel 原理与插件开发"></a>Babel 原理与插件开发</h1><p>Babel的转码过程主要由三个阶段组成：解析（parse）、转换（transform）和生成（generate）。这三个阶段分别由@babel/parser、@babel/core和@babel/generator来完成。</p>
+<ol>
+<li><strong>解析阶段</strong></li>
+</ol>
+<p>该阶段由Babel读取源码并生成抽象语法树（AST），该阶段由两部分组成：词法分析与语法分析。</p>
+<p>词法分析会将字符串形式的代码转换成tokens流，语法分析会将tokens流转换成AST。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> name = <span class="hljs-string">&quot;hello AlexCc&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>AST</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs js">-<br>#<span class="hljs-number">1</span><br>  <span class="hljs-attr">type</span>: <span class="hljs-title class_">VariableDeclaration</span><br>  declarations<br>    #<span class="hljs-number">1</span><br>    <span class="hljs-attr">type</span>: <span class="hljs-title class_">VariableDeclarator</span><br>    id<br>      <span class="hljs-attr">type</span>: <span class="hljs-title class_">Identifier</span><br>      <span class="hljs-attr">name</span>: name<br>    init<br>      <span class="hljs-attr">type</span>: <span class="hljs-title class_">Literal</span><br>      <span class="hljs-attr">value</span>: hello <span class="hljs-title class_">AlexCc</span><br>      <span class="hljs-attr">raw</span>: <span class="hljs-string">&quot;hello AlexCc&quot;</span><br>    <span class="hljs-attr">kind</span>: <span class="hljs-keyword">const</span><br></code></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><strong>转换阶段</strong></li>
+</ol>
+<p>完成了解析工作，生成了AST，AST是一个树状的JSON结构。接下来就可以通过Babel插件对该树状结构执行修改操作，修改完成后就得到了新的AST。</p>
+<ol start="3">
+<li><strong>生成阶段</strong></li>
+</ol>
+<p>通过转换阶段的工作，我们得到了新的AST。在生成阶段，我们对AST的树状JSON结构进行还原操作，生成新的JS代码，通常这就是我们需要的ES5代码。</p>
+<h2 id="Babel-插件开发"><a href="#Babel-插件开发" class="headerlink" title="Babel 插件开发"></a>Babel 插件开发</h2><blockquote>
+<p>babel-handbook</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/jamiebuilds/babel-handbook/blob/master/translations/zh-Hans/plugin-handbook.md">https://github.com/jamiebuilds/babel-handbook/blob/master/translations/zh-Hans/plugin-handbook.md</a></p>
+</blockquote>
+<p>开发Babel转码插件的重点是在第二阶段（转换阶段），在这一阶段我们要从AST上找出需要转换的节点，改成我们需要的形式，最后在生成阶段把AST变回JS代码。</p>
+<p>插件模板结构:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params">&#123; types: t &#125;</span>) &#123;<br>  <span class="hljs-keyword">return</span> &#123;<br>    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pluginName&#x27;</span>,<br>    <span class="hljs-attr">visitor</span>: &#123;&#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>假设我们有这样一段代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> dog = <span class="hljs-string">&#x27;is dog&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>现在我想将 dog 变成喵咪。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params">&#123; types: t &#125;</span>) &#123;<br>  <span class="hljs-keyword">return</span> &#123;<br>    <span class="hljs-attr">visitor</span>: &#123;<br>      <span class="hljs-title class_">Identifier</span>(path, state) &#123;<br>        <span class="hljs-keyword">if</span> (path.<span class="hljs-property">node</span>.<span class="hljs-property">name</span> === <span class="hljs-string">&#x27;dog&#x27;</span>) &#123;<br>          path.<span class="hljs-property">node</span>.<span class="hljs-property">name</span> = <span class="hljs-string">&#x27;cat&#x27;</span><br>          path.<span class="hljs-property">parent</span>.<span class="hljs-property">init</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;is cat&#x27;</span><br>        &#125;<br>      &#125;,<br>      <span class="hljs-keyword">var</span><br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>转换后：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> cat = <span class="hljs-string">&#x27;is cat&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+<p>我们编写Babel插件的主要工作就是修改<code>visitor</code>对象，该对象是遍历AST各个节点的方法。</p>
+<p>在上面的插件里，要把变量名dog修改为cat，于是我们修改了visitor.Identifier方法，那我们如何知道要修改的是Identifier方法呢？</p>
+<p>Babel原理里讲过Babel转码的三个阶段：解析阶段、转换阶段和生成阶段，我们编写的Babel插件实际上是在执行第二个阶段（转换阶段）的工作，该工作需要前一个阶段解析工作先完成。在解析阶段，我们得到了转码前代码的AST树状结构信息，该AST上会有Identifier等节点信息，我们编写插件的时候参考该AST的信息即可。</p>
+<img src="./img/ast.jpg" srcset="/img/loading.gif" lazyload />
+
+<p>接着看Identifier方法，可以看到它有两个参数path和state，visitor中的每个方法都接收这两个参数，path代表路径。最后我们判断path上节点信息name是不是dog，是的话把它修改为cat即可。</p>
+<p>同理，我们也可以修改 <code>const</code>、<code>value</code>：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params">&#123; types: t &#125;</span>) &#123;<br>  <span class="hljs-keyword">return</span> &#123;<br>    <span class="hljs-attr">visitor</span>: &#123;<br>      <span class="hljs-title class_">Identifier</span>(path, state) &#123;<br>        path.<span class="hljs-property">node</span>.<span class="hljs-property">name</span> = <span class="hljs-string">&#x27;cat&#x27;</span><br>        path.<span class="hljs-property">parent</span>.<span class="hljs-property">init</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;is cat&#x27;</span><br>      &#125;,<br>      <span class="hljs-title class_">VariableDeclaration</span>(path, state) &#123;<br>        <span class="hljs-keyword">if</span> (path.<span class="hljs-property">node</span>.<span class="hljs-property">kind</span> === <span class="hljs-string">&#x27;const&#x27;</span>) &#123;<br>          path.<span class="hljs-property">node</span>.<span class="hljs-property">kind</span> = <span class="hljs-string">&#x27;let&#x27;</span><br>        &#125;<br>      &#125;,<br>      <span class="hljs-title class_">Literal</span>(path, state) &#123;<br>        <span class="hljs-comment">// 修改 value</span><br>        path.<span class="hljs-property">node</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;is caaat...&#x27;</span><br>      &#125;<br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="插件传参"><a href="#插件传参" class="headerlink" title="插件传参"></a>插件传参</h2><p>给插件传递参数，注意第一个成员变成了数组，数组的第二项是参数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// .babelrc</span><br>&#123;<br>  <span class="hljs-string">&quot;plugins&quot;</span>: [[<span class="hljs-string">&quot;./plugin.js&quot;</span>, &#123;<br>    <span class="hljs-string">&quot;ES5&quot;</span>: <span class="hljs-literal">false</span><br>  &#125;]]<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在插件中，我们可以通过 <code>state.opts</code> 获取到参数：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// plugin.js</span><br><br>...<br><span class="hljs-title class_">VariableDeclaration</span>(path, state) &#123;<br>  <span class="hljs-keyword">if</span> (state.<span class="hljs-property">opts</span>.<span class="hljs-property">ES5</span> === <span class="hljs-literal">true</span> &amp;&amp; [<span class="hljs-string">&#x27;let&#x27;</span>, <span class="hljs-string">&#x27;const&#x27;</span>].<span class="hljs-title function_">includes</span>(path.<span class="hljs-property">node</span>.<span class="hljs-property">kind</span>)) &#123;<br>    path.<span class="hljs-property">node</span>.<span class="hljs-property">kind</span> = <span class="hljs-string">&#x27;var&#x27;</span><br>  &#125;<br>&#125;,<br>...<br></code></pre></td></tr></table></figure>
+
+
+  
+</article>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hello-alex-cheng.github.io/" target="_blank" rel="nofollow noopener"><span>I</span></a> <i class="iconfont icon-love"></i> <a href="https://hello-alex-cheng.github.io/" target="_blank" rel="nofollow noopener"><span>YOU</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

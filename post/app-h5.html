@@ -1,0 +1,802 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Hello_AlexCc">
+  <meta name="keywords" content="Full stack engineer">
+  
+    <meta name="description" content="React Native 、H5移动端开发实践">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React Native">
+<meta property="og:url" content="http://yoursite.com/post/app-h5.html">
+<meta property="og:site_name" content="Hello_AlexCc">
+<meta property="og:description" content="React Native 、H5移动端开发实践">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/img/chicken.jpg">
+<meta property="article:published_time" content="2022-06-09T06:26:40.000Z">
+<meta property="article:modified_time" content="2024-06-11T08:52:17.163Z">
+<meta property="article:author" content="Hello_AlexCc">
+<meta property="article:tag" content="NativeApp webApp HybridApp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://yoursite.com/img/chicken.jpg">
+  
+  
+  <title>React Native - Hello_AlexCc</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Hello_AlexCc</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/chicken.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="React Native">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-06-09 14:26" pubdate>
+        2022年6月9日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      29k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      238 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">React Native</h1>
+            
+            <div class="markdown-body">
+              <h1 id="react-native"><a href="#react-native" class="headerlink" title="react native"></a>react native</h1><p>React Native 是一个使用React和应用平台的原生功能来构建 Android 和 iOS 应用的开源框架。通过 React Native，您可以使用 JavaScript 来访问移动平台的 API，以及使用 React 组件来描述 UI 的外观和行为：一系列可重用、可嵌套的代码。你可以在下一节了解更多关于 React 的信息。但首先，让我们介绍一下组件在 React Native 中是如何工作的。</p>
+<h1 id="react-native-cli"><a href="#react-native-cli" class="headerlink" title="react-native-cli"></a>react-native-cli</h1><p>方便在命令行执行一些命令</p>
+<p><code>npm install -g react-native-cli</code></p>
+<blockquote>
+<p>react-native run-ios</p>
+</blockquote>
+<h1 id="初始化项目"><a href="#初始化项目" class="headerlink" title="初始化项目"></a>初始化项目</h1><ol>
+<li><p>react-native init project-name</p>
+</li>
+<li><p>npx</p>
+</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><pre><code class="hljs js"><span class="hljs-number">1.</span> npx react-native@latest init <span class="hljs-title class_">AwesomeProject</span><br><br><span class="hljs-number">2.</span> npx react-native@X.<span class="hljs-property">XX</span>.<span class="hljs-property">X</span> init <span class="hljs-title class_">AwesomeProject</span> --version X.<span class="hljs-property">XX</span>.<span class="hljs-property">X</span><br></code></pre></td></tr></table></figure>
+
+<p><code>cd AwesomeProject</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js">yarn ios<br><br><span class="hljs-comment">// or</span><br><br>yarn react-native run-ios<br></code></pre></td></tr></table></figure>
+
+<h1 id="Andriod-studio"><a href="#Andriod-studio" class="headerlink" title="Andriod studio"></a>Andriod studio</h1><p>启动 andriod</p>
+<h1 id="Xcode"><a href="#Xcode" class="headerlink" title="Xcode"></a>Xcode</h1><p>启动 ios</p>
+<h1 id="调试-APP"><a href="#调试-APP" class="headerlink" title="调试 APP"></a>调试 APP</h1><p><code>Command + D</code> 打开调试模式，如果无效，也可以通过 <code>Device + Shake</code> 弹出，需要开启的功能如下：</p>
+<ol>
+<li>remote js debugge</li>
+<li>enable hot reloading</li>
+</ol>
+<p>也可以安装 <code>react native debugger.app</code> 来调试</p>
+<h1 id="处理-ios-和-android-兼容性"><a href="#处理-ios-和-android-兼容性" class="headerlink" title="处理 ios 和 android 兼容性"></a>处理 ios 和 android 兼容性</h1><h2 id="特定平台后缀"><a href="#特定平台后缀" class="headerlink" title="特定平台后缀"></a>特定平台后缀</h2><p>方式一，创建指定平台的 <code>入口文件</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js">index.<span class="hljs-property">ios</span>.<span class="hljs-property">js</span><br><br>index.<span class="hljs-property">android</span>.<span class="hljs-property">js</span><br></code></pre></td></tr></table></figure>
+
+<p>某个组件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-title class_">BigButton</span>.<span class="hljs-property">ios</span>.<span class="hljs-property">js</span><br><span class="hljs-title class_">BigButton</span>.<span class="hljs-property">android</span>.<span class="hljs-property">js</span><br></code></pre></td></tr></table></figure>
+
+<p>去掉平台后缀直接引用，<code>React Native 会根据运行平台的不同自动引入正确对应的组件。</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> <span class="hljs-title class_">BigButton</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./BigButton&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+<h2 id="Platform"><a href="#Platform" class="headerlink" title="Platform"></a>Platform</h2><p>适用于细粒度控制兼容性 <code>Platform</code></p>
+<p><code>.OS</code>在 iOS 上会返回ios，而在 Android 设备或模拟器上则会返回android。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> &#123; <span class="hljs-title class_">Platform</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-native&#x27;</span>;<br><br><span class="hljs-title class_">Platform</span>.<span class="hljs-property">OS</span> === <span class="hljs-string">&#x27;ios&#x27;</span> ? ...<br></code></pre></td></tr></table></figure>
+
+<p>还有个实用的方法是 <code>Platform.select()</code>，它可以以 Platform.OS 为 key，从传入的对象中返回对应平台的值</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> &#123;<span class="hljs-title class_">Platform</span>, <span class="hljs-title class_">StyleSheet</span>&#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-native&#x27;</span>;<br><br><span class="hljs-keyword">const</span> styles = <span class="hljs-title class_">StyleSheet</span>.<span class="hljs-title function_">create</span>(&#123;<br>  <span class="hljs-attr">container</span>: &#123;<br>    <span class="hljs-attr">flex</span>: <span class="hljs-number">1</span>,<br>    ...<span class="hljs-title class_">Platform</span>.<span class="hljs-title function_">select</span>(&#123;<br>      <span class="hljs-attr">ios</span>: &#123;<br>        <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;red&#x27;</span>,<br>      &#125;,<br>      <span class="hljs-attr">android</span>: &#123;<br>        <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,<br>      &#125;,<br>    &#125;),<br>  &#125;,<br>&#125;);<br></code></pre></td></tr></table></figure>
+
+<p>这一方法可以接受任何合法类型的参数，因此你也可以直接用它针对不同平台返回不同的组件，像下面这样：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 返回特定平台的 组件</span><br><span class="hljs-keyword">const</span> <span class="hljs-title class_">Component</span> = <span class="hljs-title class_">Platform</span>.<span class="hljs-title function_">select</span>(&#123;<br>  <span class="hljs-attr">ios</span>: <span class="hljs-function">() =&gt;</span> <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;ComponentIOS&#x27;</span>),<br>  <span class="hljs-attr">android</span>: <span class="hljs-function">() =&gt;</span> <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;ComponentAndroid&#x27;</span>),<br>&#125;)();<br><br><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">Component</span> /&gt;</span></span>;<br></code></pre></td></tr></table></figure>
+
+<h1 id="WebView"><a href="#WebView" class="headerlink" title="WebView"></a>WebView</h1><blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/UnPourTous/react-native-0.51.0/blob/master/Libraries/Components/WebView/WebView.ios.js#L559">https://github.com/UnPourTous/react-native-0.51.0/blob/master/Libraries/Components/WebView/WebView.ios.js#L559</a></p>
+</blockquote>
+<p>现在 Android App大多嵌入了 Android Webview 组件进行 Hybrid 开发，它具备开发周期短、灵活性好的优点，但是缺点也很明显，加载速度慢 &amp; 消耗流量。引起缺点的主要原因如下：</p>
+<ol>
+<li>js解析效率，以及手机硬件设备的性能</li>
+<li>页面资源的下载（图片、js文件、css文件）</li>
+</ol>
+<h2 id="安装-react-native-webview"><a href="#安装-react-native-webview" class="headerlink" title="安装 react-native-webview"></a>安装 react-native-webview</h2><p><code>npm install --save react-native-webview</code></p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/react-native-webview/react-native-webview/blob/master/docs/Getting-Started.md">https://github.com/react-native-webview/react-native-webview/blob/master/docs/Getting-Started.md</a></p>
+</blockquote>
+<h1 id="Hybrid技术原理"><a href="#Hybrid技术原理" class="headerlink" title="Hybrid技术原理"></a>Hybrid技术原理</h1><p>Hybrid App的本质，其实是在原生的 App 中，使用 WebView 作为容器直接承载 Web页面。因此，最核心的点就是 Native端 与 H5端 之间的双向通讯层，其实这里也可以理解为我们需要一套跨语言通讯方案，来完成 Native(Java/Objective-c/…) 与 JavaScript 的通讯。这个方案就是我们所说的 <code>JSBridge(JS桥接)</code>，而实现的关键，便是作为容器的 WebView，一切的原理都是基于 WebView 的机制。</p>
+<h2 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h2><ul>
+<li>快速更新</li>
+</ul>
+<p>一般来说， App 一个功能的上线需要经过漫长流程，版本的发布存在铺量的问题；而 WebView 加载远端页面的方式，远端页面一经发布，立即全量。所以，页面需要频繁更新时可以考虑 WebView 实现。</p>
+<ul>
+<li>缩小 App 安装包大小</li>
+</ul>
+<p>H5 页面是远端资源，能有效减少 App 安装包的大小。</p>
+<ul>
+<li>页面复用</li>
+</ul>
+<p>一次开发，多处运行。新开发的 H5 页面可以在 RN App WebView、微信/QQ的内置浏览器、微信小程序 WebView 等 WebView 组件上运行。页面在 iOS/Android 上都能获得不错表现。</p>
+<h1 id="原生组件"><a href="#原生组件" class="headerlink" title="原生组件"></a>原生组件</h1><p>在 Android 开发中是使用 Kotlin 或 Java 来编写视图；</p>
+<p>在 iOS 开发中是使用 Swift 或 Objective-C 来编写视图。</p>
+<p>在 React Native 中，则使用 React 组件通过 JavaScript 来调用这些视图。在运行时，React Native 为这些组件创建相应的 Android 和 iOS 视图。</p>
+<p>由于 <code>React Native 组件就是对原生视图的封装</code>，因此使用 React Native 编写的应用外观、感觉和性能与其他任何原生应用一样。我们将这些平台支持的组件称为原生组件。</p>
+<h1 id="核心组件"><a href="#核心组件" class="headerlink" title="核心组件"></a>核心组件</h1><p>React Native 具有许多核心组件，从表单控件到活动指示器，应有尽有。</p>
+<h1 id="长列表"><a href="#长列表" class="headerlink" title="长列表"></a>长列表</h1><p>React Native 提供了几个适用于展示长列表数据的组件，一般而言我们会选用FlatList或是SectionList。</p>
+<p><code>FlatList更适于长列表数据，且元素个数可以增删。和ScrollView不同的是，FlatList并不立即渲染所有元素，而是优先渲染屏幕上可见的元素。</code></p>
+<p>FlatList组件必须的两个属性是data和renderItem。data是列表的数据源，而renderItem则从数据源中逐个解析数据，然后返回一个设定好格式的组件来渲染。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><span class="hljs-keyword">import</span> &#123; <span class="hljs-title class_">FlatList</span>, <span class="hljs-title class_">StyleSheet</span>, <span class="hljs-title class_">Text</span>, <span class="hljs-title class_">View</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-native&#x27;</span>;<br><br><span class="hljs-keyword">const</span> styles = <span class="hljs-title class_">StyleSheet</span>.<span class="hljs-title function_">create</span>(&#123;<br>  <span class="hljs-attr">container</span>: &#123;<br>   <span class="hljs-attr">flex</span>: <span class="hljs-number">1</span>,<br>   <span class="hljs-attr">paddingTop</span>: <span class="hljs-number">22</span><br>  &#125;,<br>  <span class="hljs-attr">item</span>: &#123;<br>    <span class="hljs-attr">padding</span>: <span class="hljs-number">10</span>,<br>    <span class="hljs-attr">fontSize</span>: <span class="hljs-number">18</span>,<br>    <span class="hljs-attr">height</span>: <span class="hljs-number">44</span>,<br>  &#125;,<br>&#125;);<br><br><span class="hljs-keyword">const</span> <span class="hljs-title function_">FlatListBasics</span> = (<span class="hljs-params"></span>) =&gt; &#123;<br>  <span class="hljs-keyword">return</span> (<br>    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">View</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&#123;styles.container&#125;</span>&gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;<span class="hljs-name">FlatList</span></span></span><br><span class="hljs-tag"><span class="language-xml">        <span class="hljs-attr">data</span>=<span class="hljs-string">&#123;[</span></span></span><br><span class="hljs-tag"><span class="language-xml">          &#123;<span class="hljs-attr">key:</span> &#x27;<span class="hljs-attr">Devin</span>&#x27;&#125;,</span></span><br><span class="hljs-tag"><span class="language-xml">          &#123;<span class="hljs-attr">key:</span> &#x27;<span class="hljs-attr">Dan</span>&#x27;&#125;,</span></span><br><span class="hljs-tag"><span class="language-xml">          &#123;<span class="hljs-attr">key:</span> &#x27;<span class="hljs-attr">Dominic</span>&#x27;&#125;,</span></span><br><span class="hljs-tag"><span class="language-xml">          &#123;<span class="hljs-attr">key:</span> &#x27;<span class="hljs-attr">Jackson</span>&#x27;&#125;,</span></span><br><span class="hljs-tag"><span class="language-xml">          &#123;<span class="hljs-attr">key:</span> &#x27;<span class="hljs-attr">James</span>&#x27;&#125;,</span></span><br><span class="hljs-tag"><span class="language-xml">          &#123;<span class="hljs-attr">key:</span> &#x27;<span class="hljs-attr">Joel</span>&#x27;&#125;,</span></span><br><span class="hljs-tag"><span class="language-xml">          &#123;<span class="hljs-attr">key:</span> &#x27;<span class="hljs-attr">John</span>&#x27;&#125;,</span></span><br><span class="hljs-tag"><span class="language-xml">          &#123;<span class="hljs-attr">key:</span> &#x27;<span class="hljs-attr">Jillian</span>&#x27;&#125;,</span></span><br><span class="hljs-tag"><span class="language-xml">          &#123;<span class="hljs-attr">key:</span> &#x27;<span class="hljs-attr">Jimmy</span>&#x27;&#125;,</span></span><br><span class="hljs-tag"><span class="language-xml">          &#123;<span class="hljs-attr">key:</span> &#x27;<span class="hljs-attr">Julie</span>&#x27;&#125;,</span></span><br><span class="hljs-tag"><span class="language-xml">        ]&#125;</span></span><br><span class="hljs-tag"><span class="language-xml">        <span class="hljs-attr">renderItem</span>=<span class="hljs-string">&#123;(&#123;item&#125;)</span> =&gt;</span> <span class="hljs-tag">&lt;<span class="hljs-name">Text</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&#123;styles.item&#125;</span>&gt;</span>&#123;item.key&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">Text</span>&gt;</span>&#125;</span><br><span class="language-xml">      /&gt;</span><br><span class="language-xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">View</span>&gt;</span></span><br>  );<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h1 id="awesome-react-native"><a href="#awesome-react-native" class="headerlink" title="awesome-react-native"></a>awesome-react-native</h1><p><a target="_blank" rel="noopener" href="https://github.com/jondot/awesome-react-native">https://github.com/jondot/awesome-react-native</a></p>
+<h1 id="使用-Expo-创建项目"><a href="#使用-Expo-创建项目" class="headerlink" title="使用 Expo 创建项目"></a>使用 Expo 创建项目</h1><blockquote>
+<p>Expo官网： <a target="_blank" rel="noopener" href="https://docs.expo.dev/tutorial/create-your-first-app/">https://docs.expo.dev/tutorial/create-your-first-app/</a></p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js">npx create-expo-app <span class="hljs-title class_">StickerSmash</span> &amp;&amp; cd <span class="hljs-title class_">StickerSmash</span><br><br>yarn install<br><br>npx expo install react-dom react-native-web @expo/webpack-config<br></code></pre></td></tr></table></figure>
+
+<h2 id="启动项目"><a href="#启动项目" class="headerlink" title="启动项目"></a>启动项目</h2><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-attr">&quot;scripts&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;start&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;expo start&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;android&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;expo start --android&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;ios&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;expo start --ios&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;web&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;expo start --web&quot;</span><br><span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="手机安装-Expo-Go，实时预览效果"><a href="#手机安装-Expo-Go，实时预览效果" class="headerlink" title="手机安装 Expo Go，实时预览效果"></a>手机安装 Expo Go，实时预览效果</h2><p>启动项目后，控制台会有个二维码，手机使用相机扫码即可打开 <code>Expo Go</code> App，我们修改的代码，也会实时在手机端更新。</p>
+<h1 id="Text"><a href="#Text" class="headerlink" title="Text"></a>Text</h1><p><code>numberOfLines</code> 表示文本需要显示几行，超出的用 <code>省略号表示</code></p>
+<p><code>onLongPress</code> 长按触发事件</p>
+<p><code>onPress</code> 点击触发事件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> &#123; <span class="hljs-title class_">StatusBar</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;expo-status-bar&#x27;</span>;<br><span class="hljs-keyword">import</span> &#123; <span class="hljs-title class_">StyleSheet</span>, <span class="hljs-title class_">Text</span>, <span class="hljs-title class_">View</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-native&#x27;</span>;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">App</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-keyword">return</span> (<br>    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">View</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&#123;styles.container&#125;</span>&gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;<span class="hljs-name">Text</span> <span class="hljs-attr">numberOfLines</span>=<span class="hljs-string">&#123;1&#125;</span> <span class="hljs-attr">onLongPress</span>=<span class="hljs-string">&#123;()</span> =&gt;</span> alert(1)&#125;&gt;First AppFirst AppFirst AppFirst AppFirst AppFirst AppFirst AppFirst AppFirst AppFirst AppFirst App<span class="hljs-tag">&lt;/<span class="hljs-name">Text</span>&gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;<span class="hljs-name">StatusBar</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;auto&quot;</span> /&gt;</span></span><br><span class="language-xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">View</span>&gt;</span></span><br>  );<br>&#125;<br><br><span class="hljs-keyword">const</span> styles = <span class="hljs-title class_">StyleSheet</span>.<span class="hljs-title function_">create</span>(&#123;<br>  <span class="hljs-attr">container</span>: &#123;<br>    <span class="hljs-attr">flex</span>: <span class="hljs-number">1</span>,<br>    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;#fff&#x27;</span>,<br>    <span class="hljs-attr">alignItems</span>: <span class="hljs-string">&#x27;center&#x27;</span>,<br>    <span class="hljs-attr">justifyContent</span>: <span class="hljs-string">&#x27;center&#x27;</span>,<br>  &#125;,<br>&#125;);<br></code></pre></td></tr></table></figure>
+
+<p><code>如果要渲染的是一组需要分组的数据，也许还带有分组标签的，那么SectionList将是个不错的选择</code></p>
+<h1 id="StatusBar"><a href="#StatusBar" class="headerlink" title="StatusBar"></a>StatusBar</h1><blockquote>
+<p><a target="_blank" rel="noopener" href="https://docs.expo.dev/versions/latest/sdk/status-bar/">https://docs.expo.dev/versions/latest/sdk/status-bar/</a></p>
+</blockquote>
+<p>可以控制 StatusBar 显示隐藏、动画之类的</p>
+<img src='../img/status-bar.png' />
+
+<h1 id="ActivityIndicator-loading效果"><a href="#ActivityIndicator-loading效果" class="headerlink" title="ActivityIndicator(loading效果)"></a>ActivityIndicator(loading效果)</h1><p><code>&lt;ActivityIndicator color=&#123;&#39;red&#39;&#125; /&gt;</code></p>
+<h1 id="Image"><a href="#Image" class="headerlink" title="Image"></a>Image</h1><blockquote>
+<p><a target="_blank" rel="noopener" href="https://docs.expo.dev/versions/latest/sdk/image/#image">Image API</a></p>
+</blockquote>
+<p>使用图片的三种方式</p>
+<ul>
+<li><p>引用网络图片</p>
+</li>
+<li><p>通过 import / require 导入本地图片</p>
+</li>
+<li><p>使用 base64 格式的图片</p>
+</li>
+</ul>
+<p><code>安装</code></p>
+<blockquote>
+<p>npx expo install expo-image</p>
+</blockquote>
+<p><code>contentFit</code> 替代了原来的 <code>resizeMode</code></p>
+<p><code>contentFit</code> 确定图像应如何调整大小以适合其容器。这个属性告诉图像以多种方式填充容器，例如“保持纵横比”或“拉伸并尽可能地占用空间”。它反映了 CSS 对象匹配属性。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> &#123; <span class="hljs-title class_">Image</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;expo-image&#x27;</span>;<br><span class="hljs-keyword">import</span> &#123; <span class="hljs-title class_">StyleSheet</span>, <span class="hljs-title class_">View</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-native&#x27;</span>;<br><br><span class="hljs-keyword">const</span> blurhash =<br>  <span class="hljs-string">&#x27;|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM&#123;M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya&#125;j[ayfQa&#123;oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[&#x27;</span>;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">App</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-keyword">return</span> (<br>    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">View</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&#123;styles.container&#125;</span>&gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;<span class="hljs-name">Image</span></span></span><br><span class="hljs-tag"><span class="language-xml">        <span class="hljs-attr">style</span>=<span class="hljs-string">&#123;styles.image&#125;</span></span></span><br><span class="hljs-tag"><span class="language-xml">        <span class="hljs-attr">source</span>=<span class="hljs-string">&quot;https://picsum.photos/seed/696/3000/2000&quot;</span></span></span><br><span class="hljs-tag"><span class="language-xml">        <span class="hljs-attr">placeholder</span>=<span class="hljs-string">&#123;blurhash&#125;</span></span></span><br><span class="hljs-tag"><span class="language-xml">        <span class="hljs-attr">contentFit</span>=<span class="hljs-string">&quot;cover&quot;</span></span></span><br><span class="hljs-tag"><span class="language-xml">        <span class="hljs-attr">transition</span>=<span class="hljs-string">&#123;1000&#125;</span></span></span><br><span class="hljs-tag"><span class="language-xml">      /&gt;</span></span><br><span class="language-xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">View</span>&gt;</span></span><br>  );<br>&#125;<br><br><span class="hljs-keyword">const</span> styles = <span class="hljs-title class_">StyleSheet</span>.<span class="hljs-title function_">create</span>(&#123;<br>  <span class="hljs-attr">container</span>: &#123;<br>    <span class="hljs-attr">flex</span>: <span class="hljs-number">1</span>,<br>    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;#fff&#x27;</span>,<br>    <span class="hljs-attr">alignItems</span>: <span class="hljs-string">&#x27;center&#x27;</span>,<br>    <span class="hljs-attr">justifyContent</span>: <span class="hljs-string">&#x27;center&#x27;</span>,<br>  &#125;,<br>  <span class="hljs-attr">image</span>: &#123;<br>    <span class="hljs-attr">flex</span>: <span class="hljs-number">1</span>,<br>    <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,<br>    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;#0553&#x27;</span>,<br>  &#125;,<br>&#125;);<br></code></pre></td></tr></table></figure>
+
+<p>支持图片加载过程中的几种方法</p>
+<ul>
+<li><p>onLoad</p>
+</li>
+<li><p>onLoadStart</p>
+</li>
+<li><p>onLoadEnd</p>
+</li>
+<li><p>onError</p>
+</li>
+</ul>
+<h1 id="ImageBackground"><a href="#ImageBackground" class="headerlink" title="ImageBackground"></a>ImageBackground</h1><p>背景图的使用</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> &#123; <span class="hljs-title class_">View</span>, <span class="hljs-title class_">Text</span>, <span class="hljs-title class_">StyleSheet</span>, <span class="hljs-title class_">ImageBackground</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-native&#x27;</span><br><span class="hljs-keyword">import</span> &#123; <span class="hljs-title class_">Image</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;expo-image&#x27;</span><br><br><span class="hljs-keyword">const</span> <span class="hljs-title function_">ImageDemo</span> = (<span class="hljs-params"></span>) =&gt; &#123;<br>  <span class="hljs-keyword">return</span> (<br>    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">View</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&#123;styles.container&#125;</span>&gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;<span class="hljs-name">ImageBackground</span></span></span><br><span class="hljs-tag"><span class="language-xml">        <span class="hljs-attr">style</span>=<span class="hljs-string">&#123;styles.image&#125;</span></span></span><br><span class="hljs-tag"><span class="language-xml">        <span class="hljs-attr">source</span>=<span class="hljs-string">&#123;require(</span>&#x27;<span class="hljs-attr">..</span>/<span class="hljs-attr">..</span>/<span class="hljs-attr">assets</span>/<span class="hljs-attr">chrome.jpg</span>&#x27;)&#125;</span></span><br><span class="hljs-tag"><span class="language-xml">      &gt;</span></span><br><span class="language-xml">          <span class="hljs-tag">&lt;<span class="hljs-name">Text</span>&gt;</span>Hello ImageBackground<span class="hljs-tag">&lt;/<span class="hljs-name">Text</span>&gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;/<span class="hljs-name">ImageBackground</span>&gt;</span></span><br><span class="language-xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">View</span>&gt;</span></span><br>  )<br>&#125;<br><br><span class="hljs-keyword">const</span> styles = <span class="hljs-title class_">StyleSheet</span>.<span class="hljs-title function_">create</span>(&#123;<br>  <span class="hljs-attr">container</span>: &#123;<br>    <span class="hljs-attr">flex</span>: <span class="hljs-number">1</span>,<br>    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;#fff&#x27;</span>,<br>  &#125;,<br>  <span class="hljs-attr">image</span>: &#123;<br>    <span class="hljs-attr">flex</span>: <span class="hljs-number">1</span>,<br>    <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,<br>    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;#0553&#x27;</span>,<br>  &#125;,<br>&#125;)<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">ImageDemo</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="ScrollView"><a href="#ScrollView" class="headerlink" title="ScrollView"></a>ScrollView</h1><blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.reactnative.cn/docs/scrollview">https://www.reactnative.cn/docs/scrollview</a></p>
+</blockquote>
+<p>一个封装了平台的 ScrollView（滚动视图）的组件，同时还集成了触摸锁定的“响应者”系统。</p>
+<p>记住 ScrollView 必须有一个确定的高度才能正常工作，因为它实际上所做的就是将一系列不确定高度的子组件装进一个确定高度的容器（通过滚动操作）。</p>
+<p><code>一般来说我们会给 ScrollView 设置flex: 1以使其自动填充父容器的空余空间，但前提条件是所有的父容器本身也设置了 flex 或者指定了高度，否则就会导致无法正常滚动，你可以使用元素查看器来查找具体哪一层高度不正确。</code></p>
+<h2 id="ScrollView和FlatList应该如何选择？"><a href="#ScrollView和FlatList应该如何选择？" class="headerlink" title="ScrollView和FlatList应该如何选择？"></a>ScrollView和FlatList应该如何选择？</h2><p>ScrollView 会简单粗暴地把所有子元素一次性全部渲染出来。其原理浅显易懂，使用上自然也最简单。然而这样简单的渲染逻辑自然带来了性能上的不足。想象一下你有一个特别长的列表需要显示，可能有好几屏的高度。创建和渲染那些屏幕以外的 JS 组件和原生视图，显然对于渲染性能和内存占用都是一种极大的拖累和浪费。</p>
+<p>这就是为什么我们还有专门的FlatList组件。FlatList会惰性渲染子元素，只在它们将要出现在屏幕中时开始渲染。这种惰性渲染逻辑要复杂很多，因而 API 在使用上也更为繁琐。除非你要渲染的数据特别少，否则你都应该尽量使用FlatList，哪怕它们用起来更麻烦。</p>
+<p>此外FlatList还可以方便地渲染行间分隔线，支持多列布局，无限滚动加载等等。</p>
+<h2 id="scrollEventThrottle-节流"><a href="#scrollEventThrottle-节流" class="headerlink" title="scrollEventThrottle(节流)"></a>scrollEventThrottle(节流)</h2><p>这个属性控制在滚动过程中，scroll 事件被调用的频率（单位是 ms，事件触发的间隔时间）。更小的间隔时间能够更及时的跟踪滚动位置，不过可能会带来性能问题，因为更多的信息会通过 bridge 传递。由于 JS 事件循环需要和屏幕刷新率同步，因此设置为 1-16 之间的数值不太可能有实质区别（一般屏幕刷新率为 60 帧，即每帧间隔不低于 16 ms）。默认值为 0，意味着每次视图被滚动，scroll 事件都会被调用。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;<span class="hljs-title class_">ScrollView</span><br>  style=&#123;styles.<span class="hljs-property">container</span>&#125;<br>  horizontal=&#123;<span class="hljs-literal">false</span>&#125; <span class="hljs-comment">// 控制垂直方向滚动、true 表示水平风向滚动</span><br>  onScroll=&#123;<span class="hljs-function">() =&gt;</span> &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;ScrollView scroll ...&#x27;</span>)<br>  &#125;&#125;<br>  scrollEventThrottle=&#123;<span class="hljs-number">1000</span>&#125;<br>&gt;<br>  &#123;<br>    <span class="hljs-keyword">new</span> <span class="hljs-title class_">Array</span>(<span class="hljs-number">10</span>).<span class="hljs-title function_">fill</span>(<span class="hljs-string">&#x27;&#x27;</span>).<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">item, idx</span>) =&gt;</span> &#123;<br>      <span class="hljs-keyword">return</span> (<br>        <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">View</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&#123;styles.box&#125;</span>&gt;</span></span><br><span class="language-xml">          <span class="hljs-tag">&lt;<span class="hljs-name">Text</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&#123;styles.text&#125;</span>&gt;</span> &#123;idx&#125; <span class="hljs-tag">&lt;/<span class="hljs-name">Text</span>&gt;</span></span><br><span class="language-xml">        <span class="hljs-tag">&lt;/<span class="hljs-name">View</span>&gt;</span></span><br>      )<br>    &#125;)<br>  &#125;<br>&lt;/<span class="hljs-title class_">ScrollView</span>&gt;<br></code></pre></td></tr></table></figure>
+
+<h1 id="解决键盘遮挡问题"><a href="#解决键盘遮挡问题" class="headerlink" title="解决键盘遮挡问题"></a>解决键盘遮挡问题</h1><p><code>关键组件</code>: <code>KeyboardAvoidingView</code></p>
+<p>本组件用于解决一个常见的尴尬问题：手机上弹出的键盘常常会挡住当前的视图。本组件可以自动根据键盘的高度，调整自身的 height 或底部的 padding，以避免被遮挡。</p>
+<p><code>关键属性</code>: <code>behavior</code>，可选值为 <code>&#39;height&#39;, &#39;position&#39;, &#39;padding&#39;</code></p>
+<p><code>关键代码</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> &#123; <span class="hljs-title class_">KeyboardAvoidingView</span>, <span class="hljs-title class_">Platform</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-native&#x27;</span><br><br>&lt;<span class="hljs-title class_">KeyboardAvoidingView</span><br>  style=&#123;&#123; <span class="hljs-attr">flex</span>: <span class="hljs-number">1</span> &#125;&#125;<br>  behavior=&#123;<span class="hljs-title class_">Platform</span>.<span class="hljs-property">OS</span> == <span class="hljs-string">&quot;ios&quot;</span> ? <span class="hljs-string">&quot;padding&quot;</span> : <span class="hljs-string">&quot;height&quot;</span>&#125;<br>/&gt;<br></code></pre></td></tr></table></figure>
+
+<p>整体代码如下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span>, &#123; useState &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span><br><span class="hljs-keyword">import</span> &#123;<br>  <span class="hljs-title class_">Text</span>,<br>  <span class="hljs-title class_">StyleSheet</span>,<br>  <span class="hljs-title class_">View</span>,<br>  <span class="hljs-title class_">TextInput</span>,<br>  <span class="hljs-title class_">Switch</span>,<br>  <span class="hljs-title class_">Button</span>,<br>  <span class="hljs-title class_">KeyboardAvoidingView</span>,<br>  <span class="hljs-title class_">Platform</span><br>&#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-native&#x27;</span><br><span class="hljs-keyword">import</span> &#123; <span class="hljs-title class_">Image</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;expo-image&#x27;</span><br><br><span class="hljs-keyword">const</span> <span class="hljs-title function_">index</span> = (<span class="hljs-params"></span>) =&gt; &#123;<br><br>  <span class="hljs-keyword">const</span> [isEnabled, setIsEnabled] = <span class="hljs-title function_">useState</span>(<span class="hljs-literal">false</span>);<br>  <span class="hljs-keyword">const</span> <span class="hljs-title function_">toggleSwitch</span> = (<span class="hljs-params"></span>) =&gt; <span class="hljs-title function_">setIsEnabled</span>(<span class="hljs-function"><span class="hljs-params">previousState</span> =&gt;</span> !previousState);<br><br>  <span class="hljs-keyword">return</span> (<br>    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">KeyboardAvoidingView</span></span></span><br><span class="hljs-tag"><span class="language-xml">      <span class="hljs-attr">style</span>=<span class="hljs-string">&#123;styles.container&#125;</span></span></span><br><span class="hljs-tag"><span class="language-xml">      <span class="hljs-attr">behavior</span>=<span class="hljs-string">&#123;Platform.OS</span> == <span class="hljs-string">&quot;ios&quot;</span> ? &quot;<span class="hljs-attr">padding</span>&quot; <span class="hljs-attr">:</span> &quot;<span class="hljs-attr">height</span>&quot;&#125;</span></span><br><span class="hljs-tag"><span class="language-xml">    &gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;<span class="hljs-name">Image</span></span></span><br><span class="hljs-tag"><span class="language-xml">        <span class="hljs-attr">style</span>=<span class="hljs-string">&#123;&#123;</span> <span class="hljs-attr">width:</span> <span class="hljs-attr">200</span>, <span class="hljs-attr">height:</span> <span class="hljs-attr">200</span>, <span class="hljs-attr">alignSelf:</span> &#x27;<span class="hljs-attr">center</span>&#x27;&#125;&#125;</span></span><br><span class="hljs-tag"><span class="language-xml">        <span class="hljs-attr">source</span>=<span class="hljs-string">&#123;require(</span>&#x27;<span class="hljs-attr">..</span>/<span class="hljs-attr">..</span>/<span class="hljs-attr">assets</span>/<span class="hljs-attr">avatar.jpg</span>&#x27;)&#125;</span></span><br><span class="hljs-tag"><span class="language-xml">      /&gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;<span class="hljs-name">TextInput</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&#123;styles.inputStyle&#125;</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">&#x27;请输入账号&#x27;</span> /&gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;<span class="hljs-name">TextInput</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&#123;styles.inputStyle&#125;</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">&#x27;请输入密码&#x27;</span> /&gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;<span class="hljs-name">Switch</span></span></span><br><span class="hljs-tag"><span class="language-xml">        <span class="hljs-attr">title</span>=<span class="hljs-string">&#x27;记住密码&#x27;</span></span></span><br><span class="hljs-tag"><span class="language-xml">        <span class="hljs-attr">trackColor</span>=<span class="hljs-string">&#123;&#123;</span> <span class="hljs-attr">false:</span> &quot;#<span class="hljs-attr">767577</span>&quot;, <span class="hljs-attr">true:</span> &quot;#<span class="hljs-attr">81b0ff</span>&quot; &#125;&#125; // 卡槽颜色</span></span><br><span class="hljs-tag"><span class="language-xml">        <span class="hljs-attr">thumbColor</span>=<span class="hljs-string">&#123;isEnabled</span> ? &quot;#<span class="hljs-attr">f5dd4b</span>&quot; <span class="hljs-attr">:</span> &quot;#<span class="hljs-attr">f4f3f4</span>&quot;&#125; // 开关上圆形按钮的背景颜色</span></span><br><span class="hljs-tag"><span class="language-xml">        <span class="hljs-attr">onValueChange</span>=<span class="hljs-string">&#123;toggleSwitch&#125;</span></span></span><br><span class="hljs-tag"><span class="language-xml">        <span class="hljs-attr">value</span>=<span class="hljs-string">&#123;isEnabled&#125;</span></span></span><br><span class="hljs-tag"><span class="language-xml">      /&gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;<span class="hljs-name">Button</span> <span class="hljs-attr">title</span>=<span class="hljs-string">&#x27;登录&#x27;</span> <span class="hljs-attr">color</span>=<span class="hljs-string">&quot;#f194ff&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">Button</span>&gt;</span></span><br><span class="language-xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">KeyboardAvoidingView</span>&gt;</span></span><br>  )<br>&#125;<br><br><span class="hljs-keyword">const</span> styles = <span class="hljs-title class_">StyleSheet</span>.<span class="hljs-title function_">create</span>(&#123;<br>  <span class="hljs-attr">container</span>: &#123;<br>    <span class="hljs-attr">flex</span>: <span class="hljs-number">1</span>,<br>    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;#ccc&#x27;</span>,<br>    <span class="hljs-attr">alignItems</span>: <span class="hljs-string">&#x27;center&#x27;</span>,<br>    <span class="hljs-attr">justifyContent</span>: <span class="hljs-string">&#x27;center&#x27;</span><br>  &#125;,<br>  <span class="hljs-attr">inputStyle</span>: &#123;<br>    <span class="hljs-attr">height</span>: <span class="hljs-number">40</span>,<br>    <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,<br>    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;#fff&#x27;</span>,<br>    <span class="hljs-attr">marginTop</span>: <span class="hljs-number">12</span><br>  &#125;<br>&#125;)<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> index<br></code></pre></td></tr></table></figure>
+
+<p>效果如下</p>
+<img src='../img/keyboard-avoiding-view.jpg' width="200px" />
+
+<h1 id="webview"><a href="#webview" class="headerlink" title="webview"></a>webview</h1><ul>
+<li><p><a target="_blank" rel="noopener" href="https://github.com/react-native-webview/react-native-webview/blob/master/docs/Guide.md#react-native-webview-guide">webview 官方文档</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://github.com/react-native-webview/react-native-webview/blob/master/docs/Reference.md">React Native WebView API Reference</a></p>
+</li>
+</ul>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p><code>npx expo install react-native-webview</code></p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>注意，包裹 <code>WebView</code> 组件的容器，必须使用 <code>flex: 1</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> &#123; <span class="hljs-title class_">StyleSheet</span>, <span class="hljs-title class_">SafeAreaView</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-native&#x27;</span>;<br><span class="hljs-keyword">import</span> &#123; <span class="hljs-title class_">WebView</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-native-webview&#x27;</span><br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">App</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-keyword">return</span> (<br>    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">SafeAreaView</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&#123;styles.container&#125;</span>&gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;<span class="hljs-name">WebView</span> <span class="hljs-attr">source</span>=<span class="hljs-string">&#123;&#123;</span></span></span><br><span class="hljs-tag"><span class="language-xml">        <span class="hljs-attr">uri:</span> &#x27;<span class="hljs-attr">https:</span>//<span class="hljs-attr">m.baidu.com</span>&#x27;</span></span><br><span class="hljs-tag"><span class="language-xml">      &#125;&#125; /&gt;</span></span><br><span class="language-xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">SafeAreaView</span>&gt;</span></span><br>  );<br>&#125;<br><br><span class="hljs-keyword">const</span> styles = <span class="hljs-title class_">StyleSheet</span>.<span class="hljs-title function_">create</span>(&#123;<br>  <span class="hljs-attr">container</span>: &#123;<br>    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;pink&#x27;</span>,<br>    <span class="hljs-attr">flex</span>: <span class="hljs-number">1</span> <br>  &#125;<br>&#125;);<br></code></pre></td></tr></table></figure>
+
+<img src='../img/webview-m.baidu.png' height='400px' />
+
+
+<h2 id="显示-HTML"><a href="#显示-HTML" class="headerlink" title="显示 HTML"></a>显示 HTML</h2><p>注意：<code>设置 html 源需要原始 WhiteList 属性设置为[’*’]。</code></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">WebView</span> <span class="hljs-attr">source</span>=<span class="hljs-string">&#123;&#123;</span></span><br><span class="hljs-tag">  <span class="hljs-attr">originWhitelist</span>=<span class="hljs-string">&#123;[</span>&#x27;*&#x27;]&#125;</span><br><span class="hljs-tag">  <span class="hljs-attr">html:</span> &#x27;&lt;<span class="hljs-attr">h1</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">center</span>&gt;</span>Hello webview<span class="hljs-tag">&lt;/<span class="hljs-name">center</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>&#x27;<br>&#125;&#125; /&gt;<br></code></pre></td></tr></table></figure>
+
+<p><code>加载本地 HTML 文件</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span>, &#123;<span class="hljs-title class_">Component</span>&#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><span class="hljs-keyword">import</span> &#123;<span class="hljs-title class_">View</span>, <span class="hljs-title class_">Text</span>, <span class="hljs-title class_">Alert</span>, <span class="hljs-title class_">TextInput</span>, <span class="hljs-title class_">Button</span>&#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-native&#x27;</span>;<br><span class="hljs-keyword">import</span> &#123; <span class="hljs-title class_">WebView</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-native-webview&#x27;</span>;<br><span class="hljs-keyword">const</span> localHtmlFile = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;../assets/test.html&#x27;</span>);<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">LocalPageLoad</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_ inherited__">Component</span>&lt;<span class="hljs-title class_">Props</span>, <span class="hljs-title class_">State</span>&gt; &#123;<br>    <span class="hljs-title function_">render</span>(<span class="hljs-params"></span>) &#123;<br>      <span class="hljs-keyword">return</span> (<br>        <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">View</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&#123;&#123;</span> <span class="hljs-attr">width:</span> &#x27;<span class="hljs-attr">100</span>%&#x27;, <span class="hljs-attr">height:</span> &#x27;<span class="hljs-attr">100</span>%&#x27; &#125;&#125;&gt;</span></span><br><span class="language-xml">          <span class="hljs-tag">&lt;<span class="hljs-name">WebView</span> <span class="hljs-attr">source</span>=<span class="hljs-string">&#123;localHtmlFile&#125;/</span>&gt;</span></span><br><span class="language-xml">        <span class="hljs-tag">&lt;/<span class="hljs-name">View</span>&gt;</span></span><br>      );<br>    &#125;<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="获取-webview-实例"><a href="#获取-webview-实例" class="headerlink" title="获取 webview 实例"></a>获取 webview 实例</h2><p>class 组件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyWeb</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_ inherited__">Component</span> &#123;<br>  webview = <span class="hljs-literal">null</span>;<br><br>  <span class="hljs-title function_">render</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">return</span> (<br>      <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">WebView</span></span></span><br><span class="hljs-tag"><span class="language-xml">        <span class="hljs-attr">ref</span>=<span class="hljs-string">&#123;(ref)</span> =&gt;</span> (this.webview = ref)&#125;</span><br><span class="language-xml">      /&gt;</span><br>    );<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>函数组件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> &#123;createRef&#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span><br><span class="hljs-keyword">import</span> &#123; <span class="hljs-title class_">WebView</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-native-webview&#x27;</span><br><br><br><span class="hljs-keyword">const</span> <span class="hljs-title function_">WebViewDemo</span> = (<span class="hljs-params"></span>) =&gt; &#123;<br>  <span class="hljs-keyword">const</span> webviewRef = <span class="hljs-title function_">createRef</span>()<br><br>  <span class="hljs-comment">// webviewRef.current.stopLoading 阻止加载</span><br><br>  <span class="hljs-keyword">return</span> (<br>    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">WebView</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">&#123;webviewRef&#125;</span> /&gt;</span></span><br>  )<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">WebViewDemo</span><br></code></pre></td></tr></table></figure>
+
+<p><code>useRef</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> webViewRef = <span class="hljs-title function_">useRef</span>(<span class="hljs-literal">null</span>);<br><br><span class="hljs-keyword">if</span> (webViewRef.<span class="hljs-property">current</span>) &#123;<br>  webViewRef.<span class="hljs-property">current</span>.<span class="hljs-title function_">goBack</span>();<br>&#125;<br><br>&lt;<span class="hljs-title class_">WebView</span><br>  ref=&#123;webViewRef&#125;<br>/&gt;<br></code></pre></td></tr></table></figure>
+<h2 id="接入-H5-调试工具-vConsole"><a href="#接入-H5-调试工具-vConsole" class="headerlink" title="接入 H5 调试工具 vConsole"></a>接入 H5 调试工具 <code>vConsole</code></h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://cdn.bootcss.com/vConsole/3.3.0/vconsole.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;script&gt;<br>  <span class="hljs-keyword">const</span> vConsole = <span class="hljs-keyword">new</span> <span class="hljs-title class_">VConsole</span>()<br>&lt;/script&gt;<br></code></pre></td></tr></table></figure>
+
+<h2 id="控制导航状态的更改"><a href="#控制导航状态的更改" class="headerlink" title="控制导航状态的更改"></a>控制导航状态的更改</h2><p>有时候你想拦截一个用户在你的 webview 中点击一个链接，然后做一些不同于在 webview 中导航的事情。我们可以使用 <code>onNavigationStateChange</code> 方法监听。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> <span class="hljs-title function_">WebViewDemo</span> = (<span class="hljs-params"></span>) =&gt; &#123;<br>  <span class="hljs-keyword">const</span> webviewRef = <span class="hljs-title function_">createRef</span>()<br><br>  <span class="hljs-keyword">const</span> <span class="hljs-title function_">onNavigationStateChange</span> = newNavState =&gt; &#123;<br>    <span class="hljs-keyword">const</span> &#123; url &#125; = newNavState<br><br>    <span class="hljs-comment">// 我们可以判断 newNavState.url 中的参数，来决定 webview 的行为</span><br>    <span class="hljs-comment">// 比如，webview 中有一个 PDF 连接，点击之后，我们应该显示 PDF</span><br>    <span class="hljs-keyword">if</span> (url.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;.pdf&#x27;</span>)) &#123;<br>      <span class="hljs-variable language_">this</span>.<span class="hljs-property">webview</span>.<span class="hljs-title function_">stopLoading</span>();<br>      <span class="hljs-comment">// open a modal with the PDF viewer</span><br>      <span class="hljs-title class_">Alert</span>.<span class="hljs-title function_">alert</span>(<span class="hljs-string">&#x27;打开 PDF modal&#x27;</span>)<br>    &#125;<br><br>    <span class="hljs-title class_">Alert</span>.<span class="hljs-title function_">alert</span>(<span class="hljs-string">&#x27;执行其他逻辑!&#x27;</span>)<br>  &#125;<br><br>  <span class="hljs-keyword">return</span> (<br>    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">WebView</span></span></span><br><span class="hljs-tag"><span class="language-xml">      <span class="hljs-attr">ref</span>=<span class="hljs-string">&#123;webviewRef&#125;</span></span></span><br><span class="hljs-tag"><span class="language-xml">      <span class="hljs-attr">source</span>=<span class="hljs-string">&#123;&#123;</span> <span class="hljs-attr">uri:</span> &#x27;<span class="hljs-attr">https:</span>//<span class="hljs-attr">reactnative.dev</span>/&#x27; &#125;&#125;</span></span><br><span class="hljs-tag"><span class="language-xml">      <span class="hljs-attr">onNavigationStateChange</span>=<span class="hljs-string">&#123;onNavigationStateChange&#125;</span></span></span><br><span class="hljs-tag"><span class="language-xml">    /&gt;</span></span><br>  )<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="JS（HTML）与本机之间的通信"><a href="#JS（HTML）与本机之间的通信" class="headerlink" title="JS（HTML）与本机之间的通信"></a>JS（HTML）与本机之间的通信</h2><p>我们需要发送消息到网页浏览加载的网页，也可以接收来自这些网页的消息。</p>
+<p>为此，React NativeWebView 公开了三个不同的选项</p>
+<ol>
+<li>React Native -&gt; Web: The injectedJavaScript prop</li>
+<li>React Native -&gt; Web: The injectJavaScript method</li>
+<li>Web -&gt; React Native: The postMessage method and onMessage prop</li>
+</ol>
+<h2 id="The-injectedJavaScript-prop"><a href="#The-injectedJavaScript-prop" class="headerlink" title="The injectedJavaScript prop"></a>The injectedJavaScript prop</h2><p><code>injectedJavaScript</code> 字符串是一个脚本，首次加载网页后立即执行脚本的内容。它只运行一次，即使页面被重新加载或导航离开。</p>
+<p>下面的代码中，当 webview 加载了 html 页面，首先会将 <code>body</code> 设置为 <code>粉色</code>，同时在 <code>window</code> 对象上挂在一个方法 <code>sayHello</code>。</p>
+<p><code>html</code> 中，我们可以定义一个按钮，点击按钮后，可以调用 <code>window.sayHello</code>。</p>
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p><code>injectedJavaScript</code> 字符串脚本最后，有一个 <code>true</code>，<strong><em>这是必须的，否则有时候你会无声地失败</em></strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// rn component</span><br><span class="hljs-keyword">const</span> injectedJavaScript = <span class="hljs-string">`</span><br><span class="hljs-string">  document.body.style.backgroundColor = &#x27;pink&#x27;;</span><br><span class="hljs-string">  window.sayHello = function() &#123; alert(&#x27;我是 RN 通过 injectedJavaScript 注入的方法&#x27;) &#125;;</span><br><span class="hljs-string">  true;</span><br><span class="hljs-string">`</span><br><br><span class="hljs-keyword">return</span> (<br>  <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">WebView</span></span></span><br><span class="hljs-tag"><span class="language-xml">    <span class="hljs-attr">source</span>=<span class="hljs-string">&#123;localH5&#125;</span></span></span><br><span class="hljs-tag"><span class="language-xml">    <span class="hljs-attr">injectedJavaScript</span>=<span class="hljs-string">&#123;injectedJavaScript&#125;</span></span></span><br><span class="hljs-tag"><span class="language-xml">  /&gt;</span></span><br>)<br><br><span class="hljs-comment">// h5</span><br><span class="hljs-keyword">const</span> button = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;button&#x27;</span>)<br>button.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;click&#x27;</span>, <span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-variable language_">window</span>.<span class="hljs-property">sayHello</span> === <span class="hljs-string">&#x27;function&#x27;</span>) &#123;<br>    <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">sayHello</span>()<br>  &#125;<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<img src='../img/injectedJavaScript.png' width='300px' />
+
+<h2 id="injectedJavaScriptBeforeContentLoaded-prop"><a href="#injectedJavaScriptBeforeContentLoaded-prop" class="headerlink" title="injectedJavaScriptBeforeContentLoaded prop"></a>injectedJavaScriptBeforeContentLoaded prop</h2><p>这是在网页首次加载之前运行的脚本。即使页面重新加载或导航离开，它也只运行一次。</p>
+<p>如果您想在执行 Web 代码之前将任何内容注入到窗口、本地存储或文档中，这非常有用。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs js"><br><span class="hljs-keyword">const</span> runFirst = <span class="hljs-string">`</span><br><span class="hljs-string">  window.isNativeApp = true;</span><br><span class="hljs-string">  true; // note: 这是必须的，否则有时候你会无声地失败</span><br><span class="hljs-string">`</span>;<br><br><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">WebView</span></span></span><br><span class="hljs-tag"><span class="language-xml">  <span class="hljs-attr">source</span>=<span class="hljs-string">&#123;&#123;</span></span></span><br><span class="hljs-tag"><span class="language-xml">    <span class="hljs-attr">uri:</span> &#x27;<span class="hljs-attr">xxx</span>&#x27;,</span></span><br><span class="hljs-tag"><span class="language-xml">  &#125;&#125;</span></span><br><span class="hljs-tag"><span class="language-xml">  <span class="hljs-attr">injectedJavaScriptBeforeContentLoaded</span>=<span class="hljs-string">&#123;runFirst&#125;</span></span></span><br><span class="hljs-tag"><span class="language-xml">/&gt;</span></span><br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>Warning</code>: On Android, this may work, but it is not 100% reliable (see #1609 and #1099).</p>
+</blockquote>
+<h2 id="The-injectJavaScript-method"><a href="#The-injectJavaScript-method" class="headerlink" title="The injectJavaScript method"></a>The injectJavaScript method</h2><p>虽然方便，但是前面提到的 <code>injectedJavaScript</code> prop的缺点是它<code>只运行一次</code>。这就是为什么还在 webview 参考文献中公开了一个名为 <code>injectJavaScript</code> 的方法(<code>注意这个名字稍有不同!</code>).</p>
+<p>如下例子，当首次加载 <code>localH5.html</code> 时，背景色是 <code>粉色</code>，<code>三秒过后，我们通过 webview本身提供的 injectJavaScript 方法，将 html 的背景色改为了 橙色</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> <span class="hljs-title function_">WebViewDemo</span> = (<span class="hljs-params"></span>) =&gt; &#123;<br><br>  <span class="hljs-keyword">const</span> webviewRef = <span class="hljs-title function_">createRef</span>()<br><br>  <span class="hljs-keyword">const</span> injectedJavaScript = <span class="hljs-string">`</span><br><span class="hljs-string">    document.body.style.backgroundColor = &#x27;pink&#x27;;</span><br><span class="hljs-string">    window.sayHello = function() &#123; alert(&#x27;我是 RN 通过 injectedJavaScript 注入的方法&#x27;) &#125;;</span><br><span class="hljs-string">    true</span><br><span class="hljs-string">    `</span><br><br>  <span class="hljs-comment">// 3s 后，localH5.html 的背景色自动改为 `橙色`</span><br>  <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> &#123;<br>    webviewRef.<span class="hljs-property">current</span>.<span class="hljs-title function_">injectJavaScript</span>(<span class="hljs-string">`</span><br><span class="hljs-string">      document.body.style.backgroundColor = &#x27;orange&#x27;;</span><br><span class="hljs-string">    `</span>)<br>  &#125;, <span class="hljs-number">3000</span>)<br><br>  <span class="hljs-keyword">return</span> (<br>    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">WebView</span></span></span><br><span class="hljs-tag"><span class="language-xml">      <span class="hljs-attr">ref</span>=<span class="hljs-string">&#123;webviewRef&#125;</span></span></span><br><span class="hljs-tag"><span class="language-xml">      <span class="hljs-attr">source</span>=<span class="hljs-string">&#123;localH5&#125;</span></span></span><br><span class="hljs-tag"><span class="language-xml">      <span class="hljs-attr">injectedJavaScript</span>=<span class="hljs-string">&#123;injectedJavaScript&#125;</span></span></span><br><span class="hljs-tag"><span class="language-xml">    /&gt;</span></span><br>  )<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>在 iOS 上，injectJavaScript 调用 WebView 的 evaluateJS</p>
+<p>在 Android 上，injectJavaScript 调用 Android WebView 的 evaluateJavascriptWithFallback 方法</p>
+</blockquote>
+<h2 id="window-ReactNativeWebView-postMessage"><a href="#window-ReactNativeWebView-postMessage" class="headerlink" title="window.ReactNativeWebView.postMessage"></a>window.ReactNativeWebView.postMessage</h2><p>web page 可以给 <code>React Native code</code> 发送消息啦!</p>
+<p>你必须设置 webview <code>onMessage</code> 属性，否则<code>window.reactativewebview.postmessage</code>方法将不会被注入到网页中。</p>
+<p>window.ReactNativeWebView.postMessage only accepts one argument which must be a string.</p>
+<p>rn</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;<span class="hljs-title class_">WebView</span><br>  source=&#123;localH5&#125;<br>  onMessage=&#123;<span class="hljs-function"><span class="hljs-params">event</span> =&gt;</span> &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;🔥&#x27;</span>, event.<span class="hljs-property">nativeEvent</span>.<span class="hljs-property">data</span>) <span class="hljs-comment">// 你好 ReactNativeWebview</span><br>  &#125;&#125;<br>/&gt;<br></code></pre></td></tr></table></figure>
+
+<p>localH5.html</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> button = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;button&#x27;</span>)<br>button.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;click&#x27;</span>, <span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-comment">// 给 RN 发送消息</span><br>  <span class="hljs-variable language_">window</span>.<span class="hljs-property">ReactNativeWebView</span>.<span class="hljs-title function_">postMessage</span>(<span class="hljs-string">&#x27;你好 ReactNativeWebview&#x27;</span>)<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<h2 id="处理-H5-的消息类型"><a href="#处理-H5-的消息类型" class="headerlink" title="处理 H5 的消息类型"></a>处理 H5 的消息类型</h2><p>WebView <code>onMessage</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs js">onMessage = <span class="hljs-function">(<span class="hljs-params">event</span>) =&gt;</span> &#123;<br>  <span class="hljs-keyword">const</span> data = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(event.<span class="hljs-property">nativeEvent</span>.<span class="hljs-property">data</span>)<br>  <span class="hljs-keyword">const</span> &#123; type &#125; = data<br>  <span class="hljs-keyword">switch</span> (type) &#123;<br>    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;route&#x27;</span>:<br>      <span class="hljs-comment">// 路由跳转</span><br>      <span class="hljs-keyword">break</span><br>    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;emitCallback&#x27;</span>:<span class="hljs-comment">// h5触发回调</span><br>      <span class="hljs-keyword">const</span> routeParams = <span class="hljs-variable language_">this</span>.<span class="hljs-property">props</span>?.<span class="hljs-property">navigation</span>?.<span class="hljs-property">state</span>?.<span class="hljs-property">params</span><br><br>      routeParams[callbackName] &amp;&amp; routeParams[callbackName](callbackResult)<br>      <span class="hljs-keyword">break</span><br>    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;tel&#x27;</span>:<br>      <span class="hljs-comment">// 拨打电话</span><br>      <span class="hljs-keyword">break</span><br>    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;captureCheck&#x27;</span>:<br>      <span class="hljs-comment">// 检查照相机权限</span><br>      <span class="hljs-keyword">break</span><br>    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;msg&#x27;</span>:<br>      <span class="hljs-comment">// 发短信</span><br>      <span class="hljs-keyword">break</span><br>    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;upload&#x27;</span>:<br>      <span class="hljs-comment">// 上传图片</span><br>      <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">beforeUpload</span>(data)<br>      <span class="hljs-keyword">break</span><br>    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;eventEmit&#x27;</span>:<span class="hljs-comment">// 事件监听-触发</span><br>      key &amp;&amp; <span class="hljs-title class_">RCTDeviceEventEmitter</span>.<span class="hljs-title function_">emit</span>(key, params)<br>      <span class="hljs-keyword">break</span><br>    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;console&#x27;</span>:<br>      <span class="hljs-comment">// 控制台输出信息</span><br>      <span class="hljs-keyword">const</span> [ tag, ...restVal ] = val<br>      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> tag === <span class="hljs-string">&#x27;string&#x27;</span> &amp;&amp; tag.<span class="hljs-title function_">startsWith</span>(<span class="hljs-string">&#x27;console.&#x27;</span>)) &#123;<br>        <span class="hljs-keyword">const</span> type = tag.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;console.&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>)<br>        <span class="hljs-variable language_">console</span>[type].<span class="hljs-property">call</span>?.(<span class="hljs-variable language_">this</span>, ...restVal)<br>      &#125; <span class="hljs-keyword">else</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(...val)<br>      <span class="hljs-keyword">break</span><br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="自定义-headers-sessions-and-cookies"><a href="#自定义-headers-sessions-and-cookies" class="headerlink" title="自定义 headers, sessions, and cookies"></a>自定义 headers, sessions, and cookies</h2><h3 id="Setting-Custom-Headers"><a href="#Setting-Custom-Headers" class="headerlink" title="Setting Custom Headers"></a>Setting Custom Headers</h3><p>自定义 headers</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">WebView</span></span><br><span class="hljs-tag">  <span class="hljs-attr">source</span>=<span class="hljs-string">&#123;&#123;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">uri:</span> &#x27;<span class="hljs-attr">http:</span>//<span class="hljs-attr">example.com</span>&#x27;,</span><br><span class="hljs-tag">    <span class="hljs-attr">headers:</span> &#123;</span><br><span class="hljs-tag">      &#x27;<span class="hljs-attr">my-custom-header-key</span>&#x27;<span class="hljs-attr">:</span> &#x27;<span class="hljs-attr">my-custom-header-value</span>&#x27;,</span><br><span class="hljs-tag">    &#125;,</span><br><span class="hljs-tag">  &#125;&#125;</span><br><span class="hljs-tag">/&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>这将在第一次加载时设置标头，<code>但不会在后续页面导航中设置标头</code>。</p>
+<p>为了解决这个问题，我们可以跟踪当前的 URL，拦截新的页面加载，然后自己导航到它们(<a target="_blank" rel="noopener" href="https://www.bigbinary.com/blog/passing-request-headers-on-each-webview-request-in-react-native">这项技术的原创者是来自 Big Binary 的 Chirag Shah</a>) </p>
+<p><code>解决方法</code></p>
+<p>WebView 提供了<code>onLoadStart</code>属性 ，它接受 WebView 开始加载时调用的函数</p>
+<p>我们可以使用此 prop 来了解何时单击链接，然后使用新的 url 重新渲染 WebView 组件。<code>重新渲染 WebView 组件将加载该页面，就好像它是第一页一样，然后将传递请求标头。</code></p>
+<p>我们知道，在 React 中，当组件的任何状态发生变化时，组件都会重新渲染自身。这里唯一改变的是 url，所以让我们将 url 移动到一个状态并将其初始化为欢迎页面，该页面是应用程序的根目录。然后使用onLoadStart属性将 url 状态更改为单击的 url。</p>
+<p>webview 的 prop <code>onShouldStartLoadWithRequest</code>，允许自定义处理任何 Web 视图请求的函数。从函数返回 true 以继续加载请求，并返回 false 以停止加载。</p>
+<p><code>webview 代码</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> <span class="hljs-title function_">CustomHeaderWebView</span> = (<span class="hljs-params">props</span>) =&gt; &#123;<br>  <span class="hljs-keyword">const</span> &#123; uri, onLoadStart, ...restProps &#125; = props;<br>  <span class="hljs-keyword">const</span> [currentURI, setURI] = <span class="hljs-title function_">useState</span>(props.<span class="hljs-property">source</span>.<span class="hljs-property">uri</span>);<br>  <span class="hljs-keyword">const</span> newSource = &#123; ...props.<span class="hljs-property">source</span>, <span class="hljs-attr">uri</span>: currentURI &#125;;<br><br>  <span class="hljs-keyword">return</span> (<br>    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">WebView</span></span></span><br><span class="hljs-tag"><span class="language-xml">      &#123;<span class="hljs-attr">...restProps</span>&#125;</span></span><br><span class="hljs-tag"><span class="language-xml">      <span class="hljs-attr">source</span>=<span class="hljs-string">&#123;newSource&#125;</span></span></span><br><span class="hljs-tag"><span class="language-xml">      <span class="hljs-attr">onShouldStartLoadWithRequest</span>=<span class="hljs-string">&#123;(request)</span> =&gt;</span> &#123;</span><br><span class="language-xml">        // If we&#x27;re loading the current URI, allow it to load</span><br><span class="language-xml">        if (request.url === currentURI) return true;</span><br><span class="language-xml"></span><br><span class="language-xml">        // We&#x27;re loading a new URL -- change state first</span><br><span class="language-xml">        setURI(request.url);</span><br><span class="language-xml">        return false;</span><br><span class="language-xml">      &#125;&#125;</span><br><span class="language-xml">    /&gt;</span><br>  );<br>&#125;;<br><br><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">CustomHeaderWebView</span></span></span><br><span class="hljs-tag"><span class="language-xml">  <span class="hljs-attr">source</span>=<span class="hljs-string">&#123;&#123;</span></span></span><br><span class="hljs-tag"><span class="language-xml">    <span class="hljs-attr">uri:</span> &#x27;<span class="hljs-attr">http:</span>//<span class="hljs-attr">example.com</span>&#x27;,</span></span><br><span class="hljs-tag"><span class="language-xml">    <span class="hljs-attr">headers:</span> &#123;</span></span><br><span class="hljs-tag"><span class="language-xml">      &#x27;<span class="hljs-attr">my-custom-header-key</span>&#x27;<span class="hljs-attr">:</span> &#x27;<span class="hljs-attr">my-custom-header-value</span>&#x27;,</span></span><br><span class="hljs-tag"><span class="language-xml">    &#125;,</span></span><br><span class="hljs-tag"><span class="language-xml">  &#125;&#125;</span></span><br><span class="hljs-tag"><span class="language-xml">/&gt;</span></span>;<br></code></pre></td></tr></table></figure>
+
+<p><code>server 代码</code>，服务端通过 <code>request.headers[&quot;my-custom-header-key&quot;]</code> 获取请求头。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> http = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;http&quot;</span>);<br><span class="hljs-keyword">var</span> port = <span class="hljs-number">9000</span>;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">logRequest</span>(<span class="hljs-params">request</span>) &#123;<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;Processing request for: &quot;</span>, request.<span class="hljs-property">url</span>);<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;Custom Header: &quot;</span>, request.<span class="hljs-property">headers</span>[<span class="hljs-string">&quot;my-custom-header-key&quot;</span>]);<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;Request Processed\n&quot;</span>);<br>&#125;<br><br>http<br>  .<span class="hljs-title function_">createServer</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">request, response</span>) &#123;<br>    response.<span class="hljs-title function_">writeHead</span>(<span class="hljs-number">200</span>, &#123; <span class="hljs-string">&quot;Content-Type&quot;</span>: <span class="hljs-string">&quot;text/html&quot;</span> &#125;);<br>    <span class="hljs-keyword">switch</span> (request.<span class="hljs-property">url</span>) &#123;<br>      <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;/&quot;</span>:<br>        response.<span class="hljs-title function_">write</span>(<br>          <span class="hljs-string">&quot;&lt;html&gt;&lt;body&gt;Welcome&lt;a href=&#x27;/bye&#x27;&gt;Bye&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;&quot;</span><br>        );<br>        <span class="hljs-title function_">logRequest</span>(request);<br>        <span class="hljs-keyword">break</span>;<br>      <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;/bye&quot;</span>:<br>        response.<span class="hljs-title function_">write</span>(<span class="hljs-string">&quot;&lt;html&gt;&lt;body&gt;Bye&lt;a href=&#x27;/&#x27;&gt;Welcome&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;&quot;</span>);<br>        <span class="hljs-title function_">logRequest</span>(request);<br>        <span class="hljs-keyword">break</span>;<br>      <span class="hljs-attr">default</span>:<br>        <span class="hljs-keyword">break</span>;<br>    &#125;<br>    response.<span class="hljs-title function_">end</span>();<br>  &#125;)<br>  .<span class="hljs-title function_">listen</span>(port);<br></code></pre></td></tr></table></figure>
+
+<h2 id="renderError-渲染错误的-WebView-页面"><a href="#renderError-渲染错误的-WebView-页面" class="headerlink" title="renderError 渲染错误的 WebView 页面"></a>renderError 渲染错误的 WebView 页面</h2><p><code>renderError</code> 函数返回一个视图以显示是否存在错误。</p>
+<p><code>注意</code>: 渲染错误的容器 <code>view</code>，样式需要设置 <code>height: &#39;100%&#39;</code>，而不是 <code>flex: 1</code>，否则 <code>错误页面显示不全。</code></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs jsx">&lt;<span class="hljs-title class_">WebView</span><br>  originWhitelist=&#123;[ <span class="hljs-string">&#x27;*&#x27;</span> ]&#125;<br>  source=&#123;&#123;<br>    <span class="hljs-attr">uri</span>: <span class="hljs-string">&#x27;http://127.0.0.1:1500/components/webview/h5.html&#x27;</span><br>  &#125;&#125;<br>  renderError=&#123;<span class="hljs-function">() =&gt;</span> &#123;<br>    <span class="hljs-keyword">return</span> (<br>      <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">TouchableOpacity</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&#123;styles.errorPage&#125;</span>&gt;</span></span><br><span class="language-xml">        <span class="hljs-tag">&lt;<span class="hljs-name">Text</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&#123;styles.errorContent&#125;</span>&gt;</span>Error Page<span class="hljs-tag">&lt;/<span class="hljs-name">Text</span>&gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;/<span class="hljs-name">TouchableOpacity</span>&gt;</span></span><br>    )<br>  &#125;&#125;<br>/&gt;<br><br><span class="hljs-keyword">const</span> styles = <span class="hljs-title class_">StyleSheet</span>.<span class="hljs-title function_">create</span>(&#123;<br>  <span class="hljs-attr">errorPage</span>: &#123;<br>    <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-comment">// 注意</span><br>    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;#333&#x27;</span>,<br>    <span class="hljs-attr">alignItems</span>: <span class="hljs-string">&#x27;center&#x27;</span>,<br>    <span class="hljs-attr">justifyContent</span>: <span class="hljs-string">&#x27;center&#x27;</span><br>  &#125;,<br>  <span class="hljs-attr">errorContent</span>: &#123;<br>    <span class="hljs-attr">textAlign</span>: <span class="hljs-string">&#x27;center&#x27;</span>,<br>    <span class="hljs-attr">fontSize</span>: <span class="hljs-number">24</span>,<br>    <span class="hljs-attr">fontWeight</span>: <span class="hljs-string">&#x27;bold&#x27;</span>,<br>    <span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;#fff&#x27;</span>,<br>  &#125;<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>当出现错误到了错误页面之后，我们可以点击错误页面，刷新 <code>webview</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;<span class="hljs-title class_">TouchableOpacity</span><br>  style=&#123;styles.<span class="hljs-property">errorPage</span>&#125;<br>  onPress=&#123;<span class="hljs-function">() =&gt;</span> &#123;<br>    <span class="hljs-comment">// Alert.alert(&#x27;错误啦，刷新下试试&#x27;)</span><br>    webviewRef.<span class="hljs-property">current</span>?.<span class="hljs-title function_">reload</span>()<br>  &#125;&#125;<br>&gt;<br>  <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">Text</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&#123;styles.errorContent&#125;</span>&gt;</span>Error Page<span class="hljs-tag">&lt;/<span class="hljs-name">Text</span>&gt;</span></span><br>&lt;/<span class="hljs-title class_">TouchableOpacity</span>&gt;<br></code></pre></td></tr></table></figure>
+
+<p>我们来给错误页面，加个背景图，并且给背景图设置<code>透明度</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs js">renderError=&#123;<span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-keyword">return</span> (<br>    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">ImageBackground</span></span></span><br><span class="hljs-tag"><span class="language-xml">      <span class="hljs-attr">source</span>=<span class="hljs-string">&#123;require(</span>&#x27;<span class="hljs-attr">..</span>/<span class="hljs-attr">..</span>/<span class="hljs-attr">assets</span>/<span class="hljs-attr">avatar.jpg</span>&#x27;)&#125;</span></span><br><span class="hljs-tag"><span class="language-xml">      <span class="hljs-attr">style</span>=<span class="hljs-string">&#123;styles.errorPage&#125;</span></span></span><br><span class="hljs-tag"><span class="language-xml">      <span class="hljs-attr">contentFit</span>=<span class="hljs-string">&#x27;fill&#x27;</span></span></span><br><span class="hljs-tag"><span class="language-xml">      <span class="hljs-attr">imageStyle</span>=<span class="hljs-string">&#123;&#123;</span></span></span><br><span class="hljs-tag"><span class="language-xml">        <span class="hljs-attr">opacity:</span> <span class="hljs-attr">0.5</span>, // 背景图片设置透明度</span></span><br><span class="hljs-tag"><span class="language-xml">      &#125;&#125;</span></span><br><span class="hljs-tag"><span class="language-xml">    &gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;<span class="hljs-name">TouchableOpacity</span></span></span><br><span class="hljs-tag"><span class="language-xml">        <span class="hljs-attr">onPress</span>=<span class="hljs-string">&#123;()</span> =&gt;</span> &#123;</span><br><span class="language-xml">          webviewRef.current?.reload()</span><br><span class="language-xml"></span><br><span class="language-xml">          // 或者返回</span><br><span class="language-xml"></span><br><span class="language-xml">          props.navigation.goBack()</span><br><span class="language-xml">        &#125;&#125;</span><br><span class="language-xml">      &gt;</span><br><span class="language-xml">        <span class="hljs-tag">&lt;<span class="hljs-name">Text</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&#123;styles.errorContent&#125;</span>&gt;</span>Error Page...<span class="hljs-tag">&lt;/<span class="hljs-name">Text</span>&gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;/<span class="hljs-name">TouchableOpacity</span>&gt;</span></span><br><span class="language-xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">ImageBackground</span>&gt;</span></span><br>  )<br>&#125;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>效果如下</p>
+<img src='../img/webview-error-page.png' width="200" />
+
+<h1 id="Expo-Router"><a href="#Expo-Router" class="headerlink" title="Expo Router"></a>Expo Router</h1><blockquote>
+<p><a target="_blank" rel="noopener" href="https://docs.expo.dev/routing/introduction/">https://docs.expo.dev/routing/introduction/</a></p>
+</blockquote>
+<h1 id="React-Navigation"><a href="#React-Navigation" class="headerlink" title="React Navigation"></a><a target="_blank" rel="noopener" href="https://reactnavigation.org/docs/4.x/getting-started">React Navigation</a></h1><blockquote>
+<p>React Navigation 版本 &gt; 4.x</p>
+</blockquote>
+<p>建立两个组件 Home 和 HomeDetails</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> &#123; createAppContainer &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-navigation&#x27;</span><br><span class="hljs-keyword">import</span> &#123; createStackNavigator &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-navigation-stack&#x27;</span><br><br><span class="hljs-keyword">const</span> <span class="hljs-title class_">AppNavigator</span> = <span class="hljs-title function_">createStackNavigator</span>(&#123;<br>  <span class="hljs-title class_">Home</span>: <span class="hljs-title class_">HomeScreen</span>,<br>  <span class="hljs-title class_">HomeDetails</span>: <span class="hljs-title class_">HomeDetailsScreen</span><br>&#125;)<br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title function_">createAppContainer</span>(<span class="hljs-title class_">AppNavigator</span>)<br></code></pre></td></tr></table></figure>
+
+<p>跳转路由，可以通过组件 props 上的 <code>this.props.navigation.navigate</code> 方法</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;<span class="hljs-title class_">Button</span><br>  onPress=&#123;<span class="hljs-function">() =&gt;</span> &#123;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">props</span>.<span class="hljs-property">navigation</span>.<span class="hljs-title function_">navigate</span>(<span class="hljs-string">&#x27;HomeDetails&#x27;</span>)<br>  &#125;&#125;<br>  title=<span class="hljs-string">&#x27;Home Details&#x27;</span><br>/&gt;<br></code></pre></td></tr></table></figure>
+
+<p>完整示例如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span>, &#123; <span class="hljs-title class_">Component</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span><br><span class="hljs-keyword">import</span> &#123; <span class="hljs-title class_">Text</span>, <span class="hljs-title class_">StyleSheet</span>, <span class="hljs-title class_">View</span>, <span class="hljs-title class_">Button</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-native&#x27;</span><br><span class="hljs-keyword">import</span> &#123; createAppContainer &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-navigation&#x27;</span><br><span class="hljs-keyword">import</span> &#123; createStackNavigator &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-navigation-stack&#x27;</span><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">HomeDetailsScreen</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_ inherited__">React.Component</span> &#123;<br>  <span class="hljs-title function_">render</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">return</span> (<br>      <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">View</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&#123;&#123;</span> <span class="hljs-attr">flex:</span> <span class="hljs-attr">1</span>, <span class="hljs-attr">alignItems:</span> &#x27;<span class="hljs-attr">center</span>&#x27;, <span class="hljs-attr">justifyContent:</span> &#x27;<span class="hljs-attr">center</span>&#x27; &#125;&#125;&gt;</span></span><br><span class="language-xml">        <span class="hljs-tag">&lt;<span class="hljs-name">Text</span>&gt;</span>Details Screen<span class="hljs-tag">&lt;/<span class="hljs-name">Text</span>&gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;/<span class="hljs-name">View</span>&gt;</span></span><br>    );<br>  &#125;<br>&#125;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">HomeScreen</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_ inherited__">Component</span> &#123;<br>  <span class="hljs-title function_">render</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">return</span> (<br>      <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">View</span>&gt;</span></span><br><span class="language-xml">        <span class="hljs-tag">&lt;<span class="hljs-name">Text</span>&gt;</span> HomeScreen <span class="hljs-tag">&lt;/<span class="hljs-name">Text</span>&gt;</span></span><br><span class="language-xml">        <span class="hljs-tag">&lt;<span class="hljs-name">Button</span></span></span><br><span class="hljs-tag"><span class="language-xml">          <span class="hljs-attr">onPress</span>=<span class="hljs-string">&#123;()</span> =&gt;</span> &#123;</span><br><span class="language-xml">            this.props.navigation.navigate(&#x27;HomeDetails&#x27;)</span><br><span class="language-xml">          &#125;&#125;</span><br><span class="language-xml">          title=&#x27;Home Details&#x27;</span><br><span class="language-xml">        /&gt;</span><br><span class="language-xml">      <span class="hljs-tag">&lt;/<span class="hljs-name">View</span>&gt;</span></span><br>    )<br>  &#125;<br>&#125;<br><br><span class="hljs-keyword">const</span> <span class="hljs-title class_">AppNavigator</span> = <span class="hljs-title function_">createStackNavigator</span>(&#123;<br>  <span class="hljs-title class_">Home</span>: <span class="hljs-title class_">HomeScreen</span>,<br>  <span class="hljs-title class_">HomeDetails</span>: <span class="hljs-title class_">HomeDetailsScreen</span><br>&#125;)<br><br><span class="hljs-keyword">const</span> styles = <span class="hljs-title class_">StyleSheet</span>.<span class="hljs-title function_">create</span>(&#123;&#125;)<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title function_">createAppContainer</span>(<span class="hljs-title class_">AppNavigator</span>)<br></code></pre></td></tr></table></figure>
+
+<p><code>回退</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;<span class="hljs-title class_">Button</span><br>  onPress=&#123;<span class="hljs-function">() =&gt;</span> &#123;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">props</span>.<span class="hljs-property">navigation</span>.<span class="hljs-title function_">goBack</span>()<br>  &#125;&#125;<br>  title=<span class="hljs-string">&#x27;Go Back&#x27;</span><br>/&gt;<br><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">Button</span></span></span><br><span class="hljs-tag"><span class="language-xml">  <span class="hljs-attr">onPress</span>=<span class="hljs-string">&#123;()</span> =&gt;</span> &#123;</span><br><span class="language-xml">    this.props.navigation.navigate(&#x27;Home&#x27;)</span><br><span class="language-xml">  &#125;&#125;</span><br><span class="language-xml">  title=&#x27;Go Home&#x27;</span><br><span class="language-xml">/&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="路由参数"><a href="#路由参数" class="headerlink" title="路由参数"></a>路由参数</h2><p><code>navigate</code> and <code>push</code> accept an optional <code>second argument</code> to let you pass parameters to the route you are navigating to. For example: this.props.navigation.navigate(‘RouteName’, {paramName: ‘value’}).</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;<span class="hljs-title class_">Button</span><br>  onPress=&#123;<span class="hljs-function">() =&gt;</span> &#123;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">props</span>.<span class="hljs-property">navigation</span>.<span class="hljs-title function_">navigate</span>(<span class="hljs-string">&#x27;HomeDetails&#x27;</span>, &#123;<br>      <span class="hljs-attr">itemId</span>: <span class="hljs-number">86</span>,<br>      <span class="hljs-attr">otherParam</span>: <span class="hljs-string">&#x27;anything you want here&#x27;</span>,<br>    &#125;)<br>  &#125;&#125;<br>  title=<span class="hljs-string">&#x27;Home Details&#x27;</span><br>/&gt;<br></code></pre></td></tr></table></figure>
+
+<p>目标页面，获取路由参数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 方式1</span><br><span class="hljs-keyword">const</span> &#123; navigation &#125; = <span class="hljs-variable language_">this</span>.<span class="hljs-property">props</span>;<br>navigation.<span class="hljs-title function_">getParam</span>(<span class="hljs-string">&#x27;otherParam&#x27;</span>, <span class="hljs-string">&#x27;default value&#x27;</span>) <span class="hljs-comment">// 获取路由的单个参数</span><br><br><span class="hljs-comment">// 方式2</span><br><span class="hljs-variable language_">this</span>.<span class="hljs-property">props</span>.<span class="hljs-property">navigation</span>.<span class="hljs-property">state</span>.<span class="hljs-property">params</span> <span class="hljs-comment">// 获取路由的所有参数，如果未指定任何参数，则为 null。</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="设置页面的-Header-title"><a href="#设置页面的-Header-title" class="headerlink" title="设置页面的 Header title"></a>设置页面的 Header title</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">class</span> <span class="hljs-title class_">HomeScreen</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_ inherited__">React.Component</span> &#123;<br>  <span class="hljs-keyword">static</span> navigationOptions = &#123;<br>    <span class="hljs-attr">title</span>: <span class="hljs-string">&#x27;Home&#x27;</span>,<br>  &#125;;<br><br>  <span class="hljs-comment">/* render function, etc */</span><br>&#125;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">DetailsScreen</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_ inherited__">React.Component</span> &#123;<br>  <span class="hljs-keyword">static</span> navigationOptions = &#123;<br>    <span class="hljs-attr">title</span>: <span class="hljs-string">&#x27;Details&#x27;</span>,<br>  &#125;;<br><br>  <span class="hljs-comment">/* render function, etc */</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>navigationOptions</code> 也可以配置成函数，函数的参数是 <code>navigation</code>，等同于组件内的 <code>this.props.navigation</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">static</span> navigationOptions = <span class="hljs-function">(<span class="hljs-params">&#123; navigation &#125;</span>) =&gt;</span> &#123;<br>  <span class="hljs-keyword">return</span> &#123;<br>    <span class="hljs-attr">title</span>: <span class="hljs-string">`首页详情 itemId:<span class="hljs-subst">$&#123;navigation.getParam(<span class="hljs-string">&#x27;itemId&#x27;</span>, <span class="hljs-string">&#x27;0&#x27;</span>)&#125;</span>`</span>,<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>我们还可以动态的改变路由参数，路由参数变化，会引起组件的重新渲染。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;<span class="hljs-title class_">Button</span><br>  onPress=&#123;<span class="hljs-function">() =&gt;</span> &#123;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">props</span>.<span class="hljs-property">navigation</span>.<span class="hljs-title function_">setParams</span>(&#123;<br>      <span class="hljs-attr">itemId</span>: <span class="hljs-number">99</span><br>    &#125;)<br>  &#125;&#125;<br>  title=<span class="hljs-string">&#x27;更新Params&#x27;</span><br>/&gt;<br></code></pre></td></tr></table></figure>
+
+<h2 id="调整页面-Header-样式"><a href="#调整页面-Header-样式" class="headerlink" title="调整页面 Header 样式"></a>调整页面 Header 样式</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">static</span> navigationOptions = <span class="hljs-function">(<span class="hljs-params">&#123; navigation &#125;</span>) =&gt;</span> &#123;<br>  <span class="hljs-keyword">return</span> &#123;<br>    <span class="hljs-attr">title</span>: <span class="hljs-string">`首页详情 itemId:<span class="hljs-subst">$&#123;navigation.getParam(<span class="hljs-string">&#x27;itemId&#x27;</span>, <span class="hljs-string">&#x27;0&#x27;</span>)&#125;</span>`</span>,<br>    <span class="hljs-attr">headerStyle</span>: &#123;<br>      <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;pink&#x27;</span><br>    &#125;,<br>    <span class="hljs-attr">headerTintColor</span>: <span class="hljs-string">&#x27;#fff&#x27;</span>, <span class="hljs-comment">// 文字、返回按钮都会应用此颜色</span><br>    <span class="hljs-attr">headerTitleStyle</span>: &#123;<br>      <span class="hljs-attr">fontWeight</span>: <span class="hljs-string">&#x27;bold&#x27;</span>,<br>      <span class="hljs-attr">fontSize</span>: <span class="hljs-number">20</span>,<br>    &#125;,<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="夸屏幕共享公共的-navigationOptions"><a href="#夸屏幕共享公共的-navigationOptions" class="headerlink" title="夸屏幕共享公共的 navigationOptions"></a>夸屏幕共享公共的 navigationOptions</h2><p>我们不希望每个 Header 的样式都不一样，我们可以配置通用的 Header Style</p>
+<p><code>createStackNavigator</code> 第二个参数，可以配置通用的 Header style</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> <span class="hljs-title class_">AppNavigator</span> = <span class="hljs-title function_">createStackNavigator</span>(<br>  &#123;<br>    <span class="hljs-title class_">Home</span>: <span class="hljs-title class_">HomeScreen</span>,<br>    <span class="hljs-title class_">Details</span>: <span class="hljs-title class_">DetailsScreen</span>,<br>  &#125;,<br>  &#123;<br>    <span class="hljs-attr">initialRouteName</span>: <span class="hljs-string">&#x27;Home&#x27;</span>,<br>    <span class="hljs-comment">/* The header config from HomeScreen is now here */</span><br>    <span class="hljs-attr">defaultNavigationOptions</span>: &#123;<br>      <span class="hljs-attr">headerStyle</span>: &#123;<br>        <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;#f4511e&#x27;</span>,<br>      &#125;,<br>      <span class="hljs-attr">headerTintColor</span>: <span class="hljs-string">&#x27;#fff&#x27;</span>,<br>      <span class="hljs-attr">headerTitleStyle</span>: &#123;<br>        <span class="hljs-attr">fontWeight</span>: <span class="hljs-string">&#x27;bold&#x27;</span>,<br>      &#125;,<br>    &#125;,<br>  &#125;<br>);<br></code></pre></td></tr></table></figure>
+
+<h2 id="自定义-Header-Title"><a href="#自定义-Header-Title" class="headerlink" title="自定义 Header Title"></a>自定义 Header Title</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> <span class="hljs-title function_">HomeTitle</span> = (<span class="hljs-params"></span>) =&gt; &#123;<br>  <span class="hljs-keyword">return</span> (<br>    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">Image</span></span></span><br><span class="hljs-tag"><span class="language-xml">      <span class="hljs-attr">source</span>=<span class="hljs-string">&#123;require(</span>&#x27;<span class="hljs-attr">..</span>/<span class="hljs-attr">..</span>/<span class="hljs-attr">assets</span>/<span class="hljs-attr">icon.png</span>&#x27;)&#125;</span></span><br><span class="hljs-tag"><span class="language-xml">      <span class="hljs-attr">style</span>=<span class="hljs-string">&#123;&#123;</span> <span class="hljs-attr">width:</span> <span class="hljs-attr">50</span>, <span class="hljs-attr">height:</span> <span class="hljs-attr">35</span> &#125;&#125;</span></span><br><span class="hljs-tag"><span class="language-xml">    /&gt;</span></span><br>  );<br>&#125;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">HomeScreen</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_ inherited__">React.Component</span> &#123;<br>  <span class="hljs-keyword">static</span> navigationOptions = &#123;<br>    <span class="hljs-comment">// headerTitle instead of title</span><br>    <span class="hljs-comment">// title: () =&gt; &lt;HomeTitle /&gt;,</span><br>    <span class="hljs-attr">headerTitle</span>: <span class="hljs-function">() =&gt;</span> <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">HomeTitle</span> /&gt;</span></span>,<br>  &#125;;<br><br>  <span class="hljs-comment">/* render function, etc */</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="Header-Buttons"><a href="#Header-Buttons" class="headerlink" title="Header Buttons"></a>Header Buttons</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">static</span> navigationOptions = &#123;<br>  <span class="hljs-attr">headerTitle</span>: <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">HomeTitle</span> /&gt;</span></span>,<br>  <span class="hljs-attr">headerRight</span>: <span class="hljs-function">() =&gt;</span> (<br>    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">Button</span></span></span><br><span class="hljs-tag"><span class="language-xml">      <span class="hljs-attr">onPress</span>=<span class="hljs-string">&#123;()</span> =&gt;</span> alert(&#x27;This is a button!&#x27;)&#125;</span><br><span class="language-xml">      title=&quot;Info&quot;</span><br><span class="language-xml">      color=&quot;#000&quot;</span><br><span class="language-xml">    /&gt;</span><br>  ),<br>  <span class="hljs-attr">headerLeft</span>: <span class="hljs-function">() =&gt;</span> (<br>    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">Button</span></span></span><br><span class="hljs-tag"><span class="language-xml">      <span class="hljs-attr">onPress</span>=<span class="hljs-string">&#123;()</span> =&gt;</span> alert(&#x27;This is a button!&#x27;)&#125;</span><br><span class="language-xml">      title=&quot;返回&quot;</span><br><span class="language-xml">      color=&quot;#000&quot;</span><br><span class="language-xml">    /&gt;</span><br>  ),<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="跳转到-H5-页面"><a href="#跳转到-H5-页面" class="headerlink" title="跳转到 H5 页面"></a>跳转到 H5 页面</h2><p>我们先定义好 H5 页面（<code>WebView</code>），如果 H5 页面中，不想要看到 <code>Header</code>，可以单独给 <code>H5Demo</code> 配置 <code>navigationOptions</code>，其中 <code>headerShown</code> 就可以控制 <code>Header</code> 的显示隐藏。</p>
+<p>想要返回的话，从屏幕左侧向右滑动即可。</p>
+<img src='../img/injectedJavaScript.png' width='300px' />
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> <span class="hljs-title class_">WebviewDemo</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../webview/webview-demo&#x27;</span><br><br><span class="hljs-keyword">const</span> <span class="hljs-title class_">AppNavigator</span> = <span class="hljs-title function_">createStackNavigator</span>(&#123;<br>  <span class="hljs-title class_">Home</span>: <span class="hljs-title class_">HomeScreen</span>, <span class="hljs-comment">// 首页</span><br>  <span class="hljs-title class_">HomeDetails</span>: <span class="hljs-title class_">HomeDetailsScreen</span>, <span class="hljs-comment">// 首页详情</span><br>  <span class="hljs-attr">H5Demo</span>: &#123; <span class="hljs-comment">// H5页面</span><br>    <span class="hljs-attr">screen</span>: <span class="hljs-title class_">WebviewDemo</span>,<br>    <span class="hljs-attr">navigationOptions</span>: &#123;<br>      <span class="hljs-attr">headerShown</span>: <span class="hljs-literal">null</span>, <span class="hljs-comment">// 不显示 header</span><br>    &#125;<br>  &#125;<br>&#125;, &#123;<br>  <span class="hljs-attr">initialRouteName</span>: <span class="hljs-string">&#x27;Home&#x27;</span>,<br>  <span class="hljs-attr">defaultNavigationOptions</span>: &#123;<br>    <span class="hljs-attr">headerStyle</span>: &#123;<br>      <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;#fff&#x27;</span><br>    &#125;,<br>    <span class="hljs-attr">headerTintColor</span>: <span class="hljs-string">&#x27;#000&#x27;</span>,<br>  &#125;<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<h2 id="H5如何打开-RN-页面？"><a href="#H5如何打开-RN-页面？" class="headerlink" title="H5如何打开 RN 页面？"></a>H5如何打开 RN 页面？</h2><p><code>其实就是 H5 和 RN 通信的逻辑，只不过是在 RN 侧做了路由的处理</code></p>
+<p>首先，我们可以在 <code>injectedJavaScript</code> 向 Web 端<code>window对象</code>注入一个全变量 <code>isRN</code>，在 Web 端通过 <code>window.isRN</code> 判断当前 Web 页面是不是通过 <code>RN</code> 内嵌的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> injectedJavaScript = <span class="hljs-string">`</span><br><span class="hljs-string">  window.isRN = true;</span><br><span class="hljs-string">  document.body.style.backgroundColor = &#x27;pink&#x27;;</span><br><span class="hljs-string">  window.sayHello = function() &#123; alert(&#x27;我是 RN 通过 injectedJavaScript 注入的方法&#x27;) &#125;;</span><br><span class="hljs-string">  true</span><br><span class="hljs-string">`</span><br><br>&lt;<span class="hljs-title class_">WebView</span><br>  source=&#123;localH5&#125;<br>  onMessage=&#123;<span class="hljs-function">(<span class="hljs-params">event</span>) =&gt;</span> &#123;<br>    <span class="hljs-keyword">if</span> (event.<span class="hljs-property">nativeEvent</span>.<span class="hljs-property">data</span>) &#123;<br>      <span class="hljs-keyword">const</span> data = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(event.<span class="hljs-property">nativeEvent</span>.<span class="hljs-property">data</span>)<br>      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;&#x27;</span>, data)<br>    &#125;<br>  &#125;&#125;<br>  injectedJavaScript=&#123;injectedJavaScript&#125;<br>/&gt;<br></code></pre></td></tr></table></figure>
+
+<p>localH5.html</p>
+<p>H5这边通过 <code>window.ReactNativeWebView.postMessage</code> 将路由信息发送到 <code>RN</code> 这边，路由信息比如包括 <code>type: route</code>、<code>path: ComponentName</code>、以及可选的参数</p>
+<p>如下示例，表示 H5 页面跳转到 <code>RN</code> 的 <code>HomeDetails</code> 页面。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs js">goBackBtn.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;click&#x27;</span>, <span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">window</span>.<span class="hljs-property">isRN</span>) &#123;<br>    <span class="hljs-keyword">const</span> routeInfo = &#123;<br>      <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;route&#x27;</span>,<br>      <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;HomeDetails&#x27;</span>,<br>      <span class="hljs-attr">params</span>: &#123;<br>        <span class="hljs-attr">itemId</span>: <span class="hljs-number">11</span>,<br>      &#125;<br>    &#125;<br>    <br>    <span class="hljs-comment">// 注意：传递的参数是 string 类型</span><br>    <span class="hljs-variable language_">window</span>.<span class="hljs-property">ReactNativeWebView</span>.<span class="hljs-title function_">postMessage</span>(<span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>(routeInfo))<br>  &#125;<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>RN 这边，通过 <code>WebView</code> 的 <code>onMessage</code> 函数接收消息，在函数内部通过判断当前参数是不是路由信息，如果是路由信息，则通过 <code>props</code> 上的 <code>navigation</code> 去操控路由跳转。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;<span class="hljs-title class_">WebView</span><br>  source=&#123;localH5&#125;<br>  onMessage=&#123;<span class="hljs-function">(<span class="hljs-params">event</span>) =&gt;</span> &#123;<br>    <span class="hljs-keyword">if</span> (event.<span class="hljs-property">nativeEvent</span>.<span class="hljs-property">data</span>) &#123;<br>      <span class="hljs-keyword">const</span> data = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(event.<span class="hljs-property">nativeEvent</span>.<span class="hljs-property">data</span>)<br><br>      <span class="hljs-keyword">if</span> (data.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;route&#x27;</span>) &#123;<br>        props.<span class="hljs-property">navigation</span>.<span class="hljs-title function_">navigate</span>(data.<span class="hljs-property">path</span>, &#123;<br>          <span class="hljs-attr">itemId</span>: data.<span class="hljs-property">query</span>.<span class="hljs-property">itemId</span><br>        &#125;)<br>      &#125;<br>    &#125;<br>  &#125;&#125;<br>  injectedJavaScript=&#123;injectedJavaScript&#125;<br>/&gt;<br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903673697402887">Android Webview H5 秒开方案实现</a>
+<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1NT41167zK?p=3&vd_source=a9f38e58a519cc0570c2dacd34ad7ebe">英文 Expo构建App教程</a>
+<blockquote>
+<a target="_blank" rel="noopener" href="https://github.com/adrianhajdin/project_react_native_jobs/blob/main/README.md">https://github.com/adrianhajdin/project_react_native_jobs/blob/main/README.md</a>
+</blockquote>
+<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:3" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1yi4y137u5/?spm_id_from=333.788.top_right_bar_window_history.content.click&vd_source=a9f38e58a519cc0570c2dacd34ad7ebe">Mosh React Native on Expo</a>
+<a href="#fnref:3" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/NativeApp-webApp-HybridApp/">NativeApp webApp HybridApp</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/post/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BATypeScript.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">深入浅出TypeScript</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/post/js-advice.html">
+                        <span class="hidden-mobile">如何编写高标准的 JavaScript 代码</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    
+      <script type="text/javascript">
+        var disqus_config = function() {
+          this.page.url = 'http://yoursite.com/post/app-h5.html';
+          this.page.identifier = '/post/app-h5.html';
+        };
+        Fluid.utils.loadComments('#disqus_thread', function() {
+          var d = document, s = d.createElement('script');
+          s.src = '//' + 'helloalexcc' + '.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', new Date());
+          (d.head || d.body).appendChild(s);
+        });
+      </script>
+    
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hello-alex-cheng.github.io/" target="_blank" rel="nofollow noopener"><span>I</span></a> <i class="iconfont icon-love"></i> <a href="https://hello-alex-cheng.github.io/" target="_blank" rel="nofollow noopener"><span>YOU</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

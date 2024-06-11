@@ -1,0 +1,809 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Hello_AlexCc">
+  <meta name="keywords" content="Full stack engineer">
+  
+    <meta name="description" content="shadow dom、样式隔离方案">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微前端-qiankun">
+<meta property="og:url" content="http://yoursite.com/post/micro-qiankun.html">
+<meta property="og:site_name" content="Hello_AlexCc">
+<meta property="og:description" content="shadow dom、样式隔离方案">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/img/micro-app.png">
+<meta property="article:published_time" content="2023-01-05T13:24:21.000Z">
+<meta property="article:modified_time" content="2024-06-11T08:52:17.344Z">
+<meta property="article:author" content="Hello_AlexCc">
+<meta property="article:tag" content="微前端">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://yoursite.com/img/micro-app.png">
+  
+  
+  <title>微前端-qiankun - Hello_AlexCc</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Hello_AlexCc</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/micro-app.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="微前端-qiankun">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2023-01-05 21:24" pubdate>
+        2023年1月5日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      20k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      166 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">微前端-qiankun</h1>
+            
+            <div class="markdown-body">
+              <h1 id="对微前端的理解"><a href="#对微前端的理解" class="headerlink" title="对微前端的理解"></a>对微前端的理解</h1><p>微前端的核心理念是将前端应用程序看作是一个整体，由多个独立的部分组成。每个部分被视为一个微前端应用，它们可以具有自己的技术栈、开发流程和团队组织。这种方式使得团队可以独立开发和部署各个子应用，减少了协调和合并的复杂性。</p>
+<h1 id="为什么-Iframe-无法胜任微前端的工作？"><a href="#为什么-Iframe-无法胜任微前端的工作？" class="headerlink" title="为什么 Iframe 无法胜任微前端的工作？"></a>为什么 Iframe 无法胜任微前端的工作？</h1><p>IFrame 在传统的前端开发中是一种常见的技术，用于在页面中嵌入其他网页或应用程序。然而，在微前端架构中，IFrame 并不是一个理想的选择，主要是因为以下几个方面的限制：</p>
+<ol>
+<li><p>隔离性和通信复杂性：IFrame 本身提供了一种隔离的环境，但这也带来了通信和数据交互的复杂性。由于每个子应用都在独立的 IFrames 中运行，它们之间的通信需要通过特定的机制，如消息传递，而这增加了开发和维护的复杂性。</p>
+</li>
+<li><p>性能和加载时间：每个 IFrames 都需要加载和渲染独立的 HTML、CSS 和 JavaScript。这意味着在加载微前端应用时，需要同时加载多个 IFrames，导致额外的网络请求和页面资源占用，可能会影响性能和加载时间。</p>
+</li>
+<li><p>样式和布局限制：IFrame 的内容在页面中是独立的，它们具有自己的 CSS 样式和布局上下文。这导致在微前端架构中难以实现全局样式的一致性，以及子应用之间的布局和交互的协调问题。</p>
+</li>
+<li><p>浏览器安全性限制：由于安全策略的限制，IFrame 之间的跨域通信可能受到限制，特别是在涉及跨域资源访问和共享数据时。这可能导致在微前端架构中需要处理复杂的安全性问题。</p>
+</li>
+</ol>
+<p>鉴于以上限制，微前端架构通常采用其他技术手段来实现子应用的拆分和集成，例如使用 Web Components、JavaScript 模块加载器等。这些技术能够提供更好的隔离性、通信机制和性能优化，使得微前端架构更具可行性和灵活性。</p>
+<h1 id="微前端运行原理"><a href="#微前端运行原理" class="headerlink" title="微前端运行原理"></a>微前端运行原理</h1><ul>
+<li><p>监听路由变化</p>
+</li>
+<li><p>匹配子应用</p>
+</li>
+<li><p>加载子应用</p>
+</li>
+<li><p>渲染子应用</p>
+</li>
+</ul>
+<h2 id="监听路由变化"><a href="#监听路由变化" class="headerlink" title="监听路由变化"></a>监听路由变化</h2><ol>
+<li><p>监听 hash 路由: <code>window.onhashchange</code></p>
+</li>
+<li><p>监听 history 路由</p>
+</li>
+</ol>
+<p>history.go、history.back、history.forward 使用 popstate 事件 <code>window.onpopstate</code></p>
+<p>监听的方式</p>
+<figure class="highlight js"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><pre><code class="hljs js"><span class="hljs-variable language_">window</span>.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;popstate&#x27;</span>, <span class="hljs-function">() =&gt;</span> &#123;&#125;)<br></code></pre></td></tr></table></figure>
+
+<p><strong>重写</strong>: pushState、replaceState 需要通过函数重写的方式进行 <code>劫持</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> rawPushState = <span class="hljs-variable language_">window</span>.<span class="hljs-property">history</span>.<span class="hljs-property">pushState</span><br><span class="hljs-variable language_">window</span>.<span class="hljs-property">history</span>.<span class="hljs-property">pushState</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params">...args</span>) &#123;<br>  rawPushState.<span class="hljs-title function_">apply</span>(<span class="hljs-variable language_">window</span>.<span class="hljs-property">history</span>, args)<br><br>  <span class="hljs-comment">// 其他逻辑</span><br>&#125;<br><br><span class="hljs-keyword">const</span> rawReplaceState = <span class="hljs-variable language_">window</span>.<span class="hljs-property">history</span>.<span class="hljs-property">replaceState</span><br><span class="hljs-variable language_">window</span>.<span class="hljs-property">history</span>.<span class="hljs-property">replaceState</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params">...args</span>) &#123;<br>  rawReplaceState.<span class="hljs-title function_">apply</span>(<span class="hljs-variable language_">window</span>.<span class="hljs-property">history</span>, args)<br><br>  <span class="hljs-comment">// 其他逻辑</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在 Vue 项目中，我们通过 this.$router.push 会触发 <code>history.pushState</code> 事件，this.$router.replace 会触发 <code>history.replaceState</code> 事件。</p>
+<h2 id="匹配子应用"><a href="#匹配子应用" class="headerlink" title="匹配子应用"></a>匹配子应用</h2><p>监听路由的变化后，拿到当前路由的路径 <code>window.location.pathname</code>，然后根据 registerMicroApps 的参数 <code>apps</code> 查找子应用。因为子应用都配置了 <code>activeRule</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 如果当前的 pathname 以 activeRule 开头，表明匹配到了子应用</span><br><br><span class="hljs-keyword">const</span> currentApp = apps.<span class="hljs-title function_">find</span>(<span class="hljs-function"><span class="hljs-params">app</span> =&gt;</span> <span class="hljs-variable language_">window</span>.<span class="hljs-property">location</span>.<span class="hljs-property">pathname</span>.<span class="hljs-title function_">startWith</span>(app.<span class="hljs-property">activeRule</span>))<br></code></pre></td></tr></table></figure>
+
+<h2 id="加载子应用"><a href="#加载子应用" class="headerlink" title="加载子应用"></a>加载子应用</h2><p>当我们找到了与当前路由匹配的子应用，接着就去加载这个子应用的资源。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">function</span> handleRouter = <span class="hljs-keyword">async</span> () =&gt; &#123;<br>  <span class="hljs-comment">// 匹配子应用</span><br><br>  <span class="hljs-comment">// 加载资源</span><br>  <span class="hljs-keyword">const</span> html = <span class="hljs-keyword">await</span> <span class="hljs-title function_">fetch</span>(currentApp.<span class="hljs-property">entry</span>.<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> res.<span class="hljs-title function_">text</span>())<br><br>  <span class="hljs-comment">// 将 html 渲染到指定的容器内</span><br>  <span class="hljs-keyword">const</span> container = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(currentApp.<span class="hljs-property">container</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这个时候，我们就拿到了子应用的 <code>html</code> 文本。</p>
+<p>但是我们不能给直接通过 <code>container.innerHTML = html</code> 将文本放到容器内，这样是无法显示的。</p>
+<p><strong>注意</strong> 浏览器处于安全考虑，放到页面上的 html 如果包含了 js 脚本，它是不会去执行 js 的。我们需要手动处理 <code>script</code> 脚本。</p>
+<h2 id="importHTML-加载资源-处理脚本"><a href="#importHTML-加载资源-处理脚本" class="headerlink" title="importHTML 加载资源/处理脚本"></a>importHTML 加载资源/处理脚本</h2><p>我们来封装一个函数 <code>importHTML</code>，专门来处理 <code>html</code> 文本。(<code>qiankun内部引用的 import-html-entry 就是做这个事的。</code>)</p>
+<p>我们可以把加载子应用资源的 fetch 请求放到 importHTML 函数中，它还有如下几个功能：</p>
+<ul>
+<li><p>将获取到的 html 文本，放到 template DOM节点中</p>
+</li>
+<li><p>获取所有的 Script 脚本</p>
+</li>
+<li><p>执行所有的 Script 脚本</p>
+</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">importHTML</span> = url =&gt; &#123;<br>  <span class="hljs-keyword">const</span> html = <span class="hljs-keyword">await</span> <span class="hljs-title function_">fetch</span>(currentApp.<span class="hljs-property">entry</span>).<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> res.<span class="hljs-title function_">text</span>()<br><br>  <span class="hljs-keyword">const</span> template = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;div&#x27;</span>)<br><br>  template.<span class="hljs-property">innerHTML</span> = html<br><br>  <span class="hljs-keyword">const</span> scripts = template.<span class="hljs-title function_">querySelectAll</span>(<span class="hljs-string">&#x27;script&#x27;</span>)<br><br>  <span class="hljs-keyword">const</span> <span class="hljs-title function_">getExternalScripts</span> = (<span class="hljs-params"></span>) =&gt; &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;解析所有脚本: &#x27;</span>, scripts)<br>  &#125;<br><br>  <span class="hljs-keyword">const</span> <span class="hljs-title function_">execScripts</span> = (<span class="hljs-params"></span>) =&gt; &#123;&#125;<br><br>  <span class="hljs-keyword">return</span> &#123;<br>    template, <span class="hljs-comment">// html 文本</span><br>    getExternalScripts, <span class="hljs-comment">// 获取 Script 脚本</span><br>    execScripts, <span class="hljs-comment">// 执行 Sript 脚本</span><br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>script 脚本分为 <code>内联</code> 脚本和外链脚本，这里需要分开处理，拿到内联脚本后，获取内容可以通过 <code>eval</code> 直接处理。如果是含有 <code>scr</code> 的 script 脚本，还需要拿到 src 的值，通过 <code>fetch</code> 去加载脚本。</p>
+<p>我们在 <code>getExternalScripts</code> 方法中来处理 </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> <span class="hljs-title function_">getExternalScripts</span> = <span class="hljs-keyword">async</span> (<span class="hljs-params"></span>) =&gt; &#123;<br>  <span class="hljs-keyword">return</span> <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">all</span>(<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(scripts).<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">script</span> =&gt;</span> &#123;<br>    <span class="hljs-comment">// 获取 scr 属性</span><br>    <span class="hljs-keyword">const</span> src = script.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;src&#x27;</span>)<br><br>    <span class="hljs-keyword">if</span> (!src) &#123;<br>      <span class="hljs-keyword">return</span> <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">resolve</span>(script.<span class="hljs-property">innerHTML</span>)<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      <span class="hljs-keyword">return</span> <span class="hljs-title function_">fetch</span>(src.<span class="hljs-title function_">startWith</span>(<span class="hljs-string">&#x27;http&#x27;</span>) ? src : <span class="hljs-string">`<span class="hljs-subst">$&#123;url&#125;</span><span class="hljs-subst">$&#123;src&#125;</span>`</span>).<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> res.<span class="hljs-title function_">text</span>())<br>    &#125;<br>  &#125;))<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>然后我们就可以通过 <code>execScripts</code> 方法去调用 getExternalScripts，拿到所有的脚本内容后，执行！</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> <span class="hljs-title function_">execScripts</span> = <span class="hljs-keyword">async</span> (<span class="hljs-params"></span>) =&gt; &#123;<br>  <span class="hljs-keyword">const</span> scripts = <span class="hljs-keyword">await</span> <span class="hljs-title function_">getExternalScripts</span>() <br><br>  scripts.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">code</span> =&gt;</span> &#123;<br>    <span class="hljs-built_in">eval</span>(code)<br>  &#125;)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h1 id="qiankun"><a href="#qiankun" class="headerlink" title="qiankun"></a>qiankun</h1><blockquote>
+<p><a target="_blank" rel="noopener" href="https://qiankun.umijs.org/zh">https://qiankun.umijs.org/zh</a></p>
+</blockquote>
+<p>基于 single-spa，通过 import-html-entry 包处理 html / css</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-attr">&quot;dependencies&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;import-html-entry&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;^1.14.0&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;single-spa&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;^5.9.2&quot;</span><br>  <span class="hljs-comment">// ...</span><br><span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br></code></pre></td></tr></table></figure>
+<h1 id="微前端的子项目是怎么引入到主项目里的"><a href="#微前端的子项目是怎么引入到主项目里的" class="headerlink" title="微前端的子项目是怎么引入到主项目里的"></a>微前端的子项目是怎么引入到主项目里的</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-title function_">registerMicroApps</span>(<br>  [<br>    &#123;<br>      <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;react16&#x27;</span>,<br>      <span class="hljs-attr">entry</span>: <span class="hljs-string">&#x27;//localhost:7100&#x27;</span>,<br>      <span class="hljs-attr">container</span>: <span class="hljs-string">&#x27;#subapp-viewport&#x27;</span>,<br>      loader,<br>      <span class="hljs-attr">activeRule</span>: <span class="hljs-string">&#x27;/react16&#x27;</span>,<br>    &#125;,<br>    &#123;<br>      <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;react15&#x27;</span>,<br>      <span class="hljs-attr">entry</span>: <span class="hljs-string">&#x27;//localhost:7102&#x27;</span>,<br>      <span class="hljs-attr">container</span>: <span class="hljs-string">&#x27;#subapp-viewport&#x27;</span>,<br>      loader,<br>      <span class="hljs-attr">activeRule</span>: <span class="hljs-string">&#x27;/react15&#x27;</span>,<br>    &#125;,<br>  ]<br>)<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li><p>容器指定路由匹配规则加载子应用，一旦路径匹配就会加载子应用资源</p>
+</li>
+<li><p>子应用打包输出格式为 umd，并且要允许跨域</p>
+</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// vue.config.js</span><br><br><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = &#123;<br>  <span class="hljs-attr">devServer</span>: &#123;<br>    <span class="hljs-comment">// ...</span><br>    <span class="hljs-attr">headers</span>: &#123;<br>      <span class="hljs-string">&#x27;Access-Control-Allow-Origin&#x27;</span>: <span class="hljs-string">&#x27;*&#x27;</span>,<br>    &#125;,<br>  &#125;,<br>  <span class="hljs-comment">// 自定义webpack配置</span><br>  <span class="hljs-attr">configureWebpack</span>: &#123;<br>    <span class="hljs-attr">output</span>: &#123;<br>      <span class="hljs-comment">// 把子应用打包成库文件、格式是 umd</span><br>      <span class="hljs-attr">library</span>: <span class="hljs-string">`<span class="hljs-subst">$&#123;name&#125;</span>-[name]`</span>,<br>      <span class="hljs-attr">libraryTarget</span>: <span class="hljs-string">&#x27;umd&#x27;</span>,<br>      <span class="hljs-attr">jsonpFunction</span>: <span class="hljs-string">`webpackJsonp_<span class="hljs-subst">$&#123;name&#125;</span>`</span>,<br>    &#125;,<br>  &#125;,<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h1 id="umd"><a href="#umd" class="headerlink" title="umd"></a>umd</h1><p>umd全称是UniversalModuleDefinition，是一种通用模块定义格式，通常用于前端模块化开发中。</p>
+<p>由于不同的模块化规范定义不同，为了让各种规范的模块可以通用，在不同的环境下都可以正常运行，就出现了umd这个通用格式。</p>
+<h2 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h2><p>umd 格式是一种既可以在浏览器环境下使用，也可以在 node 环境下使用的格式。它将 CommonJS、AMD以及普通的全局定义模块三种模块模式进行了整合。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js">(<span class="hljs-keyword">function</span> (<span class="hljs-params"><span class="hljs-variable language_">global</span>, factory</span>) &#123;<br>  <span class="hljs-comment">// CommonJS</span><br>	<span class="hljs-keyword">typeof</span> <span class="hljs-built_in">exports</span> === <span class="hljs-string">&#x27;object&#x27;</span> &amp;&amp; <span class="hljs-keyword">typeof</span> <span class="hljs-variable language_">module</span> !== <span class="hljs-string">&#x27;undefined&#x27;</span> ? <span class="hljs-title function_">factory</span>(<span class="hljs-built_in">exports</span>) :<br>  <span class="hljs-comment">// AMD</span><br>	<span class="hljs-keyword">typeof</span> define === <span class="hljs-string">&#x27;function&#x27;</span> &amp;&amp; define.<span class="hljs-property">amd</span> ? <span class="hljs-title function_">define</span>([<span class="hljs-string">&#x27;exports&#x27;</span>], factory) :<br>  <span class="hljs-comment">// Window</span><br>	(<span class="hljs-variable language_">global</span> = <span class="hljs-keyword">typeof</span> globalThis !== <span class="hljs-string">&#x27;undefined&#x27;</span> ? globalThis : <span class="hljs-variable language_">global</span> || self, <span class="hljs-title function_">factory</span>(<span class="hljs-variable language_">global</span>.<span class="hljs-property">qiankun</span> = &#123;&#125;));<br>&#125;(<span class="hljs-variable language_">this</span>, (<span class="hljs-keyword">function</span> (<span class="hljs-params"><span class="hljs-built_in">exports</span></span>) &#123;<br>  <span class="hljs-comment">// 应用代码</span><br>&#125;)));<br></code></pre></td></tr></table></figure>
+
+<h2 id="为什么-qiankun-要求子应用打包为-umd-库格式呢？"><a href="#为什么-qiankun-要求子应用打包为-umd-库格式呢？" class="headerlink" title="为什么 qiankun 要求子应用打包为 umd 库格式呢？"></a>为什么 qiankun 要求子应用打包为 umd 库格式呢？</h2><p>主要是为了拿到子应用在 <code>入口文件</code> 导出的 <code>生命钩子函数</code>，这也是主应用和子应用之间通信的关键。</p>
+<ul>
+<li><p>bootstrap</p>
+</li>
+<li><p>mount</p>
+</li>
+<li><p>unmount</p>
+</li>
+</ul>
+<h1 id="获取子应用资源-import-html-entry"><a href="#获取子应用资源-import-html-entry" class="headerlink" title="获取子应用资源 - import-html-entry"></a>获取子应用资源 - import-html-entry</h1><blockquote>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/369414267">https://zhuanlan.zhihu.com/p/369414267</a></p>
+</blockquote>
+<p>HTML Entry + Sandbox 是 qiankun 区别于 single-spa 的主要两个特性。</p>
+<p>single-spa和qiankun最大的不同，大概就是qiankun实现了html entry，而single-spa只能是js entry</p>
+<p>通过 import-html-entry，我就能像 iframe 一样加载一个子应用，只需要知道其 html 的 url 就能加载到主应用中。</p>
+<p>importHTML 几个核心方法:</p>
+<p>首先importHTML的参数为需要加载的页面url，拿到后会先通过 <code>fetch方法</code> 读取页面内容。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> importHTML <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;import-html-entry&#x27;</span>;<br><br><span class="hljs-title function_">importHTML</span>(<span class="hljs-string">&#x27;./subApp/index.html&#x27;</span>)<br>  .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(res.<span class="hljs-property">template</span>);<br><br>    res.<span class="hljs-title function_">execScripts</span>().<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">exports</span> =&gt;</span> &#123;<br>      <span class="hljs-keyword">const</span> mobx = <span class="hljs-built_in">exports</span>;<br>      <span class="hljs-keyword">const</span> &#123; observable &#125; = mobx;<br>      <span class="hljs-title function_">observable</span>(&#123;<br>        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;kuitos&#x27;</span><br>      &#125;)<br>    &#125;)<br>&#125;);<br></code></pre></td></tr></table></figure>
+
+<h2 id="返回值"><a href="#返回值" class="headerlink" title="返回值"></a>返回值</h2><ul>
+<li>template - string - 处理过的 HTML 模板。</li>
+<li>assetPublicPath - string - 资源的公共途径。</li>
+<li>getExternalScripts - Promise&lt;string[]&gt; - 来自模板的脚本 URL。</li>
+<li>getExternalStyleSheets - Promise&lt;string[]&gt; - 来自模板的 StyleSheets URL。</li>
+<li>execScripts - (sandbox?: object, strictGlobal?: boolean, execScriptsHooks?: ExecScriptsHooks): - Promise<unknown> - the return value is the last property on window or proxy window which set by the entry - script.<ul>
+<li>sandbox - optional, Window or proxy window.</li>
+<li>strictGlobal - optional, Strictly enforce the sandbox.</li>
+</ul>
+</li>
+</ul>
+<h2 id="processTpl"><a href="#processTpl" class="headerlink" title="processTpl"></a>processTpl</h2><p>它会解析html的内容并且删除注释，获取style样式及script代码。通过<code>大量的正则</code> + replace，每一个步骤都做了很多适配，比如获取script脚本，需要区分该script是不是entry script，type是JavaScript还是module，是行内script还是外链script，是相对路径还是绝对路径，是否需要处理协议等等。</p>
+<p>processTpl的返回值有 template，script，style，entry。</p>
+<h1 id="JS-沙箱"><a href="#JS-沙箱" class="headerlink" title="JS 沙箱"></a>JS 沙箱</h1><blockquote>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6920110573418086413">文章</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Gv4y177yn/?spm_id_from=333.337.search-card.all.click&vd_source=a9f38e58a519cc0570c2dacd34ad7ebe">视频</a></p>
+</blockquote>
+<p>JavaScript 沙箱是一种安全机制，用于隔离和限制 JavaScript 代码的执行环境，以防止恶意代码或意外行为对系统造成损害。沙箱提供了一种受控的环境，限制了代码的访问权限和执行能力，确保代码只能在受限制的范围内操作。</p>
+<p>JavaScript 沙箱通常用于以下情况：</p>
+<ol>
+<li>在多租户环境中，确保不同用户或组织的代码相互隔离，防止相互干扰或访问敏感信息。</li>
+<li>在第三方代码或插件中使用，以确保其代码不会对宿主环境造成潜在的安全漏洞或冲突。</li>
+<li>在应用程序中执行用户提供的代码，例如在线代码编辑器或脚本执行环境，以防止恶意代码对用户数据或系统进行攻击。</li>
+<li>在浏览器中执行不受信任的代码，例如浏览器插件或扩展，以保护用户的隐私和安全。</li>
+</ol>
+<p>JavaScript 沙箱通过限制代码的访问权限、提供隔离的执行环境、使用安全策略和沙箱沙盒技术等手段来实现。常见的 JavaScript 沙箱技术包括沙盒环境、Web Worker、iframe、JavaScript 虚拟机等。这些技术通过限制代码的执行权限、提供独立的运行环境、隔离全局上下文等方式来确保代码的安全执行。</p>
+<h2 id="快照沙箱-SnapshotSandbox"><a href="#快照沙箱-SnapshotSandbox" class="headerlink" title="快照沙箱-SnapshotSandbox"></a>快照沙箱-SnapshotSandbox</h2><p>缺点：</p>
+<ul>
+<li><p>遍历 window 上所有属性，性能差</p>
+</li>
+<li><p>同一时间只能激活一个微应用</p>
+</li>
+<li><p>污染全局 window</p>
+</li>
+</ul>
+<p>优点：</p>
+<p>可以支持不兼容Proxy的浏览器。</p>
+<p>先了解 SnapshotSandbox 的功能</p>
+<ol>
+<li><p>我们激活沙箱后，在 window 上修改的所有属性，都应该存起来，在下一次激活时，需要还原上次在 window 上修改的属性</p>
+</li>
+<li><p>失活后，应该将 window 还原成激活前的状态</p>
+</li>
+</ol>
+<p>我们来举个例子</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 激活前</span><br><span class="hljs-variable language_">window</span>.<span class="hljs-property">city</span> = <span class="hljs-string">&#x27;Beijing&#x27;</span><br><br><span class="hljs-comment">// 激活</span><br>sanbox.<span class="hljs-title function_">active</span>()<br><br><span class="hljs-variable language_">window</span>.<span class="hljs-property">city</span> = <span class="hljs-string">&#x27;上海&#x27;</span><br><br><span class="hljs-comment">// 失活</span><br>sanbox.<span class="hljs-title function_">inactive</span>()<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-variable language_">window</span>.<span class="hljs-property">city</span>) <span class="hljs-comment">// 打印 &#x27;Beijing&#x27;</span><br><br><span class="hljs-comment">// 再激活</span><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-variable language_">window</span>.<span class="hljs-property">city</span>) <span class="hljs-comment">// 打印 &#x27;上海&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>接下来，实现一个简易版的 SnapshotSandbox</p>
+<ol>
+<li>SnapshotSandbox 能够还原 window 和记录自己以前的状态，那么就需要两个对象来存储这些信息</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-number">1.</span> windowSnapshot 用来存储沙箱激活前的 <span class="hljs-variable language_">window</span><br><br><span class="hljs-number">2.</span> modifyPropsMap 用来存储沙箱激活期间，在 <span class="hljs-variable language_">window</span> 上修改过的属性<br></code></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>沙箱需要两个方法及作用</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-number">1.</span> sanbox.<span class="hljs-title function_">active</span>() <span class="hljs-comment">// 激活沙箱</span><br><br>  - 保存 <span class="hljs-variable language_">window</span> 的快照<br><br>  - 再次激活时，将 <span class="hljs-variable language_">window</span> 还原到上次 active 的状态<br><br><span class="hljs-number">2.</span> sanbox.<span class="hljs-title function_">inactive</span>() <span class="hljs-comment">// 失活沙箱</span><br><br>  - 记录当前在 <span class="hljs-variable language_">window</span> 上修改了的 prop<br><br>  - 还原 <span class="hljs-variable language_">window</span> 到 active 之前的状态<br></code></pre></td></tr></table></figure>
+
+<p>我们先来实现沙箱内部细节：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">class</span> <span class="hljs-title class_">SnapshotSandbox</span> &#123;<br><br>  <span class="hljs-title function_">constructor</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">windowSnapshot</span> = &#123;&#125;<br><br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">modifyPropsMap</span> = &#123;&#125;<br>  &#125;<br><br>  <span class="hljs-title function_">active</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-comment">// 1. 保存 window 的快照</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> prop <span class="hljs-keyword">in</span> <span class="hljs-variable language_">window</span>) &#123;<br>      <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">window</span>.<span class="hljs-title function_">hasOwnProperty</span>(prop)) &#123;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">windowSnapshot</span>[prop] = <span class="hljs-variable language_">window</span>[prop]<br>      &#125;<br>    &#125;<br><br>    <span class="hljs-comment">// 2. 再次激活时，将 window 还原到上次 active 的状态，modifyPropsMap 存储了上次 active 时在 widow 上修改了哪些属性</span><br>    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(modifyPropsMap).<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">prop</span> =&gt;</span> &#123;<br>      <span class="hljs-variable language_">window</span>[prop] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">modifyPropsMap</span>[prop]<br>    &#125;)<br>  &#125;<br><br>  <span class="hljs-title function_">inactive</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> prop <span class="hljs-keyword">in</span> <span class="hljs-variable language_">window</span>) &#123;<br>      <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">window</span>.<span class="hljs-title function_">hasOwnProperty</span>(prop)) &#123;<br>        <span class="hljs-comment">// 两者不相同，表示修改了某个 prop 记录当前在 window 上修改了的 prop</span><br>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">window</span>[prop] !== <span class="hljs-variable language_">this</span>.<span class="hljs-property">windowSnapshot</span>[prop]) &#123;<br>          <span class="hljs-variable language_">this</span>.<span class="hljs-property">modifyPropsMap</span>[prop] = <span class="hljs-variable language_">window</span>[prop]<br>        &#125;<br><br>        <span class="hljs-comment">// 还原 window</span><br>        <span class="hljs-variable language_">window</span>[prop] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">windowSnapshot</span>[prop]<br>      &#125;<br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>我们来验证一下，首先设置 <code>window.city</code> 一个初始值 <code>beijing</code>，然后初始化 沙箱，在第一次激活后，修改了 <code>window.city</code> 为 <code>上海</code>，那么应该在失活后，打印 <code>beijing</code>，再次激活时，<code>window.city</code> 是 <code>上海</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-variable language_">window</span>.<span class="hljs-property">city</span> = <span class="hljs-string">&#x27;beijing&#x27;</span><br><br><span class="hljs-keyword">const</span> ss = <span class="hljs-keyword">new</span> <span class="hljs-title class_">SnapshotSandbox</span>()<br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;window.city0 &#x27;</span>, <span class="hljs-variable language_">window</span>.<span class="hljs-property">city</span>)<br><br>ss.<span class="hljs-title function_">active</span>() <span class="hljs-comment">// 激活</span><br><br><span class="hljs-variable language_">window</span>.<span class="hljs-property">city</span> = <span class="hljs-string">&#x27;上海&#x27;</span><br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;window.city1 &#x27;</span>, <span class="hljs-variable language_">window</span>.<span class="hljs-property">city</span>) <span class="hljs-comment">// 上海</span><br><br>ss.<span class="hljs-title function_">inactive</span>()<br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;window.city2 &#x27;</span>, <span class="hljs-variable language_">window</span>.<span class="hljs-property">city</span>) <span class="hljs-comment">// beijing</span><br><br>ss.<span class="hljs-title function_">active</span>()<br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;window.city3 &#x27;</span>, <span class="hljs-variable language_">window</span>.<span class="hljs-property">city</span>) <span class="hljs-comment">// 上海</span><br><br>ss.<span class="hljs-title function_">inactive</span>()<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;window.city4 &#x27;</span>, <span class="hljs-variable language_">window</span>.<span class="hljs-property">city</span>) <span class="hljs-comment">// beijing</span><br><br>ss.<span class="hljs-title function_">active</span>()<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;window.city5 &#x27;</span>, <span class="hljs-variable language_">window</span>.<span class="hljs-property">city</span>) <span class="hljs-comment">// 上海</span><br></code></pre></td></tr></table></figure>
+
+
+<p>不支持多个应用同时运行，因为污染了全局 window</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-variable language_">window</span>.<span class="hljs-property">city</span> = <span class="hljs-string">&#x27;beijing&#x27;</span><br><br><span class="hljs-keyword">const</span> ss = <span class="hljs-keyword">new</span> <span class="hljs-title class_">SnapshotSandbox</span>()<br>ss.<span class="hljs-title function_">active</span>() <span class="hljs-comment">// 激活</span><br><span class="hljs-variable language_">window</span>.<span class="hljs-property">city</span> = <span class="hljs-string">&#x27;上海&#x27;</span><br><br><span class="hljs-keyword">const</span> ss1 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">SnapshotSandbox</span>()<br>ss1.<span class="hljs-title function_">active</span>() <span class="hljs-comment">// 激活</span><br><br><span class="hljs-variable language_">window</span>.<span class="hljs-property">city</span> = <span class="hljs-string">&#x27;广州&#x27;</span><br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-variable language_">window</span>.<span class="hljs-property">city</span>) <span class="hljs-comment">// 广州</span><br></code></pre></td></tr></table></figure>
+
+
+<h2 id="Legacy沙箱-LegacySandbox（单例）"><a href="#Legacy沙箱-LegacySandbox（单例）" class="headerlink" title="Legacy沙箱-LegacySandbox（单例）"></a>Legacy沙箱-LegacySandbox（单例）</h2><ul>
+<li><p>不需要遍历 window 上的所有属性，性能比快照沙箱要好</p>
+</li>
+<li><p>基于 proxy 实现，依然操作了 window，污染了全局，同一时间只能运行一个应用</p>
+</li>
+<li><p>兼容性没有快照沙箱好</p>
+</li>
+</ul>
+<p>功能和 <code>快照沙箱</code> 一样，但内部实现是通过 proxy 实现的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">LegacySandbox</span> &#123;<br>  <span class="hljs-comment">/** 沙箱期间新增的全局变量 */</span><br>  private addedPropsMapInSandbox = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Map</span>();<br><br>  <span class="hljs-comment">/** 沙箱期间更新的全局变量 */</span><br>  private modifiedPropsOriginalValueMapInSandbox = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Map</span>();<br><br>  <span class="hljs-comment">/** 持续记录更新的(新增和修改的)全局变量的 map，用于在任意时刻做 snapshot */</span><br>  private currentUpdatedPropsValueMap = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Map</span>();<br><br><br>  <span class="hljs-title function_">active</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-comment">//...</span><br>  &#125;<br><br>  <span class="hljs-title function_">inactive</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-comment">//...</span><br>  &#125;<br><br>  <span class="hljs-title function_">constructor</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-comment">// ...</span><br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+<h2 id="ProxySandbox-沙箱（多例）"><a href="#ProxySandbox-沙箱（多例）" class="headerlink" title="ProxySandbox 沙箱（多例）"></a>ProxySandbox 沙箱（多例）</h2><ul>
+<li><p>基于 proxy 代理对象，不需要遍历 window，性能要比快照沙箱好</p>
+</li>
+<li><p>支持多个应用</p>
+</li>
+<li><p>没有污染全局 window</p>
+</li>
+<li><p>应用失活后，依然可以获取到激活时定义的属性。</p>
+</li>
+</ul>
+<p>主要实现在 <code>constructor</code> 中，创建一个 <code>fakeWindow</code> 对象，通过 Proxy 代理这个对象，全程没有改变 window</p>
+<p>只是在获取属性值的时候，如果在代理对象上没有找到想要的属性，才回去 window 中查找。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">class</span> <span class="hljs-title class_">ProxySandbox</span> &#123;<br><br>  <span class="hljs-title function_">constructor</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-comment">// 沙箱是否是激活状态</span><br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">isRunning</span> = <span class="hljs-literal">false</span><br><br>    <span class="hljs-keyword">const</span> fakeWindow = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-literal">null</span>)<br><br>    <span class="hljs-keyword">const</span> _this = <span class="hljs-variable language_">this</span><br><br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">proxyWindow</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Proxy</span>(fakeWindow, &#123;<br>      <span class="hljs-title function_">set</span>(<span class="hljs-params">target, prop, value</span>) &#123;<br>        <span class="hljs-comment">// 只有激活状态下，才做处理</span><br>        <span class="hljs-keyword">if</span> (_this.<span class="hljs-property">isRunning</span>) &#123;<br>          target[prop] = value<br>          <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span><br>        &#125;<br>      &#125;,<br>      <span class="hljs-title function_">get</span>(<span class="hljs-params">target, prop, reciver</span>) &#123;<br>        <span class="hljs-comment">// 如果fakeWindow里面有，就从fakeWindow里面取，否则，就从外部的window里面取</span><br>        <span class="hljs-keyword">return</span> prop <span class="hljs-keyword">in</span> target ? target[prop] : <span class="hljs-variable language_">window</span>[prop]<br>      &#125;<br>    &#125;)<br>  &#125;<br><br>  <span class="hljs-title function_">active</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">isRunning</span> = <span class="hljs-literal">true</span><br>  &#125;<br><br>  <span class="hljs-title function_">inactive</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">isRunning</span> = <span class="hljs-literal">false</span><br>  &#125;<br>&#125;<br><br><span class="hljs-variable language_">window</span>.<span class="hljs-property">city</span> = <span class="hljs-string">&#x27;北京&#x27;</span><br><br><span class="hljs-keyword">const</span> p1 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ProxySandbox</span>()<br><span class="hljs-keyword">const</span> p2 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ProxySandbox</span>()<br><br><span class="hljs-comment">// 激活</span><br>p1.<span class="hljs-title function_">active</span>()<br>p2.<span class="hljs-title function_">active</span>()<br><br>p1.<span class="hljs-property">proxyWindow</span>.<span class="hljs-property">city</span> = <span class="hljs-string">&#x27;上海&#x27;</span><br>p2.<span class="hljs-property">proxyWindow</span>.<span class="hljs-property">city</span> = <span class="hljs-string">&#x27;杭州&#x27;</span><br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(p1.<span class="hljs-property">proxyWindow</span>.<span class="hljs-property">city</span>) <span class="hljs-comment">// &#x27;上海&#x27;</span><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(p2.<span class="hljs-property">proxyWindow</span>.<span class="hljs-property">city</span>) <span class="hljs-comment">// &#x27;杭州&#x27;</span><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-variable language_">window</span>.<span class="hljs-property">city</span>) <span class="hljs-comment">// 北京</span><br><br><span class="hljs-comment">// 失活</span><br>p1.<span class="hljs-title function_">inactive</span>()<br>p2.<span class="hljs-title function_">inactive</span>()<br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(p1.<span class="hljs-property">proxyWindow</span>.<span class="hljs-property">city</span>) <span class="hljs-comment">// &#x27;上海&#x27;</span><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(p2.<span class="hljs-property">proxyWindow</span>.<span class="hljs-property">city</span>) <span class="hljs-comment">// &#x27;杭州&#x27;</span><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-variable language_">window</span>.<span class="hljs-property">city</span>) <span class="hljs-comment">// &#x27;北京&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="应用间通信"><a href="#应用间通信" class="headerlink" title="应用间通信"></a>应用间通信</h1><p>我们可以通过 <code>initGlobalState</code> 来<code>定义全局状态，并返回通信方法</code>，建议在主应用使用，微应用通过 props 获取通信方法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> &#123; initGlobalState, <span class="hljs-title class_">MicroAppStateActions</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;qiankun&#x27;</span>;<br><br><span class="hljs-comment">// 初始化 state</span><br><span class="hljs-keyword">const</span> <span class="hljs-attr">actions</span>: <span class="hljs-title class_">MicroAppStateActions</span> = <span class="hljs-title function_">initGlobalState</span>(state);<br></code></pre></td></tr></table></figure>
+
+<p>微应用可以在导出的 <code>mounted</code> 钩子函数中获取 <code>props</code>，这个 <code>props</code> 中就包含了 <code>onGlobalStateChange</code> 和 <code>setGlobalState</code> 方法，当我们通过 <code>setGlobalState</code> 去设置全局的状态，就会触发 <code>onGlobalStateChange</code> 方法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">export</span> <span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">mount</span>(<span class="hljs-params">props</span>) &#123;<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;[vue] props from main framework&#x27;</span>, props);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>offGlobalStateChange: () =&gt; boolean，移除当前应用的状态监听，微应用 umount 时会默认调用</code></p>
+<h2 id="在微应用中监听全局状态"><a href="#在微应用中监听全局状态" class="headerlink" title="在微应用中监听全局状态"></a>在微应用中监听全局状态</h2><p>微应用 index.js</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs js"><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">watchGlobalStateChange</span>(<span class="hljs-params">props</span>) &#123;<br>  props.<span class="hljs-property">onGlobalStateChange</span> &amp;&amp; props.<span class="hljs-title function_">onGlobalStateChange</span>(<br>    <span class="hljs-function">(<span class="hljs-params">value, prev</span>) =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`[监听 - <span class="hljs-subst">$&#123;props.name&#125;</span>]:`</span>, value, prev),<br>    <span class="hljs-literal">true</span>, <span class="hljs-comment">// true 立即触发 callback</span><br>  );<br><br>  <span class="hljs-comment">// 两秒过后，更新全局状态，首先会触发主应用的 `onGlobalStateChange` callback</span><br>  <span class="hljs-comment">// 接着会触发上面定义的 onGlobalStateChange callback</span><br>  <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> &#123;<br>    props.<span class="hljs-property">setGlobalState</span> &amp;&amp; props.<span class="hljs-title function_">setGlobalState</span>(&#123;<br>      <span class="hljs-attr">app</span>: &#123;<br>        <span class="hljs-attr">name</span>: props.<span class="hljs-property">name</span>,<br>      &#125;,<br>    &#125;);<br>  &#125;, <span class="hljs-number">2000</span>);<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">mount</span>(<span class="hljs-params">props</span>) &#123;<br>  <span class="hljs-title function_">watchGlobalStateChange</span>(props)<br>  <span class="hljs-title function_">render</span>(props)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h1 id="qiankun-的样式问题"><a href="#qiankun-的样式问题" class="headerlink" title="qiankun 的样式问题"></a>qiankun 的样式问题</h1><p>如果不启动样式隔离，主应用、子应用所有的样式都是全局环境下，意味着，如果我在主应用里面设置了高权重的 css 样式，是会直接影响到子应用的。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs css">// 主应用 <span class="hljs-selector-tag">main</span><span class="hljs-selector-class">.css</span><br><span class="hljs-selector-tag">h1</span> &#123;<br>  <span class="hljs-attribute">color</span>: red <span class="hljs-meta">!important</span>;<br>&#125;<br><br><span class="hljs-selector-tag">button</span> &#123;<br>  <span class="hljs-attribute">background-color</span>: red <span class="hljs-meta">!important</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>主应用、子应用所有的 h1 和 button 都会应用以上颜色。</p>
+<p>当然我们不能这样做，我们的应用间样式应该独立，不能互相影响。可以通过 BEM 解决，不过在大型项目下，约定是一件很不靠谱的事情，最好是在框架中解决此问题，一劳永逸。</p>
+<h2 id="qiankun-样式隔离方案"><a href="#qiankun-样式隔离方案" class="headerlink" title="qiankun 样式隔离方案"></a>qiankun 样式隔离方案</h2><ul>
+<li><p>shadow dom（sanbox: strictStyleIsolation）</p>
+</li>
+<li><p>scoped css（sanbox: experimentalStyleIsolation）</p>
+</li>
+</ul>
+<p>在 start 方法中，配置 sanbox 属性，即可开启 css 隔离。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// sanbox: boolean | &#123; strictStyleIsolation?: boolean, experimentalStyleIsolation?: boolean &#125;</span><br><br><span class="hljs-title function_">start</span>(&#123;<br>  <span class="hljs-attr">sanbox</span>: <span class="hljs-literal">true</span><br>&#125;)<br><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>strictStyleIsolation</li>
+</ul>
+<p><code>strictStyleIsolation</code> 模式下 qiankun 会为每个微应用的容器包裹上一个 <code>shadow dom</code> 节点，<strong><code>所有的子应用都被 #shadow-root 所包裹</code></strong>，从而确保微应用的样式不会对全局造成影响。</p>
+<p>当我们开启了 <code>strictStyleIsolation</code> 模式后，主应用设置的高权重 css 确实没有影响子应用了。但是，但是，咱们去看看 Vue <code>dialog</code> 的样式（别看 React 的，因为React事件在 Shadow DOM 中根本不起作用 😂😂😂）</p>
+<blockquote>
+<p><code>注意：</code></p>
+<p><code>shadow dom</code> 并不是一个无脑的解决方案，特别是在 React 中，事件的处理可能不那么奏效了😄！</p>
+<p><a target="_blank" rel="noopener" href="https://legacy.reactjs.org/docs/web-components.html">React 官方关于 web component 的解释</a></p>
+</blockquote>
+<p>乍一看是不是没问题？</p>
+<img src="../img/strictStyleIsolation1.png" srcset="/img/loading.gif" lazyload />
+
+
+<p>我们摁下电脑的 <code>ESC</code> 键，会触发 <code>是否取消弹窗</code> 的二次确认，你再看看有没有问题？</p>
+<img src="../img/strictStyleIsolation2.png" srcset="/img/loading.gif" lazyload />
+
+<p>样式完全丢失了，这是为什么呢？<code>因为二次确认的 Dialog 是挂在 body 下，而我们整个子应用都被 shadow dom 所包裹，内部的样式对外部的样式起不到任何作用，所以这个弹窗失去了漂亮的外衣了😭😭😭</code>！</p>
+<p>不过，为啥弹窗要挂在 body 下？</p>
+<p>这个是为了避免被父元素的样式影响，比如父元素设置了 display:none，那么这个弹窗也是无法展示的。</p>
+<ul>
+<li>experimentalStyleIsolation</li>
+</ul>
+<p><code>experimentalStyleIsolation</code> 被设置为 true 时，qiankun 会改写子应用所添加的样式为所有样式规则增加一个特殊的选择器规则来限定其影响范围，因此改写后的代码会表达类似为如下结构：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs css">// 假设应用名是 react16 中的样式是这样<br><span class="hljs-selector-class">.app-main</span> &#123;<br>  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">14px</span>;<br>&#125;<br><br>// ===== 处理后 ======&gt;<br><br><span class="hljs-selector-tag">div</span><span class="hljs-selector-attr">[data-qiankun-react16]</span> <span class="hljs-selector-class">.app-main</span> &#123;<br>  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">14px</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>有点类似 Vue 中的 css scoped 作用，给每个子应用加了一个 ”唯一“ 的属性选择器。</p>
+<p>这个时候，React 的事件处理没问题了（真好啊😁），我们来到页面上看看效果：</p>
+<img src="../img/experimentalStyleIsolation1.png" srcset="/img/loading.gif" lazyload />
+
+<p>事件是生效了，但是弹窗样式丢失了😭😭😭</p>
+<p>这个弹窗是挂在 body 下，而加了 <code>experimentalStyleIsolation</code> 之后，所有的样式都加了 <code>div[data-qiankun=&quot;react16&quot;]</code> 前缀，唯独 body 下的 dialog 没有加前缀，导致无法应用到正确的样式了。(Vue子应用 也有这样的问题!!)</p>
+<p>还有就是，在主应用设置的<code>高权重样式</code>依然影响到了子应用。</p>
+<h2 id="Vue-Scoped"><a href="#Vue-Scoped" class="headerlink" title="Vue Scoped"></a>Vue Scoped</h2><p>在 Vue 的单文件组件中使用 <code>&lt;style scoped&gt;</code> 标签时，Vue 会自动将该样式应用于当前组件的元素，并在编译过程中为每个 CSS 规则添加一个<code>唯一的属性选择器</code>，以确保样式仅对当前组件有效。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-tag">h3</span> &#123;<br>  <span class="hljs-attribute">background-color</span>: pink;<br>  <span class="hljs-attribute">color</span>: blue;<br>&#125;<br><br>// ======= 使用 style scoped 后 ====&gt;<br><br><span class="hljs-selector-tag">h3</span><span class="hljs-selector-attr">[data-v-469af010]</span> &#123;<br>  <span class="hljs-attribute">background-color</span>: pink;<br>  <span class="hljs-attribute">color</span>: blue;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="CSS-Modules"><a href="#CSS-Modules" class="headerlink" title="CSS Modules"></a>CSS Modules</h2><p>要使用 CSS Modules，首先要改造 webpack.config.js，修改 css-loader 部分</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// webpack.config.js</span><br>&#123;<br>  <span class="hljs-attr">test</span>: <span class="hljs-regexp">/\.(le|c)ss$/</span>,<br>  <span class="hljs-attr">use</span>: [<span class="hljs-string">&#x27;style-loader&#x27;</span>, &#123;<br>    <span class="hljs-attr">loader</span>: <span class="hljs-string">&#x27;css-loader&#x27;</span>,<br>    <span class="hljs-attr">options</span>: &#123;<br>      <span class="hljs-attr">modules</span>: <span class="hljs-literal">true</span> <span class="hljs-comment">// 开启 css modules</span><br>    &#125;<br>  &#125;, <span class="hljs-string">&#x27;less-loader&#x27;</span>],<br>&#125;,<br></code></pre></td></tr></table></figure>
+
+<p>然后定义 模块 css <code>index.module.css</code></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.text-color</span> &#123;<br>  <span class="hljs-attribute">color</span>: red;<br>&#125;<br><br><span class="hljs-selector-class">.text-gb</span> &#123;<br>  <span class="hljs-attribute">background-color</span>: pink;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>使用的时候，导入 <code>index.module.css</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> styles <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./index.module.css&#x27;</span><br><br>&lt;div className=&#123;styles[<span class="hljs-string">&#x27;text-bg&#x27;</span>]&#125;&gt;<br>  <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">className</span>=<span class="hljs-string">&#123;styles[</span>&#x27;<span class="hljs-attr">text-color</span>&#x27;]&#125;&gt;</span>CSS Modules<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span></span><br>&lt;/div&gt;<br></code></pre></td></tr></table></figure>
+
+<p>我们再查看页面上的元素，看看样式长什么样:</p>
+<img src="../img/css-modules.png" srcset="/img/loading.gif" lazyload />
+
+<p>使用 CSS Modules 之后，选择器名字上加了 hash。</p>
+<p>既然 父元素 class name 用 css modules 加上了 hash，那么内部元素的 class name 该怎么用怎么用，不使用 <code>模块CSS</code> 中的样式也是 OK 的。</p>
+<p>css modules 和 scoped css 差不多，都能实现组件级别样式隔离，能设置子组件和全局样式，只是实现方式不同，导致了使用起来也有差异。</p>
+<h2 id="那么-qiankun-的样式隔离还有必要做吗"><a href="#那么-qiankun-的样式隔离还有必要做吗" class="headerlink" title="那么 qiankun 的样式隔离还有必要做吗"></a>那么 qiankun 的样式隔离还有必要做吗</h2><p>老项目还是可以用的，比如 JQuery 这种，qiankun 的样式隔离能用。</p>
+<p>如果要在 JQuery 这种项目中使用 CSS Module、CSS in JS，可能改造成本有点大了。</p>
+<p>只是现在的应用，不管是 vue 还是 react 基本都开启了组件级别样式隔离，qiankun 自带的样式隔离问题太多了，不能用了。</p>
+<h1 id="CSS-沙箱解决方案"><a href="#CSS-沙箱解决方案" class="headerlink" title="CSS 沙箱解决方案"></a>CSS 沙箱解决方案</h1><p>在前端开发中，为了实现 CSS 的沙箱化，即将某个 CSS 样式应用于特定的范围而不影响其他元素，可以采用以下几种实现方案：</p>
+<ol>
+<li><strong>命名约定（BEM）</strong>：通过给特定范围内的元素添加特定的类名或命名前缀，然后在 CSS 中通过类选择器或属性选择器来应用相应的样式。这种方式需要在开发过程中遵循命名约定，确保样式只作用于指定的元素，避免与其他元素产生冲突。</li>
+</ol>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs css">&lt;<span class="hljs-selector-tag">div</span> class=&quot;block&quot;&gt;<br>  &lt;<span class="hljs-selector-tag">div</span> class=&quot;block__element&quot;&gt;&lt;/<span class="hljs-selector-tag">div</span>&gt;<br>  &lt;<span class="hljs-selector-tag">div</span> class=&quot;block__element<span class="hljs-attr">--modifier</span>&quot;&gt;&lt;/<span class="hljs-selector-tag">div</span>&gt;<br>&lt;/<span class="hljs-selector-tag">div</span>&gt;<br><br>&lt;<span class="hljs-selector-tag">div</span> class=&quot;<span class="hljs-selector-tag">header</span>-<span class="hljs-selector-tag">section</span>&quot;&gt;<br>  &lt;<span class="hljs-selector-tag">div</span> class=&quot;<span class="hljs-selector-tag">header</span>-section__logo&quot;&gt;&lt;/<span class="hljs-selector-tag">div</span>&gt;<br>  &lt;<span class="hljs-selector-tag">div</span> class=&quot;<span class="hljs-selector-tag">header</span>-section__menu&quot;&gt;&lt;/<span class="hljs-selector-tag">div</span>&gt;<br>&lt;/<span class="hljs-selector-tag">div</span>&gt;<br></code></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><strong>CSS Modules</strong>：CSS Modules 是一种在构建过程中将 CSS 样式模块化的解决方案。它通过为每个模块生成唯一的类名，将样式限定在模块的范围内。在使用 CSS Modules 时，可以在 JavaScript 代码中导入样式文件，并通过类名来引用特定的样式，从而实现样式的沙箱化。</li>
+</ol>
+<p>要使用 CSS Modules，需要在 css-loader 中开启 module：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// webpack.config.js</span><br>&#123;<br>  <span class="hljs-attr">test</span>: <span class="hljs-regexp">/\.(le|c)ss$/</span>,<br>  <span class="hljs-attr">use</span>: [<span class="hljs-string">&#x27;style-loader&#x27;</span>, &#123;<br>    <span class="hljs-attr">loader</span>: <span class="hljs-string">&#x27;css-loader&#x27;</span>,<br>    <span class="hljs-attr">options</span>: &#123;<br>      <span class="hljs-attr">modules</span>: <span class="hljs-literal">true</span> <span class="hljs-comment">// 开启 css modules</span><br>    &#125;<br>  &#125;, <span class="hljs-string">&#x27;less-loader&#x27;</span>],<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>Button.module.css</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.button</span> &#123;<br>  <span class="hljs-attribute">background-color</span>: blue;<br>  <span class="hljs-attribute">color</span>: white;<br>&#125;<br><br><span class="hljs-selector-class">.button--disabled</span> &#123;<br>  <span class="hljs-attribute">opacity</span>: <span class="hljs-number">0.5</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>App.js</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><span class="hljs-keyword">import</span> styles <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./Button.module.css&#x27;</span>;<br><br>interface <span class="hljs-title class_">ButtonProps</span> &#123;<br>  disabled?: boolean;<br>  <span class="hljs-attr">onClick</span>: <span class="hljs-function">() =&gt;</span> <span class="hljs-keyword">void</span>;<br>&#125;<br><br><span class="hljs-keyword">const</span> <span class="hljs-title class_">Button</span>: <span class="hljs-title class_">React</span>.<span class="hljs-property">FC</span>&lt;<span class="hljs-title class_">ButtonProps</span>&gt; = <span class="hljs-function">(<span class="hljs-params">&#123; disabled, onClick, children &#125;</span>) =&gt;</span> &#123;<br>  <span class="hljs-keyword">const</span> buttonClasses = <span class="hljs-string">`<span class="hljs-subst">$&#123;styles.button&#125;</span> <span class="hljs-subst">$&#123;disabled ? styles[<span class="hljs-string">&#x27;button--disabled&#x27;</span>] : <span class="hljs-string">&#x27;&#x27;</span>&#125;</span>`</span>;<br><br>  <span class="hljs-keyword">return</span> (<br>    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">className</span>=<span class="hljs-string">&#123;buttonClasses&#125;</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">&#123;onClick&#125;</span> <span class="hljs-attr">disabled</span>=<span class="hljs-string">&#123;disabled&#125;</span>&gt;</span></span><br><span class="language-xml">      &#123;children&#125;</span><br><span class="language-xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span><br>  );<br>&#125;;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">Button</span>;<br></code></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><strong>CSS-in-JS</strong>：CSS-in-JS 是一种将 CSS 样式写在 JavaScript 代码中的方式，通过将样式与组件绑定在一起，实现了样式的局部化和沙箱化。常见的 CSS-in-JS 解决方案包括 styled-components、Emotion、CSS Modules with React 等。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><span class="hljs-keyword">import</span> styled <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;styled-components&#x27;</span>;<br><br><span class="hljs-keyword">const</span> <span class="hljs-title class_">Button</span> = styled.<span class="hljs-property">button</span><span class="hljs-string">`</span><br><span class="hljs-string">  background-color: blue;</span><br><span class="hljs-string">  color: white;</span><br><span class="hljs-string">  padding: 10px 20px;</span><br><span class="hljs-string">  border: none;</span><br><span class="hljs-string">  border-radius: 4px;</span><br><span class="hljs-string">  cursor: pointer;</span><br><span class="hljs-string"></span><br><span class="hljs-string">  &amp;:hover &#123;</span><br><span class="hljs-string">    background-color: darkblue;</span><br><span class="hljs-string">  &#125;</span><br><span class="hljs-string"></span><br><span class="hljs-string">  &amp;:disabled &#123;</span><br><span class="hljs-string">    opacity: 0.5;</span><br><span class="hljs-string">    cursor: not-allowed;</span><br><span class="hljs-string">  &#125;</span><br><span class="hljs-string">`</span>;<br><br><span class="hljs-keyword">const</span> <span class="hljs-title function_">ExampleComponent</span> = (<span class="hljs-params"></span>) =&gt; &#123;<br>  <span class="hljs-keyword">return</span> (<br>    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;<span class="hljs-name">Button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">&#123;()</span> =&gt;</span> console.log(&#x27;Button clicked&#x27;)&#125;&gt;Click me<span class="hljs-tag">&lt;/<span class="hljs-name">Button</span>&gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;<span class="hljs-name">Button</span> <span class="hljs-attr">disabled</span>&gt;</span>Disabled Button<span class="hljs-tag">&lt;/<span class="hljs-name">Button</span>&gt;</span></span><br><span class="language-xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br>  );<br>&#125;;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">ExampleComponent</span>;<br></code></pre></td></tr></table></figure>
+<p>在使用 CSS-in-JS 的方案中，样式是通过 JavaScript 运行时动态生成的，每个组件都具有自己独特的样式，并且不会与其他组件的样式发生冲突。这种方式提供了更好的样式隔离和组件化能力，并且使得样式与组件的代码更紧密集成在一起，提高了可维护性和可读性。</p>
+<ol start="4">
+<li><strong>Shadow DOM</strong>：Shadow DOM 是 Web 标准中的一个技术，可以创建一个隔离的 DOM 子树，其中的样式和脚本不会影响到外部的 DOM。通过在元素上应用 Shadow DOM，可以将样式限定在 Shadow DOM 内部，实现样式的沙箱化。Shadow DOM 主要用于 Web 组件开发，可以实现组件样式的封装和隔离。</li>
+</ol>
+<p>这些方案各有特点，选择合适的方案取决于具体的需求和项目情况。命名约定是最简单的方式，适用于小型项目和简单的样式隔离。CSS Modules 和 CSS-in-JS 提供了更丰富的功能和工具支持，适用于中大型项目和复杂的样式需求。Shadow DOM 则主要应用于 Web 组件开发，提供了更强大的封装和隔离能力。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">style</span>&gt;</span><span class="language-css"></span><br><span class="language-css">    <span class="hljs-selector-class">.outer</span> &#123;</span><br><span class="language-css">      <span class="hljs-attribute">background-color</span>: pink;</span><br><span class="language-css">      <span class="hljs-attribute">padding</span>: <span class="hljs-number">20px</span>;</span><br><span class="language-css">    &#125;</span><br><span class="language-css">  </span><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;outer&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>Outer Component<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;inner-root&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><br>  <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript"></span><br><span class="language-javascript">    <span class="hljs-keyword">const</span> outerElement = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;.outer&#x27;</span>);</span><br><span class="language-javascript">    <span class="hljs-keyword">const</span> innerRoot = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">&#x27;inner-root&#x27;</span>);</span><br><span class="language-javascript"></span><br><span class="language-javascript">    <span class="hljs-comment">// 创建 Shadow DOM，open 表示可以通过页面内的 JavaScript 方法来获取 Shadow DOM</span></span><br><span class="language-javascript">    <span class="hljs-keyword">const</span> shadowRoot = innerRoot.<span class="hljs-title function_">attachShadow</span>(&#123; <span class="hljs-attr">mode</span>: <span class="hljs-string">&#x27;open&#x27;</span> &#125;);</span><br><span class="language-javascript"></span><br><span class="language-javascript">    <span class="hljs-comment">// 在 Shadow DOM 中创建样式</span></span><br><span class="language-javascript">    <span class="hljs-keyword">const</span> style = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;style&#x27;</span>);</span><br><span class="language-javascript">    style.<span class="hljs-property">textContent</span> = <span class="hljs-string">`</span></span><br><span class="hljs-string"><span class="language-javascript">      .inner &#123;</span></span><br><span class="hljs-string"><span class="language-javascript">        background-color: aqua;</span></span><br><span class="hljs-string"><span class="language-javascript">        padding: 10px;</span></span><br><span class="hljs-string"><span class="language-javascript">      &#125;</span></span><br><span class="hljs-string"><span class="language-javascript">    `</span>;</span><br><span class="language-javascript">    shadowRoot.<span class="hljs-title function_">appendChild</span>(style);</span><br><span class="language-javascript"></span><br><span class="language-javascript">    <span class="hljs-comment">// 在 Shadow DOM 中创建内容</span></span><br><span class="language-javascript">    <span class="hljs-keyword">const</span> innerDiv = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;div&#x27;</span>);</span><br><span class="language-javascript">    innerDiv.<span class="hljs-property">className</span> = <span class="hljs-string">&#x27;inner&#x27;</span>;</span><br><span class="language-javascript">    innerDiv.<span class="hljs-property">textContent</span> = <span class="hljs-string">&#x27;Inner Component&#x27;</span>;</span><br><span class="language-javascript">    shadowRoot.<span class="hljs-title function_">appendChild</span>(innerDiv);</span><br><span class="language-javascript">  </span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="微前端框架"><a href="#微前端框架" class="headerlink" title="微前端框架"></a>微前端框架</h1><p>qiankun、wujie、micro-app 的区别主要还是实现容器（或者叫沙箱）上有区别</p>
+<ul>
+<li><p>qiankun: function + proxy + with</p>
+</li>
+<li><p>micro-app: web components</p>
+</li>
+<li><p>wujie: web components 和 iframe。</p>
+</li>
+</ul>
+<h1 id="微前端（qiankun）架构中，主应用和子应用有共同的组件，如何封装呢？"><a href="#微前端（qiankun）架构中，主应用和子应用有共同的组件，如何封装呢？" class="headerlink" title="微前端（qiankun）架构中，主应用和子应用有共同的组件，如何封装呢？"></a>微前端（qiankun）架构中，主应用和子应用有共同的组件，如何封装呢？</h1><p>在微前端架构中，主应用和子应用可能会共享一些组件，为了实现组件的共享和封装，可以采用以下方法：</p>
+<ol>
+<li><p>封装为独立的 npm 包：将共享的组件封装为独立的 npm 包，并发布到私有或公共的 npm 仓库中。主应用和子应用都可以通过 npm 安装该组件，并在需要的地方引入和使用。</p>
+</li>
+<li><p>Git 仓库依赖：将共享组件放置在一个独立的 Git 仓库中，并通过 Git 仓库的依赖关系来引入组件。主应用和子应用可以通过 Git 仓库的 URL 或路径来引入共享组件。</p>
+</li>
+<li><p>Git Submodule：如果主应用和子应用都在同一个 Git 仓库下，可以使用 Git Submodule 的方式来引入共享组件。将共享组件作为子模块添加到主应用和子应用的仓库中。</p>
+</li>
+<li><p>本地引用：如果主应用和子应用处于同一个代码仓库中，可以直接通过相对路径引入共享组件。将共享组件放置在一个独立的目录下，并通过相对路径引用。</p>
+</li>
+</ol>
+<p>无论选择哪种方式，关键是要保持共享组件的独立性和可维护性。确保共享组件的代码和样式与具体的主应用和子应用解耦，避免出现冲突和依赖混乱的情况。同时，建议对共享组件进行版本管理，以便在更新和维护时能够更好地控制和追踪变更。</p>
+<p>在微前端架构中，可以通过合适的方式引入共享组件，使主应用和子应用可以共享和复用组件，提高开发效率和代码质量。</p>
+<h2 id="monorepo架构"><a href="#monorepo架构" class="headerlink" title="monorepo架构"></a>monorepo架构</h2><p>Monorepo 模式也可以解决微前端中的公共依赖包和公共组件的问题。</p>
+<p>Monorepo 模式是指将多个项目或应用放置在同一个代码仓库中管理的开发模式。</p>
+<p>在 Monorepo 中，可以将公共依赖包和公共组件作为共享资源，放置在代码仓库的合适位置，供不同的项目或应用使用。这样可以避免不同项目之间重复安装和维护相同的依赖包，也能够统一管理和更新公共组件。</p>
+<p>以下是 Monorepo 模式下解决微前端中公共依赖包和公共组件的方式：</p>
+<ol>
+<li><p>公共依赖包管理：将公共的依赖包放置在代码仓库的根目录或指定目录下，通过工具如 Yarn 或 Lerna 管理依赖包的安装、更新和版本控制。不同的项目或应用可以通过引用共享的依赖包来解决依赖关系，避免重复安装和冲突。</p>
+</li>
+<li><p>公共组件封装：将公共的组件封装为独立的包或模块，放置在代码仓库的特定目录中，并通过工具如 NPM 发布和安装。不同的项目或应用可以通过引用共享的组件来实现组件的复用和共享，提高开发效率和代码一致性。</p>
+</li>
+</ol>
+<p>通过 Monorepo 模式，可以集中管理和维护公共依赖包和公共组件，减少重复工作和资源浪费。同时，还能够促进团队协作和代码共享，统一规范和风格，提高整体项目的质量和可维护性。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/">微前端</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/post/web-components.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Web Components</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/post/vue3-project-generalModule2.html">
+                        <span class="hidden-mobile">Vue3项目实战(六)：通用功能开发(二)</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    
+      <script type="text/javascript">
+        var disqus_config = function() {
+          this.page.url = 'http://yoursite.com/post/micro-qiankun.html';
+          this.page.identifier = '/post/micro-qiankun.html';
+        };
+        Fluid.utils.loadComments('#disqus_thread', function() {
+          var d = document, s = d.createElement('script');
+          s.src = '//' + 'helloalexcc' + '.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', new Date());
+          (d.head || d.body).appendChild(s);
+        });
+      </script>
+    
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hello-alex-cheng.github.io/" target="_blank" rel="nofollow noopener"><span>I</span></a> <i class="iconfont icon-love"></i> <a href="https://hello-alex-cheng.github.io/" target="_blank" rel="nofollow noopener"><span>YOU</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

@@ -1,0 +1,619 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Hello_AlexCc">
+  <meta name="keywords" content="Full stack engineer">
+  
+    <meta name="description" content="Vite">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入浅出 Vite">
+<meta property="og:url" content="http://yoursite.com/post/vite.html">
+<meta property="og:site_name" content="Hello_AlexCc">
+<meta property="og:description" content="Vite">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/img/vite.png">
+<meta property="article:published_time" content="2023-07-02T14:25:44.000Z">
+<meta property="article:modified_time" content="2024-06-11T08:52:17.352Z">
+<meta property="article:author" content="Hello_AlexCc">
+<meta property="article:tag" content="Vite">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://yoursite.com/img/vite.png">
+  
+  
+  <title>深入浅出 Vite - Hello_AlexCc</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Hello_AlexCc</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/vite.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="深入浅出 Vite">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2023-07-02 22:25" pubdate>
+        2023年7月2日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      8k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      67 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">深入浅出 Vite</h1>
+            
+            <div class="markdown-body">
+              <h1 id="vite"><a href="#vite" class="headerlink" title="vite"></a><a target="_blank" rel="noopener" href="https://cn.vitejs.dev/">vite</a></h1><blockquote>
+<p>Vite 需要 Node.js 版本 14.18+，16+。</p>
+</blockquote>
+<p>由两部分组成：</p>
+<ol>
+<li><p>一个开发服务器，以项目最外层的 <code>index.html</code> 为入口文件</p>
+</li>
+<li><p>一套针对生产环境的 Rollup 构建命令。</p>
+</li>
+</ol>
+<h2 id="浏览器支持"><a href="#浏览器支持" class="headerlink" title="浏览器支持"></a>浏览器支持</h2><p><code>默认的构建目标</code>是能支持 <code>原生 ESM 语法的 script 标签</code>、<code>原生 ESM 动态导入</code> 和 <code>import.meta</code> 的浏览器。</p>
+<h2 id="在线体验"><a href="#在线体验" class="headerlink" title="在线体验"></a>在线体验</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://stackblitz.com/edit/vitejs-vite-p476hg?file=index.html&amp;terminal=dev">https://stackblitz.com/edit/vitejs-vite-p476hg?file=index.html&amp;terminal=dev</a></p>
+</blockquote>
+<h2 id="本地体验"><a href="#本地体验" class="headerlink" title="本地体验"></a>本地体验</h2><p>直接安装 <code>vite</code> 即可。</p>
+<p><code>npm init -y</code>、<code>npm install vite -D</code>，然后配置 <code>vite 启动命令</code> 即可。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><pre><code class="hljs json"><span class="hljs-comment">// package.json</span><br><span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;vite-starter&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;private&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;version&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;0.0.0&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;module&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;scripts&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;dev&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;vite&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-comment">// 启动开发服务器，别名：`vite dev`，`vite serve`</span><br>    <span class="hljs-attr">&quot;build&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;vite build&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-comment">// 为生产环境构建产物</span><br>    <span class="hljs-attr">&quot;preview&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;vite preview&quot;</span> <span class="hljs-comment">// 本地预览生产构建产物</span><br>  <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;devDependencies&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;vite&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;^4.3.9&quot;</span><br>  <span class="hljs-punctuation">&#125;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+
+<p>也可以通过 <code>npm create vite@latest</code> 或者 <code>yarn create vite</code> 创建项目</p>
+<h2 id="兼容性"><a href="#兼容性" class="headerlink" title="兼容性"></a>兼容性</h2><p>Vite 需要 Node.js 版本 14.18+，16+。然而，有些模板需要依赖更高的 Node 版本才能正常运行，当你的包管理器发出警告时，请注意升级你的 Node 版本。</p>
+<h2 id="vite-指定根目录启动项目"><a href="#vite-指定根目录启动项目" class="headerlink" title="vite 指定根目录启动项目"></a>vite 指定根目录启动项目</h2><p><code>vite</code> 以当前工作目录作为根目录启动开发服务器。你也可以通过 <code>vite serve some/sub/dir</code> 来指定一个替代的根目录。</p>
+<p>注意 Vite 同时会解析项目根目录下的<code>配置文件（即 vite.config.js）</code>，因此如果根目录被改变了，你需要将配置文件移动到新的根目录下。</p>
+<h2 id="冷启动-预构建依赖"><a href="#冷启动-预构建依赖" class="headerlink" title="冷启动/预构建依赖"></a>冷启动/预构建依赖</h2><p>冷启动是指项目启动开发服务器时, <code>node_module/.vite</code> 下没有任何之前的预构建文件, 这一般是项目第一次启动, 或项目通过<code>vite server --force</code>启动, 也可能是你手动删除了<code>node_module/.vite</code>之后启动, 此时Vite需要扫描项目的依赖并使用esbuild对这些依赖进行预构建</p>
+<p><code>依赖预构建</code>：构建的包存放在 <code>node_modules/.vite/deps</code> 目录下，目的有如下几点：</p>
+<ol>
+<li><p>不同的包有不同的导出格式（commonjs，umd，esmodule），通过预构建整合包的导出格式</p>
+</li>
+<li><p>引用包的路径可以直接使用 <code>.vite/deps</code>，方便路径重写（浏览器默认是不会去 node_modules 下寻找包的）</p>
+</li>
+<li><p>解决网络多包传输的性能问题（以 lodash 为例，它有几千个模块，如果不做处理，在导入后浏览器会发几千个 HTTP 请求）</p>
+</li>
+</ol>
+<p>可以通过安装 <code>lodash-es</code> 这个包来做个实验，在项目中导入 <code>lodash-es</code>，你会发现 vite 对它进行了修改，将所有导出的模块整合成了一个 <code>js</code> 文件，浏览器也只会发送一次 HTTP 请求。</p>
+<p><code>lodash-es</code> 导出的所有定义好的模块方法</p>
+<img src='../img/lodash-es-export.png' />
+
+<p>启动项目，Vite 已经整合所有 <code>lodash-es</code> 导出的模块</p>
+<p>HTTP请求：<code>/node_modules/.vite/deps/lodash-es.js?v=4db083fa</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs js">...<br><br><span class="hljs-comment">// node_modules/lodash-es/add.js</span><br><span class="hljs-keyword">var</span> add = <span class="hljs-title function_">createMathOperation_default</span>(<span class="hljs-keyword">function</span>(<span class="hljs-params">augend, addend</span>) &#123;<br>  <span class="hljs-keyword">return</span> augend + addend;<br>&#125;, <span class="hljs-number">0</span>);<br><span class="hljs-keyword">var</span> add_default = add;<br><br>...<br><br><span class="hljs-keyword">var</span> math_default_default = &#123;<br>  <span class="hljs-attr">add</span>: add_default,<br>  ...<br>&#125;<br><br>...<br><br><span class="hljs-keyword">export</span> &#123;<br>  add_default <span class="hljs-keyword">as</span> add,<br>  ...<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>我们可以通过 <code>vite.config.js</code> 来配置一下，不对 <code>lodash-es</code> 预构建：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// vite.config.js</span><br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> &#123;<br>  <span class="hljs-attr">optimizeDeps</span>: &#123;<br>    <span class="hljs-attr">exclude</span>: [<span class="hljs-string">&#x27;lodash-es&#x27;</span>]<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>重启服务后，你会发现浏览器发送了很多个 HTTP 请求去加载 <code>lodash-es</code> 导出的每个模块方法。</p>
+<img src='../img/vite-optimizeDeps-exclude.png' />
+
+<h1 id="vite为什么快？"><a href="#vite为什么快？" class="headerlink" title="vite为什么快？"></a>vite为什么快？</h1><ol>
+<li><p>开发环境不打包(<code>Vite 以 原生 ESM 方式提供源码</code>)，目前主流的浏览器已经支持模块化了。<code>&lt;script type=&quot;module&quot; src=&quot;...&quot;&gt;</code></p>
+</li>
+<li><p>按需加载模块，不像webpack那样构建所有源码，vite是根据路由拆分的代码模块，只会处理当前屏幕上实际使用到的模块</p>
+</li>
+<li><p>vite 使用 esbuild 预构建依赖（不经常改动的依赖包）</p>
+</li>
+<li><p>利用 HTTP 头来加速整个页面的重新加载。（<code>源码模块</code>的请求会根据 304 Not Modified 进行<code>协商缓存</code>，而<code>依赖模块</code>请求则会通过 Cache-Control: max-age=31536000,immutable 进行<code>强缓存</code>，因此一旦被缓存它们将不需要再次请求。）</p>
+</li>
+</ol>
+<h1 id="vite-config-js"><a href="#vite-config-js" class="headerlink" title="vite.config.js"></a>vite.config.js</h1><p>如果项目添加了 <code>vite.config.js</code>，启动项目或者打包项目时，vite 会自动读取这个配置文件</p>
+<h2 id="defineConfig"><a href="#defineConfig" class="headerlink" title="defineConfig"></a>defineConfig</h2><p>写配置文件时，为了有更好的语法提示，我们可以使用 <code>defineConfig</code> 方法来包裹配置对象</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> &#123; defineConfig &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vite&#x27;</span>;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title function_">defineConfig</span>(&#123;<br>  <span class="hljs-attr">optimizeDeps</span>: &#123;<br>    <span class="hljs-attr">exclude</span>: [<span class="hljs-string">&#x27;lodash-es&#x27;</span>],<br>  &#125;,<br>&#125;);<br></code></pre></td></tr></table></figure>
+
+<p>或者这样写：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">/** <span class="hljs-doctag">@type</span> import(&quot;vite&quot;).UserConfig */</span><br><span class="hljs-keyword">const</span> viteConfig = &#123;<br>  <span class="hljs-attr">optimizeDeps</span>: &#123;<br>    <span class="hljs-attr">exclude</span>: [<span class="hljs-string">&#x27;lodash-es&#x27;</span>],<br>  &#125;,<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> viteConfig<br></code></pre></td></tr></table></figure>
+
+<p><code>defineConfig</code> 也可以接收一个函数作为参数，这个函数也有一个参数：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-title function_">defineConfig</span>(<span class="hljs-function">(<span class="hljs-params">&#123;</span></span><br><span class="hljs-params"><span class="hljs-function">  command: <span class="hljs-string">&quot;serve&quot;</span>, // <span class="hljs-string">&quot;build&quot;</span> or <span class="hljs-string">&quot;serve&quot;</span></span></span><br><span class="hljs-params"><span class="hljs-function">  mode: <span class="hljs-string">&quot;development&quot;</span>,</span></span><br><span class="hljs-params"><span class="hljs-function">  ssrBuild: <span class="hljs-literal">false</span>,</span></span><br><span class="hljs-params"><span class="hljs-function">&#125;</span>) =&gt;</span> &#123;<br>  ...<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>我们可以通过 <code>command</code> 或者 <code>mode</code> 来执行不同环境的配置。</p>
+<h2 id="区分打包配置"><a href="#区分打包配置" class="headerlink" title="区分打包配置"></a>区分打包配置</h2><p>我们可以根据不同环境，编写不同的配置文件 <code>vite.base.config</code>、<code>vite.dev.config</code>、<code>vite.prod.config</code>。</p>
+<p>vite.config.js</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs js"><br><span class="hljs-keyword">const</span> env = &#123;<br>  <span class="hljs-string">&#x27;serve&#x27;</span>: <span class="hljs-function">() =&gt;</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(&#123;&#125;, vite.<span class="hljs-property">base</span>.<span class="hljs-property">config</span>, vite.<span class="hljs-property">dev</span>.<span class="hljs-property">config</span>),<br>  <span class="hljs-string">&#x27;build&#x27;</span>: <span class="hljs-function">() =&gt;</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(&#123;&#125;, vite.<span class="hljs-property">base</span>.<span class="hljs-property">config</span>, vite.<span class="hljs-property">prod</span>.<span class="hljs-property">config</span>),<br>&#125;<br><br><span class="hljs-title function_">defineConfig</span>(<span class="hljs-function">(<span class="hljs-params">&#123; command: <span class="hljs-string">&quot;serve&quot;</span> &#125;</span>) =&gt;</span> &#123;<br>  <span class="hljs-keyword">return</span> env[serve]()<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<h1 id="环境变量配置"><a href="#环境变量配置" class="headerlink" title="环境变量配置"></a>环境变量配置</h1><p>Vite 使用 <code>dotenv</code> 从你的 环境目录 中的下列文件加载额外的环境变量：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs js">.<span class="hljs-property">env</span>                # 所有情况下都会加载<br>.<span class="hljs-property">env</span>.<span class="hljs-property">local</span>          # 所有情况下都会加载，但会被 git 忽略<br>.<span class="hljs-property">env</span>.[mode]         # 只在指定模式下加载<br>.<span class="hljs-property">env</span>.[mode].<span class="hljs-property">local</span>   # 只在指定模式下加载，但会被 git 忽略<br></code></pre></td></tr></table></figure>
+
+<p>在 <code>vite.config.js</code> 中，想要获取配置的环境变量，我们需要通过如下形式获取:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> &#123; defineConfig, loadEnv &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vite&#x27;</span><br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title function_">defineConfig</span>(<span class="hljs-function">(<span class="hljs-params">options</span>) =&gt;</span> &#123;<br>  <span class="hljs-comment">// 读取指定的环境变量</span><br>  <span class="hljs-keyword">const</span> env = <span class="hljs-title function_">loadEnv</span>(options.<span class="hljs-property">mode</span>, process.<span class="hljs-title function_">cwd</span>(), <span class="hljs-string">&#x27;&#x27;</span>)<br><br>  <span class="hljs-comment">// ...</span><br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p><code>options.mode</code> 可以通过 <code>yarn dev --mode develop</code> 指定。</p>
+<p><code>process.cwd()</code> 表示当前文件的 <code>执行目录</code></p>
+<p><code>loadEnv</code> 第三个参数是 <code>prefixs</code>，环境变量的前缀，默认是 <code>VITE_</code>，<code>默认情况下只有前缀为 VITE_ 会被加载，除非更改了 prefixes 配置。</code></p>
+<h2 id="在客户端获取环境变量"><a href="#在客户端获取环境变量" class="headerlink" title="在客户端获取环境变量"></a>在客户端获取环境变量</h2><p>配置的环境变量会存放到 <code>import.meta.env</code> 中。</p>
+<p><code>为了防止意外地将一些环境变量泄漏到客户端，只有以 VITE_ 为前缀的变量才会暴露给经过 vite 处理的代码。</code></p>
+<h2 id="修改默认的环境变量前缀"><a href="#修改默认的环境变量前缀" class="headerlink" title="修改默认的环境变量前缀"></a>修改默认的环境变量前缀</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title function_">defineConfig</span>(<span class="hljs-function">(<span class="hljs-params">options</span>) =&gt;</span> &#123;<br>  <br>  <span class="hljs-keyword">return</span> &#123;<br>    <span class="hljs-comment">// ..</span><br>    <span class="hljs-attr">envPrefix</span>: <span class="hljs-string">&#x27;ENV_&#x27;</span> <span class="hljs-comment">// 默认是 `VITE_`</span><br>  &#125;<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<h2 id="增加测试环境"><a href="#增加测试环境" class="headerlink" title="增加测试环境"></a>增加测试环境</h2><p>package.json</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-string">&quot;scripts&quot;</span>: &#123;<br>  <span class="hljs-string">&quot;test&quot;</span>: <span class="hljs-string">&quot;vite --mode test&quot;</span>,<br>&#125;,<br></code></pre></td></tr></table></figure>
+
+<p>添加 <code>.env.test</code> 文件，写入测试环境的配置即可。</p>
+<h1 id="Vite-如何执行-vue-文件"><a href="#Vite-如何执行-vue-文件" class="headerlink" title="Vite 如何执行 .vue 文件"></a>Vite 如何执行 <code>.vue</code> 文件</h1><p>Vite 是一个开发服务器，以项目最外层的 <code>index.html</code> 为入口文件。当它遇到 <code>.js</code> 文件结尾的文件，会去开发服务器请求这个 js 文件。并且告诉浏览器以 <code>Content-Type: text/javascript</code> 去解析这个文件。</p>
+<p>如果遇到是 <code>.vue</code> 文件，首先会在开发服务器解析 <code>vue</code> 文件，将 <code>vue</code> 文件的内容转化为 <code>js</code> 内容，虽然它是 <code>.vue</code> 结尾的文件，我们还是可以通过 <code>Content-Type: text/javascript</code> 告诉浏览器使用 <code>js</code> 的形式去解析执行文件。</p>
+<p>假设 Vite 开发服务器如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> app = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Koa</span>();<br><br>app.<span class="hljs-title function_">use</span>(<span class="hljs-keyword">async</span> (ctx) =&gt; &#123;<br>    <span class="hljs-keyword">if</span> (ctx.<span class="hljs-property">request</span>.<span class="hljs-property">url</span> === <span class="hljs-string">&quot;/&quot;</span>) &#123;<br>        <span class="hljs-keyword">const</span> indexContent = <span class="hljs-keyword">await</span> fs.<span class="hljs-property">promises</span>.<span class="hljs-title function_">readFile</span>(path.<span class="hljs-title function_">resolve</span>(__dirname, <span class="hljs-string">&quot;./index.html&quot;</span>));<br>        ctx.<span class="hljs-property">response</span>.<span class="hljs-title function_">set</span>(<span class="hljs-string">&quot;Content-Type&quot;</span>, <span class="hljs-string">&quot;text/html&quot;</span>);<br>        ctx.<span class="hljs-property">response</span>.<span class="hljs-property">body</span> = indexContent;<br>    &#125;<br><br>    <span class="hljs-keyword">if</span> (ctx.<span class="hljs-property">request</span>.<span class="hljs-property">url</span> === <span class="hljs-string">&quot;/App.vue&quot;</span>) &#123;<br>        <span class="hljs-keyword">const</span> <span class="hljs-title class_">AppContent</span> = <span class="hljs-keyword">await</span> fs.<span class="hljs-property">promises</span>.<span class="hljs-title function_">readFile</span>(path.<span class="hljs-title function_">resolve</span>(__dirname, <span class="hljs-string">&quot;./App.vue&quot;</span>));<br><br>        <span class="hljs-comment">// 对 .vue 文件做一系列解析操作，将其内容转为纯 js 内容</span><br>        <span class="hljs-comment">//...</span><br><br>        ctx.<span class="hljs-property">response</span>.<span class="hljs-title function_">set</span>(<span class="hljs-string">&quot;Content-Type&quot;</span>, <span class="hljs-string">&quot;text/javascript&quot;</span>);<br>        ctx.<span class="hljs-property">response</span>.<span class="hljs-property">body</span> = <span class="hljs-title class_">AppContent</span>;<br>    &#125;<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<h1 id="css-modules"><a href="#css-modules" class="headerlink" title="css.modules"></a>css.modules</h1><p>任何以 .module.css 为后缀名的 CSS 文件都被认为是一个 CSS modules 文件。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-comment">/* example.module.css */</span><br><span class="hljs-selector-class">.red</span> &#123;<br>  <span class="hljs-attribute">color</span>: red;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> classes <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./example.module.css&#x27;</span><br><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">&#x27;foo&#x27;</span>).<span class="hljs-property">className</span> = classes.<span class="hljs-property">red</span><br></code></pre></td></tr></table></figure>
+
+<p>CSS modules 行为可以通过 css.modules 选项 进行配置。</p>
+<p>如果 <code>css.modules.localsConvention</code> 设置开启了 camelCase 格式变量名转换（例如 localsConvention: ‘camelCaseOnly’），你还可以使用按名导入。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// .apply-color -&gt; applyColor</span><br><span class="hljs-keyword">import</span> &#123; applyColor &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./example.module.css&#x27;</span><br><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">&#x27;foo&#x27;</span>).<span class="hljs-property">className</span> = applyColor<br></code></pre></td></tr></table></figure>
+
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>在 Vite 开发服务器中，遇到了 <code>.module.css</code> 结尾的文件，通过一定的规则将<code>类名</code>进行替换，比如 <code>.red</code> 替换成 <code>._red_hjlk23_1</code></p>
+<p>并创建一个映射对象 <code>&#123; red: &#39;_red_hjlk23_1&#39; &#125;</code></p>
+<p>将替换过后的内容，塞进动态创建的<code>style</code> 标签里，并且插入到 <code>head</code> 中</p>
+<p>将 <code>.module.css</code> 结尾的内容全部替换成 <code>js</code> 内容，方便 <code>热更新</code></p>
+<h2 id="其他配置"><a href="#其他配置" class="headerlink" title="其他配置"></a>其他配置</h2><p>css.modules</p>
+<p><code>配置 CSS modules 的行为。选项将被传递给 postcss-modules。</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs js">interface <span class="hljs-title class_">CSSModulesOptions</span> &#123;<br>  scopeBehaviour?: <span class="hljs-string">&#x27;global&#x27;</span> | <span class="hljs-string">&#x27;local&#x27;</span> <span class="hljs-comment">// 如果是 global，则不会产生模块化的 css</span><br>  globalModulePaths?: <span class="hljs-title class_">RegExp</span>[]<br>  generateScopedName?: <span class="hljs-comment">// 配置模块化 css 名字的格式，比如 `[name]_[local]_[hash:5]`</span><br>    | string<br>    | (<span class="hljs-function">(<span class="hljs-params">name: string, filename: string, css: string</span>) =&gt;</span> string)<br>  hashPrefix?: string<br>  <span class="hljs-comment">/**</span><br><span class="hljs-comment">   * 默认：null</span><br><span class="hljs-comment">   */</span><br>  localsConvention?:<br>    | <span class="hljs-string">&#x27;camelCase&#x27;</span> <span class="hljs-comment">// 展示驼峰式和横杠</span><br>    | <span class="hljs-string">&#x27;camelCaseOnly&#x27;</span> <span class="hljs-comment">// 只展示驼峰式</span><br>    | <span class="hljs-string">&#x27;dashes&#x27;</span> <span class="hljs-comment">// 横杠</span><br>    | <span class="hljs-string">&#x27;dashesOnly&#x27;</span> <span class="hljs-comment">// 只展示横杠</span><br>    | <span class="hljs-literal">null</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h1 id="配置-CSS-预处理器（less、scss）"><a href="#配置-CSS-预处理器（less、scss）" class="headerlink" title="配置 CSS 预处理器（less、scss）"></a>配置 CSS 预处理器（less、scss）</h1><blockquote>
+<p><a target="_blank" rel="noopener" href="https://cn.vitejs.dev/config/shared-options.html#css-preprocessoroptions">https://cn.vitejs.dev/config/shared-options.html#css-preprocessoroptions</a></p>
+</blockquote>
+<p><code>css.preprocessorOptions</code></p>
+<p>math 可用的四个选项是：</p>
+<ul>
+<li>always（3.x 默认值）- 支持各种形式的运算</li>
+<li>parens-division （默认 4.0） - 使用 / 运算符不在括号外执行除法（但可以在括号外使用 <code>./</code> 运算符进行 “forced” - <code>./</code> 已弃用）</li>
+<li>parens | strict - 所有数学表达式都需要括号。</li>
+<li>strict-legacy（在 4.0 中删除）- 在某些情况下，如果无法计算表达式的任何部分，则不会计算数学。</li>
+</ul>
+<p><code>设置全局变量</code>，而不是定义在一个单独的文件里频繁的导入。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title function_">defineConfig</span>(&#123;<br>  <span class="hljs-attr">css</span>: &#123;<br>    <span class="hljs-attr">preprocessorOptions</span>: &#123;<br>      <span class="hljs-attr">less</span>: &#123;<br>        <span class="hljs-attr">math</span>: <span class="hljs-string">&#x27;always&#x27;</span>, <span class="hljs-comment">// `任何时候都能计算`,</span><br>        <span class="hljs-attr">globalVars</span>: &#123;<br>          <span class="hljs-attr">mainColor</span>: <span class="hljs-string">&#x27;red&#x27;</span> <span class="hljs-comment">// 全局变量</span><br>        &#125;<br>      &#125;,<br>    &#125;,<br>  &#125;,<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>使用的时候，依然使用 <code>@mainColor</code> 形式。</p>
+<h1 id="css-devSourcemap"><a href="#css-devSourcemap" class="headerlink" title="css.devSourcemap"></a>css.devSourcemap</h1><p>在开发过程中是否启用 sourcemap。</p>
+<p>默认情况下 <code>css.devSourcemap</code> 是 false，我们编写的 css 文件会被编译到 <code>style</code> 标签内，并插入到 head 标签中。</p>
+<p>如果想要知道我们的 <code>css</code>、<code>less</code> 文件的原始内容、编写的位置，可以将 <code>css.devSourcemap</code> 设置为 true。</p>
+<h1 id="css-postcss"><a href="#css-postcss" class="headerlink" title="css.postcss"></a>css.postcss</h1><blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.npmjs.com/package/postcss-cli">https://www.npmjs.com/package/postcss-cli</a></p>
+</blockquote>
+<p>单独使用 <code>postcss</code> 来编译 css</p>
+<p><code>npm i -D postcss postcss-cli</code></p>
+<p>需要添加 <code>postcss.config.js</code> 配置文件</p>
+<p>执行命令</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css">npx postcss <span class="hljs-selector-tag">input</span><span class="hljs-selector-class">.sss</span> -<span class="hljs-selector-tag">p</span> sugarss -o output<span class="hljs-selector-class">.css</span> -m<br></code></pre></td></tr></table></figure>
+
+
+<h2 id="postcss-plugins列表"><a href="#postcss-plugins列表" class="headerlink" title="postcss-plugins列表"></a><a target="_blank" rel="noopener" href="https://github.com/postcss/postcss/blob/main/docs/plugins.md">postcss-plugins列表</a></h2><p>比较常用的 <code>postcss-preset-env</code>，它可以将现代 CSS 转换为大多数浏览器都能理解的内容，根据目标浏览器或运行时环境确定所需的填充。和 <code>babel-preset/env</code> 一样，它是一套插件的集合。</p>
+<h2 id="postcss-停止处理-less、sass了"><a href="#postcss-停止处理-less、sass了" class="headerlink" title="postcss 停止处理 less、sass了"></a>postcss 停止处理 less、sass了</h2><p>less 和 sass 等一系列预处理器的 postcss 插件已经停止维护了，我们需要用 less 或 sass 自己的编译器将代码处理完，编译结果给到 postcss。</p>
+<p>所以，业内也说，postcss 是 <code>后处理器</code></p>
+<p>不维护的主要原因是，<code>less</code> 或 <code>sass</code> 经常更新，postcss 官方也必须得跟着更新对应的插件，否则会出现问题。这样一来，就导致维护成本高，postcss 官方也觉得没有必要自己去维护。</p>
+<p>目前来说，大多数 less 或 sass 的 postcss plugin 是有社区人员维护的。</p>
+<h1 id="配置别名-ts-报错问题"><a href="#配置别名-ts-报错问题" class="headerlink" title="配置别名 ts 报错问题"></a>配置别名 ts 报错问题</h1><p>导入 <code>nodejs</code> 内置模块时可能提示找不到模块，安装 <code>yarn add @types/node -D</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title function_">defineConfig</span>(&#123;<br>  <span class="hljs-attr">plugins</span>: [<span class="hljs-title function_">react</span>()],<br>  <span class="hljs-attr">resolve</span>: &#123;<br>    <span class="hljs-attr">alias</span>: &#123;<br>      <span class="hljs-string">&#x27;@&#x27;</span>: <span class="hljs-title function_">resolve</span>(__dirname, <span class="hljs-string">&#x27;./src&#x27;</span>)<br>    &#125;<br>  &#125;<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>但是导入模块时 ts 提示依然报错，<code>修改 tsconfig.json</code></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;compilerOptions&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-comment">// ...</span><br>    <span class="hljs-attr">&quot;baseUrl&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;.&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;paths&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>      <span class="hljs-attr">&quot;@/*&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;src/*&quot;</span><span class="hljs-punctuation">]</span><br>    <span class="hljs-punctuation">&#125;</span><br>  <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Vite/">Vite</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/post/%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F%E6%8E%92%E6%9F%A5%E6%96%B9%E5%BC%8F.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">内存泄漏排查方式</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/post/%E6%B8%A9%E6%95%85%E7%9F%A5%E6%96%B0HTTP.html">
+                        <span class="hidden-mobile">温故知新HTTP</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    
+      <script type="text/javascript">
+        var disqus_config = function() {
+          this.page.url = 'http://yoursite.com/post/vite.html';
+          this.page.identifier = '/post/vite.html';
+        };
+        Fluid.utils.loadComments('#disqus_thread', function() {
+          var d = document, s = d.createElement('script');
+          s.src = '//' + 'helloalexcc' + '.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', new Date());
+          (d.head || d.body).appendChild(s);
+        });
+      </script>
+    
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hello-alex-cheng.github.io/" target="_blank" rel="nofollow noopener"><span>I</span></a> <i class="iconfont icon-love"></i> <a href="https://hello-alex-cheng.github.io/" target="_blank" rel="nofollow noopener"><span>YOU</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

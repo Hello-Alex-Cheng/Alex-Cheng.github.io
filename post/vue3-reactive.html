@@ -1,0 +1,514 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Hello_AlexCc">
+  <meta name="keywords" content="Full stack engineer">
+  
+    <meta name="description" content="响应式系统的作用与实现">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue3的响应式系统">
+<meta property="og:url" content="http://yoursite.com/post/vue3-reactive.html">
+<meta property="og:site_name" content="Hello_AlexCc">
+<meta property="og:description" content="响应式系统的作用与实现">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/img/vue3.jpg">
+<meta property="article:published_time" content="2022-12-22T13:34:30.000Z">
+<meta property="article:modified_time" content="2024-06-11T08:52:17.359Z">
+<meta property="article:author" content="Hello_AlexCc">
+<meta property="article:tag" content="Reactive,Vue3">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://yoursite.com/img/vue3.jpg">
+  
+  
+  <title>Vue3的响应式系统 - Hello_AlexCc</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Hello_AlexCc</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/vue3.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Vue3的响应式系统">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-12-22 21:34" pubdate>
+        2022年12月22日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      4.6k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      39 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Vue3的响应式系统</h1>
+            
+            <div class="markdown-body">
+              <h1 id="响应式系统实现"><a href="#响应式系统实现" class="headerlink" title="响应式系统实现"></a>响应式系统实现</h1><h2 id="响应式基础"><a href="#响应式基础" class="headerlink" title="响应式基础"></a>响应式基础</h2><ol>
+<li><p>通过 proxy 代理对象，读取属性时触发 get 方法，设置属性时触发 set 方法</p>
+</li>
+<li><p>在 get 方法中收集副作用函数，在 set 方法中触发副作用函数</p>
+</li>
+<li><p>假设有这么一个对象：<code>&#123; ok: true, text: &#39;hello world&#39; &#125;</code>，注册副作用函数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><pre><code class="hljs js"><span class="hljs-title function_">effect</span>(<span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-property">innerHTML</span> = obj.<span class="hljs-property">ok</span> ? obj.<span class="hljs-property">text</span> : <span class="hljs-string">&#x27;ok not&#x27;</span><br>&#125;)<br></code></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>当 ok 为 true，我们会走 obj.text 的读取逻辑，触发 get 拦截方法。这个时候页面上会显示 <code>hello world</code>，当我们将 obj.ok 设置为 false 后，我们会有副作用遗留函数（text的），因为 ok 为 false，永远不会再读取 obj.text 了。</p>
+<p>但是，当我们修改 obj.text 时， effect 副作用函数依然会触发，虽然页面上永远是 <code>ok not</code>。</p>
+<h2 id="清除不必要的副作用函数"><a href="#清除不必要的副作用函数" class="headerlink" title="清除不必要的副作用函数"></a>清除不必要的副作用函数</h2><ol start="4">
+<li><p>这时，我们就需要进行 <code>分支切换和 cleanup</code> 函数了，通过 cleanup 函数，我们将只收集使用到的 key 的副作用函数，也就是说，当 ok 为false 时，我们不再对 obj.text 进行依赖手机，无论我们如何修改 obj.text，都不会触发 effect 方法。</p>
+</li>
+<li><p>我们对注册副作用函数，做一些改变，在注册函数内部，定义了一个新的副作用函数方法，这个方法内部执行 删除副作用函数的方法 和真正的副作用函数（设置 document.body 内容）</p>
+</li>
+</ol>
+<p>同时，我们还在 副作用函数 上定义了一个 deps 属性，用来存储与该副作用函数相关联的依赖集合，将来在 <code>cleanup</code> 中通过 activeEffect.deps[i] delete effectFn 时，其实，就是将 某个 key 的 deps 中的副作用函数删除了</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">function</span> <span class="hljs-title function_">effect</span>(<span class="hljs-params">fn</span>) &#123;<br><br>  <span class="hljs-keyword">function</span> <span class="hljs-title function_">effectFn</span>(<span class="hljs-params"></span>) &#123;<br>    activeEffect = effectFn<br><br>    <span class="hljs-title function_">cleanup</span>(effectFn) <span class="hljs-comment">// 删除所有key 收集到的依赖</span><br><br>    <span class="hljs-title function_">fn</span>() <span class="hljs-comment">// 重新执行副作用函数，重新收集依赖</span><br>  &#125;<br><br>  effectFn.<span class="hljs-property">deps</span> = [] <br><br>  <span class="hljs-title function_">effectFn</span>()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>定义 cleanup 函数，每一次触发 set 方法时，都会先删除所有 key 对应的依赖，然后重新执行 <code>effectFn</code> 内部的 <code>fn</code> 函数，重新收集依赖</li>
+</ol>
+<p>因为 obj.ok = false 了，不会再读取 <code>obj.text</code>，所以也就不会再对 obj.text 收集依赖了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">function</span> <span class="hljs-title function_">cleanup</span>(<span class="hljs-params">effectFn</span>) &#123;<br><br>  <span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; effectFn.<span class="hljs-property">deps</span>.<span class="hljs-property">length</span>; i++) &#123;<br>    <span class="hljs-keyword">const</span> deps = effectFn.<span class="hljs-property">deps</span>[i] <span class="hljs-comment">// Set 集合</span><br><br>    deps.<span class="hljs-title function_">delete</span>(effectFn)<br>  &#125;<br><br>  effectFn.<span class="hljs-property">deps</span>.<span class="hljs-property">length</span> = []<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+<p><strong>注意</strong></p>
+<p>我们删除 effectFn.deps[i] 中的 effectFn，其实就是删除了 ‘ok、text’ 中对应的依赖集合（Set）的副作用函数，因为 effectFn.deps 中存放的集合 和 Map key 对应的 Value 的集合，是同一个集合</p>
+<p>删除后，Map 中的所有 value 都是空的 Set</p>
+<p>然后执行 <code>fn</code> 函数，重新进行读取 obj 属性，进行依赖收集。</p>
+<h2 id="竟然无限循环？"><a href="#竟然无限循环？" class="headerlink" title="竟然无限循环？"></a>竟然无限循环？</h2><ol start="7">
+<li>最后一步，我们还需要改造一下 trigger 函数，否则会造成 <code>无限循环</code></li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">function</span> <span class="hljs-title function_">trigger</span>(<span class="hljs-params">target, key</span>) &#123;<br>  <span class="hljs-keyword">const</span> depsMap = bucket.<span class="hljs-title function_">get</span>(target)<br><br>  <span class="hljs-keyword">if</span> (!depsMap) <span class="hljs-keyword">return</span><br><br>  <span class="hljs-keyword">const</span> effects = depsMap.<span class="hljs-title function_">get</span>(key)<br>  <span class="hljs-keyword">const</span> effectsToRun = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Set</span>(effects)<br><br>  <span class="hljs-comment">// effects &amp;&amp; effects.forEach(fn =&gt; fn())</span><br>  effectsToRun &amp;&amp; effectsToRun.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">fn</span> =&gt;</span> <span class="hljs-title function_">fn</span>())<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>为什么新建一个 <code>Set</code> 集合呢?  <code>const effectsToRun = new Set(effects)</code></p>
+<p>因为，我们遍历 effects 时，执行了每一个 <code>副作用</code> 函数，当副作用函数执行时，会调用 cleanup 进行清除，实际上就是从 effects 集合中奖当前执行的副作用函数剔除</p>
+<p>但是，副作用函数的执行 <code>fn()</code> 会触发属性的读取操作，执行 <code>track</code>，导致副作用函数重新被收集到依赖中，而对于 effects集合的遍历仍然在执行，从而造成 <code>无限循环</code>。</p>
+<p><strong>解决办法</strong>就是：根据 effects 重新建立一个集合，进行遍历。</p>
+<h2 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">http-equiv</span>=<span class="hljs-string">&quot;X-UA-Compatible&quot;</span> <span class="hljs-attr">content</span>=<span class="hljs-string">&quot;IE=edge&quot;</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;viewport&quot;</span> <span class="hljs-attr">content</span>=<span class="hljs-string">&quot;width=device-width, initial-scale=1.0&quot;</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>收集 key 的依赖<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br>  <br>  <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript"></span><br><span class="language-javascript">    <span class="hljs-comment">// 存储被注册的副作用函数</span></span><br><span class="language-javascript">    <span class="hljs-keyword">let</span> activeEffect;</span><br><span class="language-javascript"></span><br><span class="language-javascript">    <span class="hljs-keyword">const</span> data = &#123;</span><br><span class="language-javascript">      <span class="hljs-attr">ok</span>: <span class="hljs-literal">true</span>,</span><br><span class="language-javascript">      <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;hello world&#x27;</span></span><br><span class="language-javascript">    &#125;</span><br><span class="language-javascript"></span><br><span class="language-javascript">    <span class="hljs-keyword">const</span> bucket = <span class="hljs-keyword">new</span> <span class="hljs-title class_">WeakMap</span>() <span class="hljs-comment">// target =&gt; Map</span></span><br><span class="language-javascript"></span><br><span class="language-javascript">    <span class="hljs-keyword">const</span> obj = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Proxy</span>(data, &#123;</span><br><span class="language-javascript">      <span class="hljs-title function_">get</span>(<span class="hljs-params">target, key</span>) &#123;</span><br><span class="language-javascript">        <span class="hljs-comment">// 追踪依赖</span></span><br><span class="language-javascript">        <span class="hljs-title function_">track</span>(target, key)</span><br><span class="language-javascript">        <span class="hljs-keyword">return</span> target[key]</span><br><span class="language-javascript">      &#125;,</span><br><span class="language-javascript">      <span class="hljs-title function_">set</span>(<span class="hljs-params">target, key, value</span>) &#123;</span><br><span class="language-javascript">        target[key] = value</span><br><span class="language-javascript">        <span class="hljs-comment">// 触发依赖</span></span><br><span class="language-javascript">        <span class="hljs-title function_">trigger</span>(target, key)</span><br><span class="language-javascript">      &#125;</span><br><span class="language-javascript">    &#125;)</span><br><span class="language-javascript"></span><br><span class="language-javascript"></span><br><span class="language-javascript">    <span class="hljs-keyword">function</span> <span class="hljs-title function_">track</span>(<span class="hljs-params">target, key</span>) &#123;</span><br><span class="language-javascript">      <span class="hljs-keyword">if</span> (!activeEffect) <span class="hljs-keyword">return</span> target[key]</span><br><span class="language-javascript">      <span class="hljs-keyword">let</span> depsMap = bucket.<span class="hljs-title function_">get</span>(target)</span><br><span class="language-javascript"></span><br><span class="language-javascript">      <span class="hljs-keyword">if</span> (!depsMap) &#123;</span><br><span class="language-javascript">        bucket.<span class="hljs-title function_">set</span>(target, depsMap = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Map</span>())</span><br><span class="language-javascript">      &#125;</span><br><span class="language-javascript"></span><br><span class="language-javascript">      <span class="hljs-keyword">let</span> deps = depsMap.<span class="hljs-title function_">get</span>(key)</span><br><span class="language-javascript"></span><br><span class="language-javascript">      <span class="hljs-keyword">if</span> (!deps) &#123;</span><br><span class="language-javascript">        depsMap.<span class="hljs-title function_">set</span>(key, deps = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Set</span>())</span><br><span class="language-javascript">      &#125;</span><br><span class="language-javascript"></span><br><span class="language-javascript">      <span class="hljs-comment">// 添加副作用函数</span></span><br><span class="language-javascript">      deps.<span class="hljs-title function_">add</span>(activeEffect)</span><br><span class="language-javascript"></span><br><span class="language-javascript">      <span class="hljs-comment">// deps 存储与该副作用函数相关联的依赖集合</span></span><br><span class="language-javascript">      <span class="hljs-comment">// 将来在 cleanup 中通过 activeEffect.deps[i] delete effectFn 时，其实，就是将 deps 中的副作用函数删除了</span></span><br><span class="language-javascript">      activeEffect.<span class="hljs-property">deps</span>.<span class="hljs-title function_">push</span>(deps)</span><br><span class="language-javascript">    &#125;</span><br><span class="language-javascript"></span><br><span class="language-javascript">    <span class="hljs-keyword">function</span> <span class="hljs-title function_">trigger</span>(<span class="hljs-params">target, key</span>) &#123;</span><br><span class="language-javascript">      <span class="hljs-keyword">const</span> depsMap = bucket.<span class="hljs-title function_">get</span>(target)</span><br><span class="language-javascript"></span><br><span class="language-javascript">      <span class="hljs-keyword">if</span> (!depsMap) <span class="hljs-keyword">return</span></span><br><span class="language-javascript"></span><br><span class="language-javascript">      <span class="hljs-keyword">const</span> effects = depsMap.<span class="hljs-title function_">get</span>(key)</span><br><span class="language-javascript">      <span class="hljs-keyword">const</span> effectsToRun = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Set</span>(effects)</span><br><span class="language-javascript"></span><br><span class="language-javascript">      <span class="hljs-comment">// effects &amp;&amp; effects.forEach(fn =&gt; fn())</span></span><br><span class="language-javascript">      effectsToRun &amp;&amp; effectsToRun.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">fn</span> =&gt;</span> <span class="hljs-title function_">fn</span>())</span><br><span class="language-javascript">    &#125;</span><br><span class="language-javascript"></span><br><span class="language-javascript">    <span class="hljs-keyword">function</span> <span class="hljs-title function_">effect</span>(<span class="hljs-params">fn</span>) &#123;</span><br><span class="language-javascript">      <span class="hljs-keyword">function</span> <span class="hljs-title function_">effectFn</span>(<span class="hljs-params"></span>) &#123;</span><br><span class="language-javascript">        activeEffect = effectFn</span><br><span class="language-javascript"></span><br><span class="language-javascript">        <span class="hljs-title function_">cleanup</span>(effectFn)</span><br><span class="language-javascript">        <span class="hljs-title function_">fn</span>()</span><br><span class="language-javascript">      &#125;</span><br><span class="language-javascript"></span><br><span class="language-javascript">      effectFn.<span class="hljs-property">deps</span> = [] <span class="hljs-comment">// 存储所有包含当前副作用函数的依赖 集合，在 get 拦截函数中处理 deps</span></span><br><span class="language-javascript"></span><br><span class="language-javascript">      <span class="hljs-title function_">effectFn</span>()</span><br><span class="language-javascript">    &#125;</span><br><span class="language-javascript"></span><br><span class="language-javascript">    <span class="hljs-keyword">function</span> <span class="hljs-title function_">cleanup</span>(<span class="hljs-params">effectFn</span>) &#123;</span><br><span class="language-javascript"></span><br><span class="language-javascript">      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;effectFn &#x27;</span>, effectFn.<span class="hljs-property">deps</span>)</span><br><span class="language-javascript">      <span class="hljs-comment">// 我们删除 effectFn.deps[i] 中的 effectFn，其实就是删除了 &#x27;xxx&#x27;(key) 中对应的依赖集合的副作用函数</span></span><br><span class="language-javascript">      <span class="hljs-comment">// effectFn.deps[i] 中，存放的依赖集合，和 Map key 对应的依赖集合，是同一个集合，删除某一项，自然会影响到另一个</span></span><br><span class="language-javascript">      <span class="hljs-comment">// 当我们在 trigger 中执行 effects 时，就是执行副作用函数</span></span><br><span class="language-javascript">      <span class="hljs-comment">// 这个时候，会执行 cleanup，删除所有的 key 对应的副作用函数，最后执行 fn，重新走 属性的读取逻辑，触发 get 方法，重新收集依赖</span></span><br><span class="language-javascript">      <span class="hljs-comment">// 当我们设置 obj.ok = false 后，不会再读取 obj.text 了，从而不会对其 key 收集依赖。</span></span><br><span class="language-javascript">      <span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; effectFn.<span class="hljs-property">deps</span>.<span class="hljs-property">length</span>; i++) &#123;</span><br><span class="language-javascript">        <span class="hljs-keyword">const</span> deps = effectFn.<span class="hljs-property">deps</span>[i]</span><br><span class="language-javascript"></span><br><span class="language-javascript">        deps.<span class="hljs-title function_">delete</span>(effectFn)</span><br><span class="language-javascript">      &#125;</span><br><span class="language-javascript"></span><br><span class="language-javascript">      effectFn.<span class="hljs-property">deps</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span></span><br><span class="language-javascript">    &#125;</span><br><span class="language-javascript"></span><br><span class="language-javascript">    <span class="hljs-title function_">effect</span>(<span class="hljs-function">() =&gt;</span> &#123;</span><br><span class="language-javascript">      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27; obj.ok&#x27;</span>,  obj.<span class="hljs-property">ok</span>)</span><br><span class="language-javascript">      <span class="hljs-comment">// obj.ok = true 会触发 obj 的 get拦截方法，并且通过 track 函数收集到了副作用函数，并且将其存储在 deps 中</span></span><br><span class="language-javascript">      <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-property">innerHTML</span> = obj.<span class="hljs-property">ok</span> ? obj.<span class="hljs-property">text</span> : <span class="hljs-string">&#x27;ok not&#x27;</span></span><br><span class="language-javascript">    &#125;)</span><br><span class="language-javascript"></span><br><span class="language-javascript"></span><br><span class="language-javascript">    <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> &#123;</span><br><span class="language-javascript">      <span class="hljs-comment">// obj.text = &#x27;Vue3 Reactive&#x27;</span></span><br><span class="language-javascript">      obj.<span class="hljs-property">ok</span> = <span class="hljs-literal">false</span></span><br><span class="language-javascript"></span><br><span class="language-javascript">      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;bucket &#x27;</span>, bucket)</span><br><span class="language-javascript">    &#125;, <span class="hljs-number">1000</span>)</span><br><span class="language-javascript"></span><br><span class="language-javascript">    <span class="hljs-comment">// setTimeout(() =&gt; &#123;</span></span><br><span class="language-javascript">    <span class="hljs-comment">//   console.log(&#x27;执行了&#x27;)</span></span><br><span class="language-javascript">    <span class="hljs-comment">//   obj.text = &#x27;Vue3 Reactive&#x27;</span></span><br><span class="language-javascript">    <span class="hljs-comment">// &#125;, 3000)</span></span><br><span class="language-javascript"></span><br><span class="language-javascript"></span><br><span class="language-javascript">  </span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Reactive-Vue3/">Reactive,Vue3</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/post/vue3-project-traning.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Vue3项目实战(二)：Icon图标（SVG）</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/post/vue3-project-config.html">
+                        <span class="hidden-mobile">Vue3项目实战(一)：工程化配置</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    
+      <script type="text/javascript">
+        var disqus_config = function() {
+          this.page.url = 'http://yoursite.com/post/vue3-reactive.html';
+          this.page.identifier = '/post/vue3-reactive.html';
+        };
+        Fluid.utils.loadComments('#disqus_thread', function() {
+          var d = document, s = d.createElement('script');
+          s.src = '//' + 'helloalexcc' + '.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', new Date());
+          (d.head || d.body).appendChild(s);
+        });
+      </script>
+    
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hello-alex-cheng.github.io/" target="_blank" rel="nofollow noopener"><span>I</span></a> <i class="iconfont icon-love"></i> <a href="https://hello-alex-cheng.github.io/" target="_blank" rel="nofollow noopener"><span>YOU</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

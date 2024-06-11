@@ -1,0 +1,567 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Hello_AlexCc">
+  <meta name="keywords" content="Full stack engineer">
+  
+    <meta name="description" content="代码量少，运行速度不一定快；代码量多，运行速度也不一定慢。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何编写高标准的 JavaScript 代码">
+<meta property="og:url" content="http://yoursite.com/post/js-advice.html">
+<meta property="og:site_name" content="Hello_AlexCc">
+<meta property="og:description" content="代码量少，运行速度不一定快；代码量多，运行速度也不一定慢。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/img/god.jpg">
+<meta property="article:published_time" content="2022-03-31T02:12:23.000Z">
+<meta property="article:modified_time" content="2024-06-11T08:52:17.343Z">
+<meta property="article:author" content="Hello_AlexCc">
+<meta property="article:tag" content="JavaScript, ES6">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://yoursite.com/img/god.jpg">
+  
+  
+  <title>如何编写高标准的 JavaScript 代码 - Hello_AlexCc</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Hello_AlexCc</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/god.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="如何编写高标准的 JavaScript 代码">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-03-31 10:12" pubdate>
+        2022年3月31日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      5.2k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      44 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">如何编写高标准的 JavaScript 代码</h1>
+            
+            <div class="markdown-body">
+              <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>你是否曾经为了提供一个简单的应用解决方案而彻夜地查看源代码？<br>你是否曾经为了理解某个框架而冥思苦想、阅览群书？<br>你是否曾经为了提升0.1s的DOM性能而对多种实现方案进行严格测试和对比？<br>你是否曾经为了避免兼容问题而遍寻高手共同“诊治”？</p>
+<p>跟我一起，专注高质量 <code>JavaScript</code> 代码，少出 <code>Bug🐛</code>，早下班 !</p>
+<blockquote>
+<p>期望为读者带来如下帮助 📚：</p>
+</blockquote>
+<p>  ❑ 能写出简单、清晰、高效的代码。<br>  ❑ 能搭建一个稳定、健壮、快捷的应用框架。<br>  ❑ 能回答一个困扰很多人的技术问题。<br>  ❑ 能修复一个应用开发中遇到的大的Bug。<br>  ❑ 能非常熟悉某个开源产品。<br>  ❑ 能提升客户端应用性能。</p>
+<h2 id="JavaScript-基础"><a href="#JavaScript-基础" class="headerlink" title="JavaScript 基础"></a>JavaScript 基础</h2><p>代码量少，运行速度不一定快；代码量多，运行速度也不一定慢。</p>
+<h3 id="减少全局变量"><a href="#减少全局变量" class="headerlink" title="减少全局变量"></a>减少全局变量</h3><ol>
+<li><p>多个全局变量都追加在一个名称空间下，将显著降低与其他应用程序产生冲突的概率</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> namespace = &#123;&#125;<br><br>namespace.<span class="hljs-property">name</span> = <span class="hljs-string">&#x27;my namespace&#x27;</span><br></code></pre></td></tr></table></figure></li>
+<li><p>使用闭包体将信息隐藏，它是另一种有效减少“全局污染”的方法。</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> sayName = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-keyword">const</span> name = <span class="hljs-string">&#x27;closure&#x27;</span><br><br>  <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-title function_">alert</span>(name)<br>  &#125;<br>&#125;()<br></code></pre></td></tr></table></figure></li>
+<li><p>作用域控制着变量与参数的可见性及生命周期。</p>
+<p> JavaScript支持函数作用域，定义在函数中的参数和变量在函数外部是不可见的，并且在一个函数中的任何位置定义的变量在该函数中的任何地方都可见。它不仅减少了名称冲突，并且提供了自动内存管理。</p>
+</li>
+<li><p>ES6 模块化编程中每个 js 文件内部定义的变量，外部无法获取。如果外部需要模块内部变量，通过 export 导出。</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;script&gt;<br>  <span class="hljs-keyword">var</span> windowA = <span class="hljs-string">&#x27;window a&#x27;</span><br><br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-variable language_">window</span>.<span class="hljs-property">windowA</span>) <span class="hljs-comment">// 输出 &#x27;window a&#x27;</span><br>&lt;/script&gt;<br><br><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;module&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="language-javascript"><span class="language-xml">  <span class="hljs-keyword">var</span> moduleA = <span class="hljs-string">&#x27;module a&#x27;</span></span></span><br><span class="language-javascript"><span class="language-xml"></span></span><br><span class="language-javascript"><span class="language-xml">  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-variable language_">window</span>.<span class="hljs-property">moduleA</span>) <span class="hljs-comment">// 输出 undefined</span></span></span><br><span class="language-javascript"><span class="language-xml"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span><br></code></pre></td></tr></table></figure>
+
+
+
+</li>
+</ol>
+<h3 id="谨慎JS数据类型"><a href="#谨慎JS数据类型" class="headerlink" title="谨慎JS数据类型"></a>谨慎JS数据类型</h3><p>在自动转换数据类型时，JavaScript一般遵循：如果某个类型的值被用于需要其他类型的值的环境中，JavaScript就自动将这个值转换成所需要的类型。</p>
+<h4 id="类型转换"><a href="#类型转换" class="headerlink" title="类型转换"></a>类型转换</h4><p>慎用JavaScript类型自动转换，注意<code>自动转换规则</code>:</p>
+<ol>
+<li><p>如果把非空对象用在逻辑运算环境中，则对象被转换为true。此时的对象包括所有类型的对象，即使是值为false的包装对象也被转换为true。</p>
+</li>
+<li><p>果把对象用在数值运算环境中，则对象会被自动转换为数字，如果转换失败，则返回值为NaN。</p>
+</li>
+<li><p>当数组被用在数值运算环境中时，数组将根据包含的元素来决定转换的值。如果数组为空数组，则被转换为数值0。如果数组仅包含一个数字元素，则被转换为该数字的数值。如果数组包含多个元素，或者仅包含一个非数字元素，则返回NaN。</p>
+<p>🌰</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 对象</span><br><span class="hljs-keyword">const</span> obj = &#123;&#125;<br>obj &amp;&amp; <span class="hljs-number">1</span> &gt;&gt; <span class="hljs-number">1</span><br>obj + <span class="hljs-number">1</span> &gt;&gt; <span class="hljs-string">&#x27;[object Object]1&#x27;</span><br><br>obj.<span class="hljs-property">valueOf</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123; <span class="hljs-keyword">return</span> <span class="hljs-number">99</span> &#125;<br>obj + <span class="hljs-number">1</span> &gt;&gt; <span class="hljs-number">100</span><br><br><span class="hljs-comment">// 数组自动转换规则</span><br>+[] &gt;&gt; <span class="hljs-number">0</span><br>+[<span class="hljs-number">1</span>] &gt;&gt; <span class="hljs-number">1</span><br>+[<span class="hljs-number">1</span>,<span class="hljs-number">2</span>] &gt;&gt; <span class="hljs-title class_">NaN</span><br></code></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h4 id="类型判断"><a href="#类型判断" class="headerlink" title="类型判断"></a>类型判断</h4><ol>
+<li><p><code>typeof</code><br>对于任何变量来说，使用typeof运算符总是以字符串的形式返回以下6种类型之一：<br>❑ “number”<br>❑ “string”<br>❑ “boolean”<br>❑ “object”<br>❑ “function”<br>❑ “undefined”</p>
+<p>令人疑惑的是，在使用 <code>typeof</code> 检测null值时，返回的是“object”，而不是“null”。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">typeof</span> <span class="hljs-literal">null</span> &gt;&gt; <span class="hljs-string">&#x27;object&#x27;</span><br><br><span class="hljs-keyword">typeof</span> [] &gt;&gt; <span class="hljs-string">&#x27;object&#x27;</span><br><br><span class="hljs-keyword">typeof</span> &#123;&#125; &gt;&gt; <span class="hljs-string">&#x27;object&#x27;</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p><code>instanceof</code></p>
+<p>instanceof 运算符用于检测构造函数的 prototype 属性是否出现在某个实例对象的<code>原型链</code>上。</p>
+<p>这个在判断对象时存在一些不确定性，来看下例子：</p>
+<p>🌰</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">function</span> <span class="hljs-title function_">Person</span>(<span class="hljs-params">name</span>) &#123;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = name<br>&#125;<br><span class="hljs-keyword">const</span> p = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Person</span>(<span class="hljs-string">&#x27;hello&#x27;</span>)<br>p <span class="hljs-keyword">instanceof</span> <span class="hljs-title class_">Person</span> &gt;&gt; <span class="hljs-literal">true</span><br>p <span class="hljs-keyword">instanceof</span> <span class="hljs-title class_">Object</span> &gt;&gt; <span class="hljs-literal">true</span><br></code></pre></td></tr></table></figure>
+
+<p>再看一个🌰:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">function</span> <span class="hljs-title function_">Person</span>(<span class="hljs-params">name</span>) &#123;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = name<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">Child</span>(<span class="hljs-params">name</span>) &#123;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = name<br>&#125;<br><br><span class="hljs-title class_">Child</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Person</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span><br><span class="hljs-title class_">Child</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">constructor</span> = <span class="hljs-title class_">Child</span><br><br><span class="hljs-keyword">const</span> p = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Child</span>(<span class="hljs-string">&#x27;hello child&#x27;</span>)<br><br>p <span class="hljs-keyword">instanceof</span> <span class="hljs-title class_">Person</span> &gt;&gt; <span class="hljs-literal">true</span><br>p <span class="hljs-keyword">instanceof</span> <span class="hljs-title class_">Object</span> &gt;&gt; <span class="hljs-literal">true</span><br></code></pre></td></tr></table></figure>
+
+<p>如果是判断数组呢?</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js">[] <span class="hljs-keyword">instanceof</span> <span class="hljs-title class_">Array</span> &gt;&gt; <span class="hljs-literal">true</span><br><br>[] <span class="hljs-keyword">instanceof</span> <span class="hljs-title class_">Object</span> &gt;&gt; <span class="hljs-literal">true</span><br><br><span class="hljs-comment">// 当然这种方式存在不确定性，我们可以使用 Array.isArray() 方法来判断</span><br><span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>([]) &gt;&gt; <span class="hljs-literal">true</span><br><span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(&#123;&#125;) &gt;&gt; <span class="hljs-literal">false</span><br></code></pre></td></tr></table></figure>
+
+<p>从上面例子可以看出，使用 <code>instanceof</code> 来判断时存在种种不确定性，只要出现在原型链上的对象都会返回 <code>true</code>，使用的时候还需要着重注意！</p>
+<p>为什么会这样，想必大家应该想起来了！</p>
+<p><strong>Object类是所有对象类型的的父类!</strong></p>
+</li>
+<li><p><code>toString() 方法</code></p>
+<blockquote>
+<p>每个对象都有一个 toString() 方法，当该对象被表示为一个文本值时，或者一个对象以预期的字符串方式引用时自动调用。默认情况下，toString() 方法被每个 Object 对象继承。如果此方法在自定义对象中未被覆盖，toString() 返回 “[object type]”，其中 type 是对象的类型。</p>
+</blockquote>
+<p>toString() 方法，它定义在 Object 的原型对象上，对象在调用时会返回一个表示该对象的字符串。</p>
+<p>使用 <code>toString()</code> 方法检测对象类型是最安全、最准确的。调用toString()方法把对象转换为字符串，然后通过检测字符串中是否包含数组所特有的标志字符可以确定对象的类型。</p>
+<p>为什么说 <code>toString</code> 方法用来检测对象类型是最安全、最准确的，我们慢慢来看吧~</p>
+<p>先看看在对象上直接使用 <code>toString</code>会是什么结果：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> obj = &#123; <span class="hljs-attr">a</span>: <span class="hljs-number">1</span> &#125;<br><span class="hljs-keyword">const</span> arr = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>]<br><br>obj.<span class="hljs-title function_">toString</span>() &gt;&gt; <span class="hljs-string">&#x27;[object Object]&#x27;</span><br><br><span class="hljs-comment">// 如果是数组的话，则输出字符串</span><br>arr.<span class="hljs-title function_">toString</span>() &gt;&gt; <span class="hljs-string">&#x27;1,2&#x27;</span><br><br><br><span class="hljs-comment">// 当然我们可以重写/覆盖原型链上的 toString 方法</span><br>obj.<span class="hljs-property">toString</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;overwrite&#x27;</span><br>&#125;<br>obj.<span class="hljs-title function_">toString</span>() &gt;&gt; <span class="hljs-string">&#x27;overwrite&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>既然 toString 方法定义在原型对象上，我们看看如果单独调用它，会是什么结果呢?</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-title function_">toString</span>() &gt;&gt; <span class="hljs-string">&#x27;[object Object]&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>如果通过 <code>call/apply</code> 方法，改变 <code>toString</code> 方法内部的 <code>this</code> 执行，又会是什么结果呢?</p>
+<p>看到如下结果，我相信这绝对可以完美 cover 住项目里面所有的类型判断了！所以说它是最安全、最准确的类型判断，没有异议吧😏</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">toString</span>.<span class="hljs-title function_">call</span>(&#123;&#125;) &gt;&gt; <span class="hljs-string">&#x27;[object Object]&#x27;</span><br><br><span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">toString</span>.<span class="hljs-title function_">call</span>([]) &gt;&gt; <span class="hljs-string">&#x27;[object Array]&#x27;</span><br><br><span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">toString</span>.<span class="hljs-title function_">call</span>(<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)&#123;&#125;) &gt;&gt; <span class="hljs-string">&#x27;[object Function]&#x27;</span><br><br><span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">toString</span>.<span class="hljs-title function_">call</span>(<span class="hljs-string">&#x27;&#x27;</span>) &gt;&gt; <span class="hljs-string">&#x27;[object String]&#x27;</span><br><br><span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">toString</span>.<span class="hljs-title function_">call</span>(<span class="hljs-number">1</span>) &gt;&gt; <span class="hljs-string">&#x27;[object Number]&#x27;</span><br><br><span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">toString</span>.<span class="hljs-title function_">call</span>(<span class="hljs-literal">true</span>) &gt;&gt; <span class="hljs-string">&#x27;[object Boolean]&#x27;</span><br><br><span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">toString</span>.<span class="hljs-title function_">call</span>(<span class="hljs-literal">null</span>) &gt;&gt; <span class="hljs-string">&#x27;[object Null]&#x27;</span><br><br><span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">toString</span>.<span class="hljs-title function_">call</span>(<span class="hljs-literal">undefined</span>) &gt;&gt; <span class="hljs-string">&#x27;[object Undefined]&#x27;</span><br><br><span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">toString</span>.<span class="hljs-title function_">call</span>() &gt;&gt; <span class="hljs-string">&#x27;[object Undefined]&#x27;</span><br><br><span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">toString</span>.<span class="hljs-title function_">call</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>()) &gt;&gt; <span class="hljs-string">&#x27;[object Date]&#x27;</span><br><br><span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">toString</span>.<span class="hljs-title function_">call</span>(<span class="hljs-regexp">/at/</span>) &gt;&gt; <span class="hljs-string">&#x27;[object RegExp]&#x27;</span><br><br></code></pre></td></tr></table></figure>
+
+<p>那么它是如何做到的呢，我们来扒一扒它的原理！在 <code>toString</code> 方法被调用时，会执行以下几个操作步骤:</p>
+<ol>
+<li>获取this指向的那个对象的<code>[[Class]]</code>属性的值。（<code>call/apply</code> 改变 this 指向）</li>
+<li>计算出三个字符串”[object “、 第一步的操作结果、 以及 “]” 连接后的新字符串。</li>
+<li>返回第二步的操作结果，也就是类似 <code>&#39;[object Type]&#39;</code> 这种格式字符串。</li>
+</ol>
+<p>需要注意的是，对象的<code>[[Class]]</code>属性是无法直接访问的，它一个内部属性，所有的对象(原生对象和宿主对象)都拥有该属性，且不能被任何人修改。在规范中，<code>[[Class]]</code>是这么定义的：<code>内部属性</code>描述。</p>
+<p>如果要单独或者对象的 <code>[[Class]]</code>，我们可以这样做:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> targetObj = []<br><span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">toString</span>.<span class="hljs-title function_">call</span>(targetObj).<span class="hljs-title function_">slice</span>(<span class="hljs-number">8</span>, -<span class="hljs-number">1</span>) &gt;&gt; <span class="hljs-string">&#x27;Array&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>既然它如此好用，难道就没有缺点吗？</p>
+<p>答案是当然有的，毕竟凡事都不可能那么绝对的嘛！</p>
+<p>那么缺点是什么呢？<br>第一，<code>toString()</code> 会进行装箱操作，产生很多临时对象。（装箱就是将基本类型的数据，通过引用类型包装起来，从而可以使用引用类上的方法）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 你肯定不能这样用</span><br><span class="hljs-number">1.</span><span class="hljs-title function_">toString</span>() &gt;&gt; <span class="hljs-title class_">SyntaxError</span>: <span class="hljs-title class_">Invalid</span> or unexpected token<br><br><span class="hljs-comment">// 你必须这样用</span><br>(<span class="hljs-number">1</span>).<span class="hljs-title function_">toString</span>() &gt;&gt; <span class="hljs-string">&#x27;1&#x27;</span><br></code></pre></td></tr></table></figure>
+<p>第二，无法区分自定义对象类型，用来判断这类对象时，返回的都是<code>Object</code>，这样我们就需要通过 <code>instanceof</code> 来判断了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">function</span> <span class="hljs-title function_">Person</span>(<span class="hljs-params"></span>)&#123;&#125;<br><span class="hljs-keyword">const</span> p = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Person</span>()<br><br><span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">toString</span>.<span class="hljs-title function_">call</span>(p) &gt;&gt; <span class="hljs-string">&#x27;[object Object]&#x27;</span><br></code></pre></td></tr></table></figure>
+
+
+
+</li>
+</ol>
+<h3 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h3><p>JavaScript解释器强制约定字符串在堆区存储的数据是不可变的，也就是说，JavaScript解释器强制约定字符串在堆区存储的数据是不可变的。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span>参考资料
+<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span>参考资料2
+<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/JavaScript-ES6/">JavaScript, ES6</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/post/app-h5.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">React Native</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/post/react-hooks.html">
+                        <span class="hidden-mobile">React Hooks</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    
+      <script type="text/javascript">
+        var disqus_config = function() {
+          this.page.url = 'http://yoursite.com/post/js-advice.html';
+          this.page.identifier = '/post/js-advice.html';
+        };
+        Fluid.utils.loadComments('#disqus_thread', function() {
+          var d = document, s = d.createElement('script');
+          s.src = '//' + 'helloalexcc' + '.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', new Date());
+          (d.head || d.body).appendChild(s);
+        });
+      </script>
+    
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hello-alex-cheng.github.io/" target="_blank" rel="nofollow noopener"><span>I</span></a> <i class="iconfont icon-love"></i> <a href="https://hello-alex-cheng.github.io/" target="_blank" rel="nofollow noopener"><span>YOU</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

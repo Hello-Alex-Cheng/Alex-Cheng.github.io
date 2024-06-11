@@ -1,0 +1,388 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Hello_AlexCc">
+  <meta name="keywords" content="Full stack engineer">
+  
+    <meta name="description" content="源码阅读 https:&#x2F;&#x2F;react.jokcy.me&#x2F;book&#x2F;api&#x2F;react-element.html  react-class-source-code React.createElementComponent &amp; PureComponent1234567891011121314151617181920function Component(props, context, updat">
+<meta property="og:type" content="website">
+<meta property="og:title" content="page.title">
+<meta property="og:url" content="http://yoursite.com/demo/2023%E9%9D%A2%E8%AF%95%E5%87%86%E5%A4%87/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%20React.html">
+<meta property="og:site_name" content="Hello_AlexCc">
+<meta property="og:description" content="源码阅读 https:&#x2F;&#x2F;react.jokcy.me&#x2F;book&#x2F;api&#x2F;react-element.html  react-class-source-code React.createElementComponent &amp; PureComponent1234567891011121314151617181920function Component(props, context, updat">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-06-11T08:52:17.489Z">
+<meta property="article:modified_time" content="2024-06-11T08:52:17.489Z">
+<meta property="article:author" content="Hello_AlexCc">
+<meta property="article:tag" content="Full stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>page.title - Hello_AlexCc</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  <header style="height: 60vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Hello_AlexCc</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="page.title">
+              
+            </span>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      <div class="container nopadding-x-md">
+        <div class="py-5" id="board"
+          >
+          
+          <div class="container">
+            <div class="row">
+              <div class="col-12 col-md-10 m-auto">
+                
+
+<article class="page-content">
+  <h1 id="源码阅读"><a href="#源码阅读" class="headerlink" title="源码阅读"></a>源码阅读</h1><blockquote>
+<p><a target="_blank" rel="noopener" href="https://react.jokcy.me/book/api/react-element.html">https://react.jokcy.me/book/api/react-element.html</a></p>
+</blockquote>
+<p>react-class-source-code</p>
+<h1 id="React-createElement"><a href="#React-createElement" class="headerlink" title="React.createElement"></a>React.createElement</h1><h1 id="Component-amp-PureComponent"><a href="#Component-amp-PureComponent" class="headerlink" title="Component &amp; PureComponent"></a>Component &amp; PureComponent</h1><figure class="highlight js"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></div></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">function</span> <span class="hljs-title function_">Component</span>(<span class="hljs-params">props, context, updater</span>) &#123;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">props</span> = props;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">context</span> = context;<br>  <span class="hljs-comment">// If a component has string refs, we will assign a different object later.</span><br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">refs</span> = emptyObject;<br>  <span class="hljs-comment">// We initialize the default updater but the real one gets injected by the</span><br>  <span class="hljs-comment">// renderer.</span><br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">updater</span> = updater || <span class="hljs-title class_">ReactNoopUpdateQueue</span>;<br>&#125;<br><br><span class="hljs-title class_">Component</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">setState</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params">partialState, callback</span>) &#123;<br>  <span class="hljs-title function_">invariant</span>(<br>    <span class="hljs-keyword">typeof</span> partialState === <span class="hljs-string">&#x27;object&#x27;</span> ||<br>      <span class="hljs-keyword">typeof</span> partialState === <span class="hljs-string">&#x27;function&#x27;</span> ||<br>      partialState == <span class="hljs-literal">null</span>,<br>    <span class="hljs-string">&#x27;setState(...): takes an object of state variables to update or a &#x27;</span> +<br>      <span class="hljs-string">&#x27;function which returns an object of state variables.&#x27;</span>,<br>  );<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">updater</span>.<span class="hljs-title function_">enqueueSetState</span>(<span class="hljs-variable language_">this</span>, partialState, callback, <span class="hljs-string">&#x27;setState&#x27;</span>);<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+
+<p>PureComponent</p>
+<p>原型式继承。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">function</span> <span class="hljs-title function_">ComponentDummy</span>(<span class="hljs-params"></span>) &#123;&#125;<br><span class="hljs-title class_">ComponentDummy</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Component</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Convenience component with default shallow equality check for sCU.</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">PureComponent</span>(<span class="hljs-params">props, context, updater</span>) &#123;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">props</span> = props;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">context</span> = context;<br>  <span class="hljs-comment">// If a component has string refs, we will assign a different object later.</span><br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">refs</span> = emptyObject;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">updater</span> = updater || <span class="hljs-title class_">ReactNoopUpdateQueue</span>;<br>&#125;<br><br><span class="hljs-keyword">const</span> pureComponentPrototype = (<span class="hljs-title class_">PureComponent</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ComponentDummy</span>());<br>pureComponentPrototype.<span class="hljs-property">constructor</span> = <span class="hljs-title class_">PureComponent</span>;<br><span class="hljs-comment">// Avoid an extra prototype jump for these methods.</span><br><span class="hljs-comment">// 避免为这些方法进行额外的原型跳转。</span><br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(pureComponentPrototype, <span class="hljs-title class_">Component</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);<br><br><span class="hljs-comment">// isPureReactComponent 标识当前组件是不是 pureComponent</span><br>pureComponentPrototype.<span class="hljs-property">isPureReactComponent</span> = <span class="hljs-literal">true</span>;<br><br><span class="hljs-keyword">export</span> &#123;<span class="hljs-title class_">Component</span>, <span class="hljs-title class_">PureComponent</span>&#125;;<br></code></pre></td></tr></table></figure>
+
+<h1 id="ref-的三种使用方式"><a href="#ref-的三种使用方式" class="headerlink" title="ref 的三种使用方式"></a>ref 的三种使用方式</h1><ul>
+<li><p>string</p>
+<p>this.refs.stringRef.textContent</p>
+</li>
+<li><p>ref callback</p>
+<p>ref={ele =&gt; (this.methodRef = ele)}</p>
+</li>
+<li><p>React.createRef()</p>
+</li>
+</ul>
+<p>this.refs 已弃用。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span><br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RefDemo</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_ inherited__">React.Component</span> &#123;<br>  <span class="hljs-title function_">constructor</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-variable language_">super</span>()<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">objRef</span> = <span class="hljs-title class_">React</span>.<span class="hljs-title function_">createRef</span>()<br><br>    <span class="hljs-comment">// &#123; current: null &#125;</span><br>  &#125;<br><br>  <span class="hljs-title function_">componentDidMount</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-comment">// console.log(`span1: $&#123;this.refs.ref1.textContent&#125;`)</span><br>    <span class="hljs-comment">// console.log(`span2: $&#123;this.ref2.textContent&#125;`)</span><br>    <span class="hljs-comment">// console.log(`span3: $&#123;this.ref3.current.textContent&#125;`)</span><br><br>    <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> &#123;<br>      <span class="hljs-variable language_">this</span>.<span class="hljs-property">refs</span>.<span class="hljs-property">stringRef</span>.<span class="hljs-property">textContent</span> = <span class="hljs-string">&#x27;string ref got&#x27;</span><br>      <span class="hljs-variable language_">this</span>.<span class="hljs-property">methodRef</span>.<span class="hljs-property">textContent</span> = <span class="hljs-string">&#x27;method ref got&#x27;</span><br>      <span class="hljs-variable language_">this</span>.<span class="hljs-property">objRef</span>.<span class="hljs-property">current</span>.<span class="hljs-property">textContent</span> = <span class="hljs-string">&#x27;obj ref got&#x27;</span><br>    &#125;, <span class="hljs-number">1000</span>)<br>  &#125;<br><br>  <span class="hljs-title function_">render</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">return</span> (<br>      <span class="language-xml"><span class="hljs-tag">&lt;&gt;</span></span><br><span class="language-xml">        <span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">&quot;stringRef&quot;</span>&gt;</span>span1<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="language-xml">        <span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">&#123;ele</span> =&gt;</span> (this.methodRef = ele)&#125;&gt;span3<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="language-xml">        <span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">&#123;this.objRef&#125;</span>&gt;</span>span3<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;/&gt;</span></span><br>    )<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="createRef"><a href="#createRef" class="headerlink" title="createRef"></a>createRef</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">createRef</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-keyword">const</span> refObject = &#123;<br>    <span class="hljs-attr">current</span>: <span class="hljs-literal">null</span>,<br>  &#125;;<br><br>  <span class="hljs-keyword">return</span> refObject;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h1 id="forwardRef"><a href="#forwardRef" class="headerlink" title="forwardRef"></a>forwardRef</h1><blockquote>
+<p><a target="_blank" rel="noopener" href="https://zh-hans.legacy.reactjs.org/docs/react-api.html#reactforwardref">https://zh-hans.legacy.reactjs.org/docs/react-api.html#reactforwardref</a></p>
+</blockquote>
+<p>React.forwardRef 会创建一个React组件，这个组件能够将其接受的 ref 属性转发到其组件树下的另一个组件中。</p>
+<p>主要用途：</p>
+<ul>
+<li><p>转发 refs 到 DOM 组件</p>
+<p>比如我们想要在自定义React 组件上获取 ref，就需要这种方式。</p>
+</li>
+<li><p>在高阶组件中转发 refs</p>
+</li>
+</ul>
+<p>在自定义组件上定义 ref，如下代码没有使用 forwardRef，会报错，因为 this.ref 是 null</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span><br><br><span class="hljs-keyword">const</span> <span class="hljs-title function_">TargetComponent</span> = (<span class="hljs-params">props, ref</span>) =&gt; (<br>  <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">&#123;ref&#125;</span> /&gt;</span></span><br>)<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Comp</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_ inherited__">React.Component</span> &#123;<br>  <span class="hljs-title function_">constructor</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-variable language_">super</span>()<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">ref</span> = <span class="hljs-title class_">React</span>.<span class="hljs-title function_">createRef</span>()<br>  &#125;<br><br>  <span class="hljs-title function_">componentDidMount</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">ref</span>.<span class="hljs-property">current</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;ref get input&#x27;</span><br>  &#125;<br><br>  <span class="hljs-title function_">render</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">return</span> <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">TargetComponent</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">&#123;this.ref&#125;</span> /&gt;</span></span><br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>更正如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> <span class="hljs-title class_">TargetComponent</span> = <span class="hljs-title class_">React</span>.<span class="hljs-title function_">forwardRef</span>(<span class="hljs-function">(<span class="hljs-params">props, ref</span>) =&gt;</span> (<br>  <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">&#123;ref&#125;</span> /&gt;</span></span><br>))<br></code></pre></td></tr></table></figure>
+
+
+  
+</article>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hello-alex-cheng.github.io/" target="_blank" rel="nofollow noopener"><span>I</span></a> <i class="iconfont icon-love"></i> <a href="https://hello-alex-cheng.github.io/" target="_blank" rel="nofollow noopener"><span>YOU</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

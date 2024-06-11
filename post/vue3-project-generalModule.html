@@ -1,0 +1,999 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Hello_AlexCc">
+  <meta name="keywords" content="Full stack engineer">
+  
+    <meta name="description" content="国际化&#x2F;换肤">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue3项目实战(五)：通用功能开发（一）">
+<meta property="og:url" content="http://yoursite.com/post/vue3-project-generalModule.html">
+<meta property="og:site_name" content="Hello_AlexCc">
+<meta property="og:description" content="国际化&#x2F;换肤">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/img/theme.png">
+<meta property="article:published_time" content="2022-12-29T03:00:23.000Z">
+<meta property="article:modified_time" content="2024-06-11T08:52:17.354Z">
+<meta property="article:author" content="Hello_AlexCc">
+<meta property="article:tag" content="工程化,Vue3,通用功能">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://yoursite.com/img/theme.png">
+  
+  
+  <title>Vue3项目实战(五)：通用功能开发（一） - Hello_AlexCc</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Hello_AlexCc</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/theme.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Vue3项目实战(五)：通用功能开发（一）">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-12-29 11:00" pubdate>
+        2022年12月29日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      34k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      283 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Vue3项目实战(五)：通用功能开发（一）</h1>
+            
+            <div class="markdown-body">
+              <h1 id="通用功能"><a href="#通用功能" class="headerlink" title="通用功能"></a>通用功能</h1><ol>
+<li>国际化</li>
+<li>动态换肤</li>
+<li><code>screenfull</code></li>
+<li><code>headerSearch</code></li>
+<li><code>tagView</code></li>
+<li><code>guide</code></li>
+</ol>
+<h1 id="国际化实现原理"><a href="#国际化实现原理" class="headerlink" title="国际化实现原理"></a>国际化实现原理</h1><p>先来看一个需求：</p>
+<blockquote>
+<p>我们有一个变量 <code>msg</code> ，但是这个 <code>msg</code> 有且只能有两个值：</p>
+<ol>
+<li>hello world</li>
+<li>你好世界</li>
+</ol>
+<p>要求：根据需要切换 <code>msg</code> 的值</p>
+</blockquote>
+<p>这样的一个需求就是 国际化 的需求，那么我们可以通过以下代码来实现这个需求</p>
+<figure class="highlight js"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></div></td><td class="code"><pre><code class="hljs js">&lt;script&gt;<br>  <span class="hljs-comment">// 1. 定义 msg 值的数据源</span><br>  <span class="hljs-keyword">const</span> messages = &#123;<br>    <span class="hljs-attr">en</span>: &#123;<br>      <span class="hljs-attr">msg</span>: <span class="hljs-string">&#x27;hello world&#x27;</span><br>    &#125;,<br>    <span class="hljs-attr">zh</span>: &#123;<br>      <span class="hljs-attr">msg</span>: <span class="hljs-string">&#x27;你好世界&#x27;</span><br>    &#125;<br>  &#125;<br>  <span class="hljs-comment">// 2. 定义切换变量</span><br>  <span class="hljs-keyword">let</span> locale = <span class="hljs-string">&#x27;en&#x27;</span><br>  <span class="hljs-comment">// 3. 定义赋值函数</span><br>  <span class="hljs-keyword">function</span> <span class="hljs-title function_">t</span>(<span class="hljs-params">key</span>) &#123;<br>    <span class="hljs-keyword">return</span> messages[locale][key]<br>  &#125;<br>  <span class="hljs-comment">// 4. 为 msg 赋值 </span><br>  <span class="hljs-keyword">let</span> msg = <span class="hljs-title function_">t</span>(<span class="hljs-string">&#x27;msg&#x27;</span>)<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(msg);<br>  <span class="hljs-comment">// 修改 locale， 重新执行 t 方法，获取不同语言环境下的值</span><br><br>&lt;/script&gt;<br></code></pre></td></tr></table></figure>
+
+<p>总结：</p>
+<ol>
+<li>通过一个变量来 <strong>控制</strong> 语言环境</li>
+<li>所有语言环境下的数据源要 <strong>预先</strong> 定义好</li>
+<li>通过一个方法来获取 <strong>当前语言</strong> 下 <strong>指定属性</strong> 的值</li>
+<li>该值即为国际化下展示值</li>
+</ol>
+<h2 id="基于-vue-i18n-V9-的国际化实现方案分析"><a href="#基于-vue-i18n-V9-的国际化实现方案分析" class="headerlink" title="基于 vue-i18n V9  的国际化实现方案分析"></a>基于 vue-i18n V9  的国际化实现方案分析</h2><p>在 <code>vue</code> 的项目中，我们不需要手写这么复杂的一些基础代码，可以直接使用 <a target="_blank" rel="noopener" href="https://vue-i18n.intlify.dev/">vue-i18n</a> 进行实现（注意：<strong><code>vue3</code> 下需要使用 <code>V 9.x</code> 的 <code>i18n</code></strong>）</p>
+<p><a target="_blank" rel="noopener" href="https://vue-i18n.intlify.dev/guide/">vue-i18n</a> 的使用可以分为四个部分：</p>
+<ol>
+<li>创建 <code>messages</code> 数据源</li>
+<li>创建 <code>locale</code> 语言变量</li>
+<li>初始化 <code>i18n</code> 实例</li>
+<li>注册 <code>i18n</code> 实例</li>
+</ol>
+<p>那么接下来我们就去实现以下：</p>
+<ol>
+<li>安装 <code>vue-i18n</code><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js">npm install vue-i18n@next<br></code></pre></td></tr></table></figure>
+
+
+</li>
+</ol>
+<ol start="2">
+<li><p>创建 <code>i18n/index.js</code> 文件</p>
+</li>
+<li><p>创建 <code>messages</code> 数据源</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> messages = &#123;<br>  <span class="hljs-attr">en</span>: &#123;<br>    <span class="hljs-attr">msg</span>: &#123;<br>      <span class="hljs-attr">test</span>: <span class="hljs-string">&#x27;hello world&#x27;</span><br>    &#125;<br>  &#125;,<br>  <span class="hljs-attr">zh</span>: &#123;<br>    <span class="hljs-attr">msg</span>: &#123;<br>      <span class="hljs-attr">test</span>: <span class="hljs-string">&#x27;你好世界&#x27;</span><br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>创建 <code>locale</code> 语言变量</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> locale = <span class="hljs-string">&#x27;en&#x27;</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p>初始化 <code>i18n</code> 实例</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> &#123; createI18n &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue-i18n&#x27;</span><br><br><span class="hljs-keyword">const</span> i18n = <span class="hljs-title function_">createI18n</span>(&#123;<br>  <span class="hljs-comment">// 使用 Composition API 模式，则需要将其设置为false</span><br>  <span class="hljs-attr">legacy</span>: <span class="hljs-literal">false</span>,<br>  <span class="hljs-comment">// 全局注入 $t 函数</span><br>  <span class="hljs-attr">globalInjection</span>: <span class="hljs-literal">true</span>,<br>  locale,<br>  messages<br>&#125;)<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>把 <code>i18n</code> 注册到 <code>vue</code> 实例</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> i18n<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>在 <code>main.js</code> 中导入</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// i18n （PS：导入放到 APP.vue 导入之前，因为后面我们会在 app.vue 中使用国际化内容）</span><br><span class="hljs-keyword">import</span> i18n <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@/i18n&#x27;</span><br>...<br>app.<span class="hljs-title function_">use</span>(i18n)<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>在 <code>layout/components/Sidebar/index.vue</code> 中使用 <code>i18n</code></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">h1</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;logo-title&quot;</span> <span class="hljs-attr">v-if</span>=<span class="hljs-string">&quot;$store.getters.sidebarOpened&quot;</span>&gt;</span><br>        &#123;&#123; $t(&#x27;msg.test&#x27;) &#125;&#125;<br><span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p>修改 <code>locale</code> 的值，即可改变展示的内容</p>
+</li>
+</ol>
+<p>截止到现在我们已经实现了 <code>i18n</code> 的最基础用法，那么解下来我们就可以在项目中使用 <code>i18n</code> 完成国际化。</p>
+<p>项目中完成国际化分成以下几步进行:</p>
+<ol>
+<li>封装 <code>langSelect</code> 组件用于修改 <code>locale</code></li>
+<li>导入 <code>el-locale</code> 语言包</li>
+<li>创建自定义语言包</li>
+</ol>
+<h2 id="封装-langSelect-组件"><a href="#封装-langSelect-组件" class="headerlink" title="封装  langSelect  组件"></a>封装  langSelect  组件</h2><ol>
+<li><p>定义 <code>store/app.js</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> &#123; <span class="hljs-variable constant_">LANG</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@/constant&#x27;</span><br><span class="hljs-keyword">import</span> &#123; getItem, setItem &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@/utils/storage&#x27;</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> &#123;<br>  <span class="hljs-attr">namespaced</span>: <span class="hljs-literal">true</span>,<br>  <span class="hljs-attr">state</span>: <span class="hljs-function">() =&gt;</span> (&#123;<br>    ...<br>    <span class="hljs-attr">language</span>: <span class="hljs-title function_">getItem</span>(<span class="hljs-variable constant_">LANG</span>) || <span class="hljs-string">&#x27;zh&#x27;</span><br>  &#125;),<br>  <span class="hljs-attr">mutations</span>: &#123;<br>    ...<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 设置国际化</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-title function_">setLanguage</span>(<span class="hljs-params">state, lang</span>) &#123;<br>      <span class="hljs-title function_">setItem</span>(<span class="hljs-variable constant_">LANG</span>, lang)<br>      state.<span class="hljs-property">language</span> = lang<br>    &#125;<br>  &#125;,<br>  <span class="hljs-attr">actions</span>: &#123;&#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+
+
+</li>
+</ol>
+<ol start="2">
+<li><p>在 <code>constant</code> 中定义常量</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 国际化</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-variable constant_">LANG</span> = <span class="hljs-string">&#x27;language&#x27;</span><br></code></pre></td></tr></table></figure>
+
+
+</li>
+</ol>
+<ol start="3">
+<li><p>创建 <code>components/LangSelect/index</code> </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;template&gt;<br>  <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">el-dropdown</span></span></span><br><span class="hljs-tag"><span class="language-xml">    <span class="hljs-attr">trigger</span>=<span class="hljs-string">&quot;click&quot;</span></span></span><br><span class="hljs-tag"><span class="language-xml">    <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;international&quot;</span></span></span><br><span class="hljs-tag"><span class="language-xml">    @<span class="hljs-attr">command</span>=<span class="hljs-string">&quot;handleSetLanguage&quot;</span></span></span><br><span class="hljs-tag"><span class="language-xml">  &gt;</span></span><br><span class="language-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;<span class="hljs-name">el-tooltip</span> <span class="hljs-attr">content</span>=<span class="hljs-string">&quot;国际化&quot;</span> <span class="hljs-attr">:effect</span>=<span class="hljs-string">&quot;effect&quot;</span>&gt;</span></span><br><span class="language-xml">        <span class="hljs-tag">&lt;<span class="hljs-name">svg-icon</span> <span class="hljs-attr">icon</span>=<span class="hljs-string">&quot;language&quot;</span> /&gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;/<span class="hljs-name">el-tooltip</span>&gt;</span></span><br><span class="language-xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br><span class="language-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">template</span> #<span class="hljs-attr">dropdown</span>&gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;<span class="hljs-name">el-dropdown-menu</span>&gt;</span></span><br><span class="language-xml">        <span class="hljs-tag">&lt;<span class="hljs-name">el-dropdown-item</span> <span class="hljs-attr">:disabled</span>=<span class="hljs-string">&quot;language === &#x27;zh&#x27;&quot;</span> <span class="hljs-attr">command</span>=<span class="hljs-string">&quot;zh&quot;</span>&gt;</span></span><br><span class="language-xml">          中文</span><br><span class="language-xml">        <span class="hljs-tag">&lt;/<span class="hljs-name">el-dropdown-item</span>&gt;</span></span><br><span class="language-xml">        <span class="hljs-tag">&lt;<span class="hljs-name">el-dropdown-item</span> <span class="hljs-attr">:disabled</span>=<span class="hljs-string">&quot;language === &#x27;en&#x27;&quot;</span> <span class="hljs-attr">command</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span></span><br><span class="language-xml">          English</span><br><span class="language-xml">        <span class="hljs-tag">&lt;/<span class="hljs-name">el-dropdown-item</span>&gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;/<span class="hljs-name">el-dropdown-menu</span>&gt;</span></span><br><span class="language-xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span></span><br><span class="language-xml">  <span class="hljs-tag">&lt;/<span class="hljs-name">el-dropdown</span>&gt;</span></span><br>&lt;/template&gt;<br><br><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">setup</span>&gt;</span><span class="language-javascript"></span></span><br><span class="language-javascript"><span class="language-xml"><span class="hljs-keyword">import</span> &#123; useI18n &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue-i18n&#x27;</span></span></span><br><span class="language-javascript"><span class="language-xml"><span class="hljs-keyword">import</span> &#123; defineProps, computed &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span></span></span><br><span class="language-javascript"><span class="language-xml"><span class="hljs-keyword">import</span> &#123; useStore &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vuex&#x27;</span></span></span><br><span class="language-javascript"><span class="language-xml"><span class="hljs-keyword">import</span> &#123; <span class="hljs-title class_">ElMessage</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;element-plus&#x27;</span></span></span><br><span class="language-javascript"><span class="language-xml"></span></span><br><span class="language-javascript"><span class="language-xml"><span class="hljs-title function_">defineProps</span>(&#123;</span></span><br><span class="language-javascript"><span class="language-xml">  <span class="hljs-attr">effect</span>: &#123;</span></span><br><span class="language-javascript"><span class="language-xml">    <span class="hljs-attr">type</span>: <span class="hljs-title class_">String</span>,</span></span><br><span class="language-javascript"><span class="language-xml">    <span class="hljs-attr">default</span>: <span class="hljs-string">&#x27;dark&#x27;</span>,</span></span><br><span class="language-javascript"><span class="language-xml">    <span class="hljs-attr">validator</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params">value</span>) &#123;</span></span><br><span class="language-javascript"><span class="language-xml">      <span class="hljs-comment">// 这个值必须匹配下列字符串中的一个</span></span></span><br><span class="language-javascript"><span class="language-xml">      <span class="hljs-keyword">return</span> [<span class="hljs-string">&#x27;dark&#x27;</span>, <span class="hljs-string">&#x27;light&#x27;</span>].<span class="hljs-title function_">indexOf</span>(value) !== -<span class="hljs-number">1</span></span></span><br><span class="language-javascript"><span class="language-xml">    &#125;</span></span><br><span class="language-javascript"><span class="language-xml">  &#125;</span></span><br><span class="language-javascript"><span class="language-xml">&#125;)</span></span><br><span class="language-javascript"><span class="language-xml"></span></span><br><span class="language-javascript"><span class="language-xml"><span class="hljs-keyword">const</span> store = <span class="hljs-title function_">useStore</span>()</span></span><br><span class="language-javascript"><span class="language-xml"><span class="hljs-keyword">const</span> language = <span class="hljs-title function_">computed</span>(<span class="hljs-function">() =&gt;</span> store.<span class="hljs-property">getters</span>.<span class="hljs-property">language</span>)</span></span><br><span class="language-javascript"><span class="language-xml"></span></span><br><span class="language-javascript"><span class="language-xml"><span class="hljs-comment">// 切换语言的方法</span></span></span><br><span class="language-javascript"><span class="language-xml"><span class="hljs-keyword">const</span> i18n = <span class="hljs-title function_">useI18n</span>()</span></span><br><span class="language-javascript"><span class="language-xml"><span class="hljs-keyword">const</span> <span class="hljs-title function_">handleSetLanguage</span> = lang =&gt; &#123;</span></span><br><span class="language-javascript"><span class="language-xml">  i18n.<span class="hljs-property">locale</span>.<span class="hljs-property">value</span> = lang</span></span><br><span class="language-javascript"><span class="language-xml">  store.<span class="hljs-title function_">commit</span>(<span class="hljs-string">&#x27;app/setLanguage&#x27;</span>, lang)</span></span><br><span class="language-javascript"><span class="language-xml">  <span class="hljs-title class_">ElMessage</span>.<span class="hljs-title function_">success</span>(<span class="hljs-string">&#x27;更新成功&#x27;</span>)</span></span><br><span class="language-javascript"><span class="language-xml">&#125;</span></span><br><span class="language-javascript"><span class="language-xml"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p>在 <code>navbar</code> 中导入 <code>LangSelect</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;template&gt;<br>  <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;navbar&quot;</span>&gt;</span></span><br><span class="language-xml">    ...</span><br><span class="language-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;right-menu&quot;</span>&gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;<span class="hljs-name">lang-select</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;right-menu-item hover-effect&quot;</span> /&gt;</span></span><br><span class="language-xml">      <span class="hljs-comment">&lt;!-- 头像 --&gt;</span></span><br><span class="language-xml">      ...</span><br><span class="language-xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br><span class="language-xml">  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br>&lt;/template&gt;<br><br><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">setup</span>&gt;</span><span class="language-javascript"></span></span><br><span class="language-javascript"><span class="language-xml"><span class="hljs-keyword">import</span> <span class="hljs-title class_">LangSelect</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@/components/LangSelect&#x27;</span></span></span><br><span class="language-javascript"><span class="language-xml">...</span></span><br><span class="language-javascript"><span class="language-xml"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span><br><br><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">style</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;scss&quot;</span> <span class="hljs-attr">scoped</span>&gt;</span><span class="language-css"></span></span><br><span class="language-css"><span class="language-xml"><span class="hljs-selector-class">.navbar</span> &#123;</span></span><br><span class="language-css"><span class="language-xml">  ...</span></span><br><span class="language-css"><span class="language-xml"></span></span><br><span class="language-css"><span class="language-xml">  <span class="hljs-selector-class">.right-menu</span> &#123;</span></span><br><span class="language-css"><span class="language-xml">    ...</span></span><br><span class="language-css"><span class="language-xml"></span></span><br><span class="language-css"><span class="language-xml">    ::v-deep .right-menu-item &#123;</span></span><br><span class="language-css"><span class="language-xml">      <span class="hljs-attribute">display</span>: inline-block;</span></span><br><span class="language-css"><span class="language-xml">      <span class="hljs-attribute">padding</span>: <span class="hljs-number">0</span> <span class="hljs-number">18px</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span>;</span></span><br><span class="language-css"><span class="language-xml">      <span class="hljs-attribute">font-size</span>: <span class="hljs-number">24px</span>;</span></span><br><span class="language-css"><span class="language-xml">      <span class="hljs-attribute">color</span>: <span class="hljs-number">#5a5e66</span>;</span></span><br><span class="language-css"><span class="language-xml">      <span class="hljs-attribute">vertical-align</span>: text-bottom;</span></span><br><span class="language-css"><span class="language-xml"></span></span><br><span class="language-css"><span class="language-xml">      &amp;<span class="hljs-selector-class">.hover-effect</span> &#123;</span></span><br><span class="language-css"><span class="language-xml">        <span class="hljs-attribute">cursor</span>: pointer;</span></span><br><span class="language-css"><span class="language-xml">      &#125;</span></span><br><span class="language-css"><span class="language-xml">    &#125;</span></span><br><span class="language-css"><span class="language-xml"></span></span><br><span class="language-css"><span class="language-xml">    ...</span></span><br><span class="language-css"><span class="language-xml">&#125;</span></span><br><span class="language-css"><span class="language-xml"></span><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span></span><br><br></code></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="element-plus-国际化处理"><a href="#element-plus-国际化处理" class="headerlink" title="element-plus 国际化处理"></a>element-plus 国际化处理</h2><p>截止到目前，我们的国际化内容已经基本功能已经处理完成了。接下来需要处理的就是对应的语言包，有了语言包就可以实现整个项目中的所有国际化处理了。</p>
+<p>那么对于语言包来说，我们整个项目中会分成两部分：</p>
+<ol>
+<li><code>element-plus</code> 语言包：用来处理 <code>element</code> 组件的国际化功能</li>
+<li>自定义语言包：用来处理 <strong>非</strong><code>element</code> 组件的国际化功能</li>
+</ol>
+<p>那么首先我们先来处理 <code>element-plus</code> 语言包：</p>
+<ol start="3">
+<li>在 <code>plugins/index</code> 中导入 <code>element</code> 的中文、英文语言包：</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> zhCn <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;element-plus/es/locale/lang/zh-cn&#x27;</span><br><span class="hljs-keyword">import</span> en <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;element-plus/lib/locale/lang/en&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<ol start="4">
+<li><p>注册 <code>element</code> 时，根据当前语言选择使用哪种语言包</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> store <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@/store&#x27;</span><br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> app =&gt; &#123;<br>  app.<span class="hljs-title function_">use</span>(<span class="hljs-title class_">ElementPlus</span>, &#123;<br>    <span class="hljs-attr">locale</span>: store.<span class="hljs-property">getters</span>.<span class="hljs-property">language</span> === <span class="hljs-string">&#x27;en&#x27;</span> ? en : zhCn<br>  &#125;)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+</li>
+</ol>
+<h2 id="自定义语言包国际化处理"><a href="#自定义语言包国际化处理" class="headerlink" title="自定义语言包国际化处理"></a>自定义语言包国际化处理</h2><p>处理完 <code>element</code> 的国际化内容之后，接下来我们来处理 <strong>自定义语言包</strong>。</p>
+<ol>
+<li>在本地创建 <code>lang</code> 文件夹，里面创建好本地需要的语言包，由于比较多，就放一部分来看看：</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// en.ts</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> &#123;<br>  <span class="hljs-attr">login</span>: &#123;<br>    <span class="hljs-attr">title</span>: <span class="hljs-string">&#x27;User Login&#x27;</span>,<br>    <span class="hljs-attr">loginBtn</span>: <span class="hljs-string">&#x27;Login&#x27;</span>,<br>    <span class="hljs-attr">usernameRule</span>: <span class="hljs-string">&#x27;Username is required&#x27;</span>,<br>    <span class="hljs-attr">passwordRule</span>: <span class="hljs-string">&#x27;Password cannot be less than 6 digits&#x27;</span>,<br>  &#125;,<br>  <span class="hljs-comment">// other....</span><br>&#125;<br><br><span class="hljs-comment">// zh.ts</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> &#123;<br>  <span class="hljs-attr">login</span>: &#123;<br>    <span class="hljs-attr">title</span>: <span class="hljs-string">&#x27;用户登录&#x27;</span>,<br>    <span class="hljs-attr">loginBtn</span>: <span class="hljs-string">&#x27;登录&#x27;</span>,<br>    <span class="hljs-attr">usernameRule</span>: <span class="hljs-string">&#x27;用户名为必填项&#x27;</span>,<br>    <span class="hljs-attr">passwordRule</span>: <span class="hljs-string">&#x27;密码不能少于6位&#x27;</span>,<br>  &#125;,<br>  <span class="hljs-comment">// other...</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><p>在 <code>lang/index</code> 中，导入语言包</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> mZhLocale <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./lang/zh&#x27;</span><br><span class="hljs-keyword">import</span> mEnLocale <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./lang/en&#x27;</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p>在 <code>messages</code> 中注册到语言包</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> messages = &#123;<br>  <span class="hljs-attr">en</span>: &#123;<br>    <span class="hljs-attr">msg</span>: &#123;<br>      ...mEnLocale<br>    &#125;<br>  &#125;,<br>  <span class="hljs-attr">zh</span>: &#123;<br>    <span class="hljs-attr">msg</span>: &#123;<br>      ...mZhLocale<br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="处理项目国际化内容"><a href="#处理项目国际化内容" class="headerlink" title="处理项目国际化内容"></a>处理项目国际化内容</h2><p>在处理好了国际化的语言包之后，接下来我们就可以应用国际化功能到我们的项目中</p>
+<p>对于我们目前的项目而言，需要进行国际化处理的地方主要分为：</p>
+<ol>
+<li>登录页面</li>
+<li><code>navbar</code> 区域</li>
+<li><code>sidebar</code> 区域</li>
+<li>面包屑区域</li>
+</ol>
+<p>那么这一小节，我们先来处理前两个</p>
+<p><strong>登录页面：</strong></p>
+<p><code>login/index</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;template&gt;<br>  <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;login-container&quot;</span>&gt;</span></span><br><span class="language-xml">    ...</span><br><span class="language-xml">      <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;title-container&quot;</span>&gt;</span></span><br><span class="language-xml">        <span class="hljs-tag">&lt;<span class="hljs-name">h3</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;title&quot;</span>&gt;</span>&#123;&#123; $t(&#x27;msg.login.title&#x27;) &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">h3</span>&gt;</span></span><br><span class="language-xml">          <span class="hljs-tag">&lt;<span class="hljs-name">lang-select</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;lang-select&quot;</span> <span class="hljs-attr">effect</span>=<span class="hljs-string">&quot;light&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">lang-select</span>&gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br><span class="language-xml"></span><br><span class="language-xml">      ...</span><br><span class="language-xml"></span><br><span class="language-xml">      <span class="hljs-tag">&lt;<span class="hljs-name">el-button</span></span></span><br><span class="hljs-tag"><span class="language-xml">        <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;primary&quot;</span></span></span><br><span class="hljs-tag"><span class="language-xml">        <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;width: 100%; margin-bottom: 30px&quot;</span></span></span><br><span class="hljs-tag"><span class="language-xml">        <span class="hljs-attr">:loading</span>=<span class="hljs-string">&quot;loading&quot;</span></span></span><br><span class="hljs-tag"><span class="language-xml">        @<span class="hljs-attr">click</span>=<span class="hljs-string">&quot;handleLogin&quot;</span></span></span><br><span class="hljs-tag"><span class="language-xml">        &gt;</span>&#123;&#123; $t(&#x27;msg.login.loginBtn&#x27;) &#125;&#125;&lt;/el-button</span><br><span class="language-xml">      &gt;</span><br><span class="language-xml">      </span><br><span class="language-xml">      <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;tips&quot;</span> <span class="hljs-attr">v-html</span>=<span class="hljs-string">&quot;$t(&#x27;msg.login.desc&#x27;)&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br><span class="language-xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">el-form</span>&gt;</span></span><br><span class="language-xml">  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br>&lt;/template&gt;<br><br><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">setup</span>&gt;</span><span class="language-javascript"></span></span><br><span class="language-javascript"><span class="language-xml"><span class="hljs-keyword">import</span> &#123; useI18n &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue-i18n&#x27;</span></span></span><br><span class="language-javascript"><span class="language-xml">...</span></span><br><span class="language-javascript"><span class="language-xml"><span class="hljs-comment">// 验证规则</span></span></span><br><span class="language-javascript"><span class="language-xml"><span class="hljs-keyword">const</span> i18n = <span class="hljs-title function_">useI18n</span>()</span></span><br><span class="language-javascript"><span class="language-xml"><span class="hljs-keyword">const</span> loginRules = <span class="hljs-title function_">ref</span>(&#123;</span></span><br><span class="language-javascript"><span class="language-xml">  <span class="hljs-attr">username</span>: [</span></span><br><span class="language-javascript"><span class="language-xml">    &#123;</span></span><br><span class="language-javascript"><span class="language-xml">      ...</span></span><br><span class="language-javascript"><span class="language-xml">      <span class="hljs-attr">message</span>: i18n.<span class="hljs-title function_">t</span>(<span class="hljs-string">&#x27;msg.login.usernameRule&#x27;</span>)</span></span><br><span class="language-javascript"><span class="language-xml">    &#125;</span></span><br><span class="language-javascript"><span class="language-xml">  ],</span></span><br><span class="language-javascript"><span class="language-xml">  ...</span></span><br><span class="language-javascript"><span class="language-xml">&#125;)</span></span><br><span class="language-javascript"><span class="language-xml">...</span></span><br><span class="language-javascript"><span class="language-xml"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span><br><br><br></code></pre></td></tr></table></figure>
+
+<p><code>login/rules</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> i18n <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@/i18n&#x27;</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">validatePassword</span> = (<span class="hljs-params"></span>) =&gt; &#123;<br>  <span class="hljs-keyword">return</span> <span class="hljs-function">(<span class="hljs-params">rule, value, callback</span>) =&gt;</span> &#123;<br>    <span class="hljs-keyword">if</span> (value.<span class="hljs-property">length</span> &lt; <span class="hljs-number">6</span>) &#123;<br>      <span class="hljs-title function_">callback</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(i18n.<span class="hljs-property">global</span>.<span class="hljs-title function_">t</span>(<span class="hljs-string">&#x27;msg.login.passwordRule&#x27;</span>)))<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      <span class="hljs-title function_">callback</span>()<br>    &#125;<br>  &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p> <strong><code>navbar</code> 区域</strong></p>
+<p><code>layout/components/navbar</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;template&gt;<br>  <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;navbar&quot;</span>&gt;</span></span><br><span class="language-xml">    ...</span><br><span class="language-xml">        <span class="hljs-tag">&lt;<span class="hljs-name">template</span> #<span class="hljs-attr">dropdown</span>&gt;</span></span><br><span class="language-xml">          <span class="hljs-tag">&lt;<span class="hljs-name">el-dropdown-menu</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;user-dropdown&quot;</span>&gt;</span></span><br><span class="language-xml">            <span class="hljs-tag">&lt;<span class="hljs-name">router-link</span> <span class="hljs-attr">to</span>=<span class="hljs-string">&quot;/&quot;</span>&gt;</span></span><br><span class="language-xml">              <span class="hljs-tag">&lt;<span class="hljs-name">el-dropdown-item</span>&gt;</span> &#123;&#123; $t(&#x27;msg.navBar.home&#x27;) &#125;&#125; <span class="hljs-tag">&lt;/<span class="hljs-name">el-dropdown-item</span>&gt;</span></span><br><span class="language-xml">            <span class="hljs-tag">&lt;/<span class="hljs-name">router-link</span>&gt;</span></span><br><span class="language-xml">            <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">target</span>=<span class="hljs-string">&quot;_blank&quot;</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;&quot;</span>&gt;</span></span><br><span class="language-xml">              <span class="hljs-tag">&lt;<span class="hljs-name">el-dropdown-item</span>&gt;</span>&#123;&#123; $t(&#x27;msg.navBar.course&#x27;) &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">el-dropdown-item</span>&gt;</span></span><br><span class="language-xml">            <span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span></span><br><span class="language-xml">            <span class="hljs-tag">&lt;<span class="hljs-name">el-dropdown-item</span> <span class="hljs-attr">divided</span> @<span class="hljs-attr">click</span>=<span class="hljs-string">&quot;logout&quot;</span>&gt;</span></span><br><span class="language-xml">              &#123;&#123; $t(&#x27;msg.navBar.logout&#x27;) &#125;&#125;</span><br><span class="language-xml">            <span class="hljs-tag">&lt;/<span class="hljs-name">el-dropdown-item</span>&gt;</span></span><br><span class="language-xml">          <span class="hljs-tag">&lt;/<span class="hljs-name">el-dropdown-menu</span>&gt;</span></span><br><span class="language-xml">        <span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;/<span class="hljs-name">el-dropdown</span>&gt;</span></span><br>    &lt;/div&gt;<br>  &lt;/div&gt;<br>&lt;/template&gt;<br></code></pre></td></tr></table></figure>
+
+<p><code>components/LangSelect/index</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;el-tooltip :content=<span class="hljs-string">&quot;$t(&#x27;msg.navBar.lang&#x27;)&quot;</span> :effect=<span class="hljs-string">&quot;effect&quot;</span>&gt;<br><br><span class="hljs-keyword">const</span> <span class="hljs-title function_">handleSetLanguage</span> = lang =&gt; &#123;<br>  ...<br>  <span class="hljs-title class_">ElMessage</span>.<span class="hljs-title function_">success</span>(i18n.<span class="hljs-title function_">t</span>(<span class="hljs-string">&#x27;msg.toast.switchLangSuccess&#x27;</span>))<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="sidebar-与-面包屑-区域的国际化处理"><a href="#sidebar-与-面包屑-区域的国际化处理" class="headerlink" title="sidebar 与 面包屑 区域的国际化处理"></a>sidebar 与 面包屑 区域的国际化处理</h2><p><strong>sidebar 区域</strong></p>
+<p>目前对于 <code>sidebar</code> 而言，显示的文本是我们在定义路由表时的 <code>title</code></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>&#123;&#123; title &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>我们可以 <strong>把 <code>title</code> 作为语言包内容的 <code>key</code> 进行处理</strong></p>
+<p>创建 <code>utils/i18n</code> 工具模块，用于 <strong>将 <code>title</code> 转化为国际化内容</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> i18n <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@/i18n&#x27;</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">generateTitle</span>(<span class="hljs-params">title</span>) &#123;<br>  <span class="hljs-keyword">return</span> i18n.<span class="hljs-property">global</span>.<span class="hljs-title function_">t</span>(<span class="hljs-string">&#x27;msg.route.&#x27;</span> + title)<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>在 <code>layout/components/Sidebar/MenuItem.vue</code> 中导入该方法：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;template&gt;<br>  ...<br>  &lt;span&gt;&#123;&#123; <span class="hljs-title function_">generateTitle</span>(title) &#125;&#125;&lt;/span&gt;<br>&lt;/template&gt;<br><br><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">setup</span>&gt;</span><span class="language-javascript"></span></span><br><span class="language-javascript"><span class="language-xml"><span class="hljs-keyword">import</span> &#123; generateTitle &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@/utils/i18n&#x27;</span></span></span><br><span class="language-javascript"><span class="language-xml">...</span></span><br><span class="language-javascript"><span class="language-xml"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span><br><br></code></pre></td></tr></table></figure>
+
+<p>最后修改下 <code>sidebarHeader</code> 的内容</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;h1 <span class="hljs-keyword">class</span>=<span class="hljs-string">&quot;logo-title&quot;</span> v-<span class="hljs-keyword">if</span>=<span class="hljs-string">&quot;$store.getters.sidebarOpened&quot;</span>&gt;<br>  &#123;&#123; $t(<span class="hljs-string">&#x27;msg.logo&#x27;</span>) &#125;&#125;<br>&lt;/h1&gt;<br></code></pre></td></tr></table></figure>
+
+<p><strong>面包屑区域：</strong></p>
+<p>在 <code>components/Breadcrumb/index</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;template&gt;<br>...<br>    &lt;!-- 不可点击项 --&gt;<br>    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">v-if</span>=<span class="hljs-string">&quot;index === breadcrumbData.length - 1&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;no-redirect&quot;</span>&gt;</span>&#123;&#123;</span><br><span class="language-xml">        generateTitle(item.meta.title)</span><br><span class="language-xml">        &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span></span><br>    &lt;!-- 可点击项 --&gt;<br>    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">v-else</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;redirect&quot;</span> @<span class="hljs-attr">click.prevent</span>=<span class="hljs-string">&quot;onLinkClick(item)&quot;</span>&gt;</span>&#123;&#123;</span><br><span class="language-xml">        generateTitle(item.meta.title)</span><br><span class="language-xml">        &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span></span><br>...<br>&lt;/template&gt;<br><br><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">setup</span>&gt;</span><span class="language-javascript"></span></span><br><span class="language-javascript"><span class="language-xml"><span class="hljs-keyword">import</span> &#123; generateTitle &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@/utils/i18n&#x27;</span></span></span><br><span class="language-javascript"><span class="language-xml">...</span></span><br><span class="language-javascript"><span class="language-xml"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span><br><br></code></pre></td></tr></table></figure>
+
+<h2 id="国际化缓存处理"><a href="#国际化缓存处理" class="headerlink" title="国际化缓存处理"></a>国际化缓存处理</h2><p>我们希望在 <strong>刷新页面后，当前的国际化选择可以被保留</strong>，所以想要实现这个功能，那么就需要进行 <strong>国际化的缓存处理</strong></p>
+<p>此处的缓存，我们依然通过两个方面进行：</p>
+<ol>
+<li><code>vuex</code> 缓存</li>
+<li><code>LocalStorage</code> 缓存</li>
+</ol>
+<p>只不过这里的缓存，我们已经在处理 <strong><code>langSelect</code> 组件时</strong> 处理完成了，所以此时我们只需要使用缓存下来的数据即可。</p>
+<p>在 <code>i18n/index</code> 中，创建 <code>getLanguage</code> 方法：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> store <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@/store&#x27;</span><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 返回当前 lang</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">getLanguage</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-keyword">return</span> store &amp;&amp; store.<span class="hljs-property">getters</span> &amp;&amp; store.<span class="hljs-property">getters</span>.<span class="hljs-property">language</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>修改 <code>createI18n</code> 的 <code>locale</code> 为 <code>getLanguage()</code> </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> i18n = <span class="hljs-title function_">createI18n</span>(&#123;<br>  ...<br>  <span class="hljs-attr">locale</span>: <span class="hljs-title function_">getLanguage</span>()<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<h2 id="国际化方案总结"><a href="#国际化方案总结" class="headerlink" title="国际化方案总结"></a>国际化方案总结</h2><p>国际化是前端项目中的一个非常常见的功能，那么在前端项目中实现国际化主要依靠的就是 <code>vue-i18n</code> 这个第三方的包。</p>
+<p>关于国际化的实现原理大家可以参照 <strong>国际化实现原理</strong> 这一小节，这里我们就不再赘述了。</p>
+<p>而  <code>i18n</code> 的使用，整体来说就分为这么四步：</p>
+<ol>
+<li>创建 <code>messages</code> 数据源</li>
+<li>创建 <code>locale</code> 语言变量</li>
+<li>初始化 <code>i18n</code> 实例</li>
+<li>注册 <code>i18n</code> 实例</li>
+</ol>
+<p>核心的内容其实就是 数据源的部分，但是大家需要注意，如果你的项目中使用了 <strong>第三方组件库</strong> ，那么不要忘记 <strong>第三方组件库的数据源</strong> 需要 <strong>单独</strong> 进行处理！</p>
+<h1 id="动态换肤原理分析"><a href="#动态换肤原理分析" class="headerlink" title="动态换肤原理分析"></a>动态换肤原理分析</h1><p>想要实现 <strong>动态换肤</strong> 的一个前置条件就是：<strong>色值不可以写死！</strong></p>
+<p>首先我们先来说一下动态换肤的实现方式。</p>
+<p>在 <code>scss</code> 中，我们可以通过 <code>$变量名:变量值</code> 的方式定义 <code>css 变量</code> ，然后通过该 <code>css</code> 来去指定某一块 <code>DOM</code> 对应的颜色。</p>
+<p>那么大家可以想一下，如果我此时改变了该 <code>css</code> 变量的值，那么对应的 <code>DOM</code> 颜色是不是也会同步发生变化。</p>
+<p>当大量的 <code>DOM</code> 都依赖这个 <code>css 变量</code> 设置颜色时，我们是不是只需要改变这个 <code>css 变量</code> ，那么所有 <code>DOM</code> 的颜色是不是都会发生变化，所谓的 <strong>动态换肤</strong> 是不是就可以实现了！</p>
+<p>这个就是 <strong>动态换肤</strong> 的实现原理!</p>
+<p>实现换肤和主题大致有两种方案:</p>
+<ol>
+<li>使用原生支持的 css var</li>
+<li>通过一些手段覆盖 element plus 样式</li>
+</ol>
+<p>我们先看来看看 css var 的实现吧。</p>
+<h2 id="css变量"><a href="#css变量" class="headerlink" title="css变量"></a>css变量</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/:root">https://developer.mozilla.org/zh-CN/docs/Web/CSS/:root</a></p>
+</blockquote>
+<p>变量 与 color、font-size 等正式属性没有什么不同，只是没有默认含义。</p>
+<p>所以 CSS 变量（CSS variable）又叫做”CSS 自定义属性”（CSS custom properties）。因为变量与自定义的 CSS 属性其实是一回事。</p>
+<p>变量可以分为</p>
+<ul>
+<li>全局变量</li>
+<li>局部变量</li>
+</ul>
+<p><strong>全局变量</strong><br>通过 <code>:root</code> 去定义，其他所有的元素都可以通过 <code>var(--xxx)</code> 的形式去使用<code>全局变量</code>，我们来看下面这个例子:</p>
+<blockquote>
+<p>var()函数还可以使用第二个参数，表示变量的默认值。如果该变量不存在，就会使用这个默认值。</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;style&gt;<br>  :root &#123;<br>    --<span class="hljs-attr">color</span>: skyblue;<br>  &#125;<br><br>  .<span class="hljs-property">use</span>-<span class="hljs-variable language_">global</span> &#123;<br>    <span class="hljs-attr">color</span>: <span class="hljs-title function_">var</span>(--color)<br>  &#125;<br>&lt;/style&gt;<br><br><span class="hljs-comment">// body</span><br><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;use-global&quot;</span>&gt;</span>使用了全局变量<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br></code></pre></td></tr></table></figure>
+<p><strong>:root</strong></p>
+<blockquote>
+<p>:root 这个 CSS 伪类匹配文档树的根元素。对于 HTML 来说，:root 表示 <html> 元素，除了优先级更高之外，与 html 选择器相同。</p>
+</blockquote>
+<p><strong>自定义属性 (–*)：CSS 变量</strong></p>
+<blockquote>
+<p>带有前缀–的属性名，比如–example–name，表示的是带有值的自定义属性，其可以通过 var 函数在全文档范围内复用的。</p>
+</blockquote>
+<p><strong>局部变量</strong></p>
+<p>我们可以在某个选择器下去定义变量，或者在元素的 <code>style</code> 属性上定义变量：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// style</span><br>:root &#123;<br>  --<span class="hljs-attr">color</span>: skyblue;<br>&#125;<br><br>.<span class="hljs-property">parent</span> &#123;<br>  --<span class="hljs-attr">color</span>: pink; <span class="hljs-comment">// 优先级更高</span><br>&#125;<br><br>h3 &#123;<br>  <span class="hljs-attr">color</span>: <span class="hljs-title function_">var</span>(--color)<br>&#125;<br><br><span class="hljs-comment">// html</span><br>&lt;div <span class="hljs-keyword">class</span>=<span class="hljs-string">&quot;parent&quot;</span>&gt;<br>  <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h3</span>&gt;</span>child title<span class="hljs-tag">&lt;/<span class="hljs-name">h3</span>&gt;</span></span><br>&lt;/div&gt;<br></code></pre></td></tr></table></figure>
+
+<p>这里 <code>h3</code> 标签会显示红色。虽然我们在 <code>:root</code> 上也定义了 <code>--color</code> 变量，但是根据就近原则，<code>h3</code> 会取父级定义的变量。</p>
+<p>我们还可以在 <code>style</code> 属性上定义变量，这里我们定义了一个 <code>--bg</code> 变量，其子元素可以访问到这个变量。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs js">.<span class="hljs-property">parent</span> &#123;<br>  --<span class="hljs-attr">color</span>: pink;<br>&#125;<br><br>h3 &#123;<br>  <span class="hljs-attr">color</span>: <span class="hljs-title function_">var</span>(--color);<br>  background-<span class="hljs-attr">color</span>: <span class="hljs-title function_">var</span>(--bg);<br>&#125;<br><br>&lt;div <span class="hljs-keyword">class</span>=<span class="hljs-string">&quot;parent&quot;</span> style=<span class="hljs-string">&quot;--bg: black;&quot;</span>&gt;<br>  <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h3</span>&gt;</span>child title<span class="hljs-tag">&lt;/<span class="hljs-name">h3</span>&gt;</span></span><br>&lt;/div&gt;<br></code></pre></td></tr></table></figure>
+
+<h2 id="修改-css-变量"><a href="#修改-css-变量" class="headerlink" title="修改 css 变量"></a>修改 css 变量</h2><p>这里定义了两个按钮，一个修改全局的（根组件）的变量，一个用来修改特定元素上的定义的变量：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;button <span class="hljs-keyword">class</span>=<span class="hljs-string">&quot;btn&quot;</span>&gt;change root&lt;/button&gt;<br><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;variable&quot;</span>&gt;</span>change local variable<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span><br></code></pre></td></tr></table></figure>
+
+<p><strong>修改全局变量</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> btn = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;.btn&#x27;</span>)<br><br>btn.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;click&#x27;</span>, <span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-keyword">const</span> html = <span class="hljs-variable language_">document</span>.<span class="hljs-property">documentElement</span><br><br>  html.<span class="hljs-property">style</span>.<span class="hljs-title function_">setProperty</span>(<span class="hljs-string">&#x27;--color&#x27;</span>, <span class="hljs-string">&#x27;red&#x27;</span>)<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p><strong>修改局部变量</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> variableBtn = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;.variable&#x27;</span>)<br><br>variableBtn.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;click&#x27;</span>, <span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-keyword">const</span> parent = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;.parent&#x27;</span>)<br><br>  parent.<span class="hljs-property">style</span>.<span class="hljs-title function_">setProperty</span>(<span class="hljs-string">&#x27;--color&#x27;</span>, <span class="hljs-string">&#x27;green&#x27;</span>)<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<h1 id="暗黑模式原理分析"><a href="#暗黑模式原理分析" class="headerlink" title="暗黑模式原理分析"></a>暗黑模式原理分析</h1><blockquote>
+<p>prefers-color-scheme</p>
+<p>prefers-color-scheme CSS 媒体特性: 用于检测用户是否有将系统的主题色设置为亮色或者暗色。</p>
+</blockquote>
+<h2 id="主题色实现原理"><a href="#主题色实现原理" class="headerlink" title="主题色实现原理"></a>主题色实现原理</h2><p>通过 <code>媒体查询</code> 去监听系统主题色的变化。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// style</span><br>@media (prefers-color-<span class="hljs-attr">scheme</span>: dark) &#123;<br>  .<span class="hljs-property">day</span>.<span class="hljs-property">dark</span>-scheme   &#123; <span class="hljs-attr">background</span>:  #<span class="hljs-number">333</span>; <span class="hljs-attr">color</span>: white; &#125;<br>  .<span class="hljs-property">night</span>.<span class="hljs-property">dark</span>-scheme &#123; <span class="hljs-attr">background</span>: black; <span class="hljs-attr">color</span>:  red; &#125;<br>&#125;<br><br>@media (prefers-color-<span class="hljs-attr">scheme</span>: light) &#123;<br>  .<span class="hljs-property">day</span>.<span class="hljs-property">light</span>-scheme   &#123; <span class="hljs-attr">background</span>: skyblue; <span class="hljs-attr">color</span>:  #<span class="hljs-number">333</span>; &#125;<br>  .<span class="hljs-property">night</span>.<span class="hljs-property">light</span>-scheme &#123; <span class="hljs-attr">background</span>:  pink; <span class="hljs-attr">color</span>: #<span class="hljs-number">333</span>; &#125;<br>&#125;<br><br>.<span class="hljs-property">day</span>, .<span class="hljs-property">night</span> &#123;<br>  <span class="hljs-attr">display</span>: inline-block;<br>  <span class="hljs-attr">padding</span>: 1em;<br>  <span class="hljs-attr">width</span>: 7em;<br>  <span class="hljs-attr">height</span>: 7em;<br>  vertical-<span class="hljs-attr">align</span>: middle;<br>&#125;<br><br><span class="hljs-comment">// html</span><br>&lt;div <span class="hljs-keyword">class</span>=<span class="hljs-string">&quot;day light-scheme&quot;</span>&gt;<span class="hljs-title class_">Day</span> (changes <span class="hljs-keyword">in</span> light scheme)&lt;/div&gt;<br><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;day dark-scheme&quot;</span>&gt;</span>Day (changes in dark scheme)<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span> &lt;br&gt;<br><br><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;night light-scheme&quot;</span>&gt;</span>Night (changes in light scheme)<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;night dark-scheme&quot;</span>&gt;</span>Night (changes in dark scheme)<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br></code></pre></td></tr></table></figure>
+
+<p>现在，我们可以去切换系统的主题色，就会发现页面上的颜色跟着变化了，这是因为我们通过 <code>@media</code> 监听 <code>prefers-color-scheme</code> 起作用了。</p>
+<h2 id="window-matchMedia"><a href="#window-matchMedia" class="headerlink" title="window.matchMedia"></a>window.matchMedia</h2><p>虽然我们通过 css @media 能够应对系统的主题色切换，但是我们如何在 <code>js</code> 中去监听呢？</p>
+<p>答案是通过 <code>window.matchMedia</code> 方法：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 如果匹配成功，scheme.matches === true</span><br><span class="hljs-comment">// 也就是说，如果我们的系统是暗黑色，那么这个 matches 就是true，否则是 false</span><br><span class="hljs-keyword">const</span> scheme = <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">matchMedia</span>(<span class="hljs-string">&#x27;(prefers-color-scheme: dark)&#x27;</span>)<br><br>scheme.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;change&#x27;</span>, <span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> &#123;<br>  <span class="hljs-keyword">if</span> (e.<span class="hljs-property">matches</span>) &#123;<br>    <span class="hljs-comment">// 暗黑色</span><br>  &#125; <span class="hljs-keyword">else</span> &#123;<br>    <span class="hljs-comment">// 亮色</span><br>  &#125;<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<h2 id="修改主题色"><a href="#修改主题色" class="headerlink" title="修改主题色"></a>修改主题色</h2><p>到此，我们知道了主题色的实现原理，我们如何在项目里去实现主题色的切换呢？</p>
+<p>我们来看一个小例子</p>
+<p>首先，我们先定义好 <code>全局变量</code>，里面包含了一些 <code>亮色模式</code> 下的变量：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js">:root &#123;<br>  --<span class="hljs-attr">color</span>: #<span class="hljs-number">333</span>;<br>  --background-<span class="hljs-attr">color</span>: pink;<br>&#125;<br><br>&lt;h1 style=<span class="hljs-string">&quot;background-color: var(--background-color); color: var(--color)&quot;</span>&gt;<br>  我是一个标题。！！！<br>&lt;/h1&gt;<br><br><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;dark-btn&quot;</span>&gt;</span>dark mode<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span><br></code></pre></td></tr></table></figure>
+
+<p>在页面初始时，我们的背景色是粉色，颜色是浅黑色。</p>
+<p>现在我们创建一个按钮，来修改主题颜色，这个之前实现过了很简单对吧。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> darkBtn = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;.dark-btn&#x27;</span>)<br><br>darkBtn.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;click&#x27;</span>, <span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-comment">// 修改变量</span><br>  <span class="hljs-variable language_">document</span>.<span class="hljs-property">documentElement</span>.<span class="hljs-property">style</span>.<span class="hljs-title function_">setProperty</span>(<span class="hljs-string">&#x27;--color&#x27;</span>, <span class="hljs-string">&#x27;#fff&#x27;</span>)<br>  <span class="hljs-variable language_">document</span>.<span class="hljs-property">documentElement</span>.<span class="hljs-property">style</span>.<span class="hljs-title function_">setProperty</span>(<span class="hljs-string">&#x27;--background-color&#x27;</span>, <span class="hljs-string">&#x27;#000&#x27;</span>)<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>好无疑问这样是可以实现的，但是，如果变量多起来了，几十上百个，我们也要一个个去修改吗？</p>
+<p>既然我们的变量都定义在根元素上，那么我们可以采取 <strong>属性覆盖</strong> 的形式。</p>
+<p>我们定义一个 <code>[data-theme=&quot;dark&quot;]</code> 样式表，专门用来处理 <code>暗黑模式</code> 下的变量，这里是黑色背景白色字体。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs js">[data-theme=<span class="hljs-string">&quot;dark&quot;</span>] &#123;<br>  --<span class="hljs-attr">color</span>: #fff;<br>  --background-<span class="hljs-attr">color</span>: #<span class="hljs-number">000</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>或者属性选择器：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">/* 浅色模式 */</span><br>html[data-theme=<span class="hljs-string">&quot;light&quot;</span>]:root &#123;<br>  --body-<span class="hljs-attr">background</span>: #efefef;<br>  --text-<span class="hljs-attr">color</span>: #<span class="hljs-number">333</span>;<br>&#125;<br><br><span class="hljs-comment">/* 深色模式 */</span><br>html[data-theme=<span class="hljs-string">&quot;dark&quot;</span>]:root &#123;<br>  --body-<span class="hljs-attr">background</span>: #<span class="hljs-number">000</span>;<br>  --text-<span class="hljs-attr">color</span>: #ededed;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>一开始，这个样式表并不会生效，因为根标签上根本没有 <code>data-theme=&quot;dark&quot;</code> 属性，我们通过按钮来修改：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js">darkBtn.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;click&#x27;</span>, <span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-variable language_">document</span>.<span class="hljs-property">documentElement</span>.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-theme&#x27;</span>, <span class="hljs-string">&#x27;dark&#x27;</span>)<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>我们给根标签设置了 <code>data-theme=&quot;dark&quot;</code> 属性，同时内部定了暗黑相关的变量，这时，<code>data-theme=&quot;dark&quot;</code> 内部的变量就会覆盖 <code>:root</code> 中的变量了，从而达到切换主题色的效果。</p>
+<p>同时，我们需要根据系统的主题色，来设置项目的主题色，这里就要用到 <code>window.matchMedia</code> 方法了。</p>
+<p>如果在 <code>Vue</code> 项目中，我们可以这样去实现:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> theme = <span class="hljs-title function_">computed</span>(<span class="hljs-function">() =&gt;</span> store.<span class="hljs-property">state</span>.<span class="hljs-property">settings</span>.<span class="hljs-property">theme</span>);<br><br><span class="hljs-comment">// 查看当前是否是 暗黑模式</span><br><span class="hljs-keyword">const</span> mediaQueryListDark = <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">matchMedia</span>(<span class="hljs-string">&#x27;(prefers-color-scheme: dark)&#x27;</span>);<br><br><span class="hljs-keyword">const</span> <span class="hljs-title function_">changeTheme</span> = (<span class="hljs-params">theme</span>) =&gt; &#123;<br>  <span class="hljs-comment">// 批量覆盖全局的变量</span><br>	<span class="hljs-variable language_">document</span>.<span class="hljs-property">documentElement</span>.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-theme&#x27;</span>, theme);<br>&#125;;<br><br><span class="hljs-keyword">const</span> <span class="hljs-title function_">handleColorSchemeChange</span> = evt =&gt; &#123;<br>  <span class="hljs-keyword">if</span> (evt.<span class="hljs-property">matches</span>) &#123;<br>    <span class="hljs-title function_">changeTheme</span>(<span class="hljs-string">&#x27;dark&#x27;</span>);<br>  &#125; <span class="hljs-keyword">else</span> &#123;<br>    <span class="hljs-title function_">changeTheme</span>(<span class="hljs-string">&#x27;light&#x27;</span>);<br>  &#125;<br>&#125;;<br><br><span class="hljs-title function_">watchEffect</span>(<span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-keyword">if</span> (theme.<span class="hljs-property">value</span> === <span class="hljs-string">&#x27;Follow System&#x27;</span>) &#123;<br>    <span class="hljs-comment">// 初始值：跟随系统设置</span><br>    <span class="hljs-title function_">handleColorSchemeChange</span>(mediaQueryListDark);<br><br>    <span class="hljs-comment">// 监听系统主题的变化</span><br>    mediaQueryListDark.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;change&#x27;</span>, handleColorSchemeChange);<br>  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (theme.<span class="hljs-property">value</span>) &#123;<br>    <span class="hljs-title function_">changeTheme</span>(theme.<span class="hljs-property">value</span>.<span class="hljs-title function_">toLowerCase</span>());<br><br>    <span class="hljs-comment">// 如果不是跟随系统设置主题了，用户自己设置的主题色，我们就不需要监听系统的主题色切换了</span><br>    mediaQueryListDark.<span class="hljs-title function_">removeEventListener</span>(<span class="hljs-string">&#x27;change&#x27;</span>, handleColorSchemeChange);<br>  &#125;<br>&#125;);<br></code></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>到这里，我们花了大量的时间和实例对换肤和主题的原理进行了研究，那么接下来就要进入正式的项目开发环节了。</p>
+<h1 id="官方换肤方案"><a href="#官方换肤方案" class="headerlink" title="官方换肤方案"></a>官方换肤方案</h1><blockquote>
+<p>官方样式路径：/node_modules/element-plus/theme-chalk/src/common/var.scss</p>
+</blockquote>
+<p>定义自己的 scss 文件，然后在 main.ts 导入。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs css">$<span class="hljs-attr">--colors</span>: (<br>  <span class="hljs-string">&quot;primary&quot;</span>: (<br>    <span class="hljs-string">&quot;base&quot;</span>: pink,<br>  ),<br>  <span class="hljs-string">&quot;success&quot;</span>: (<br>    <span class="hljs-string">&quot;base&quot;</span>: blue,<br>  ),<br>  <span class="hljs-string">&quot;warning&quot;</span>: (<br>    <span class="hljs-string">&quot;base&quot;</span>: <span class="hljs-number">#f2711c</span>,<br>  ),<br>  <span class="hljs-string">&quot;danger&quot;</span>: (<br>    <span class="hljs-string">&quot;base&quot;</span>: <span class="hljs-number">#db2828</span>,<br>  ),<br>  <span class="hljs-string">&quot;error&quot;</span>: (<br>    <span class="hljs-string">&quot;base&quot;</span>: <span class="hljs-number">#db2828</span>,<br>  ),<br>  <span class="hljs-string">&quot;info&quot;</span>: (<br>    <span class="hljs-string">&quot;base&quot;</span>: <span class="hljs-number">#42b8dd</span>,<br>  ),<br>);<br><br><span class="hljs-keyword">@forward</span> <span class="hljs-string">&#x27;element-plus/theme-chalk/src/common/var.scss&#x27;</span> with (<br>  $<span class="hljs-attribute">colors</span>: $--colors,<br>);<br><br><span class="hljs-comment">/* 导入所有的样式变量 */</span><br><span class="hljs-keyword">@use</span> <span class="hljs-string">&quot;element-plus/theme-chalk/src/index.scss&quot;</span> as *;<br></code></pre></td></tr></table></figure>
+
+<p>修改 <code>main.ts</code></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs css">// 注释原导入的 element-plus 样式<br>// import &#x27;element-plus/dist/index<span class="hljs-selector-class">.css</span>&#x27;<br><br><br>// 导入我们自己的定义的样式<br>import &#x27;@/styles/cover-element-plus.scss&#x27;<br></code></pre></td></tr></table></figure>
+
+<h2 id="通过-CSS-变量设置"><a href="#通过-CSS-变量设置" class="headerlink" title="通过 CSS 变量设置"></a>通过 CSS 变量设置</h2><p>如果不通过上面那种方案，我们还可以定义全局的变量，来覆盖官方的样式。</p>
+<p>在自己的样式文件中写入需要覆盖的样式变量：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-pseudo">:root</span> &#123;<br>  <span class="hljs-attr">--el-color-primary</span>: green;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>如果你只想自定义一个特定的组件，只需为某些组件单独添加内联样式。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css">&lt;el-tag style=&quot;<span class="hljs-attr">--el-tag-bg-color</span>: red<span class="hljs-string">&quot;&gt;Tag&lt;/el-tag&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>出于性能原因，更加推荐你在类名下添加自定义 css 变量，而不是在全局的 :root 下。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.custom-class</span> &#123;<br>  <span class="hljs-attr">--el-tag-bg-color</span>: red;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>如果您想要通过 js 控制 css 变量，可以这样做：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs css">// document<span class="hljs-selector-class">.documentElement</span> 是全局变量时<br>const el = document<span class="hljs-selector-class">.documentElement</span><br>// const el = document<span class="hljs-selector-class">.getElementById</span>(&#x27;xxx&#x27;)<br><br>// 获取 css 变量<br>getComputedStyle(el)<span class="hljs-selector-class">.getPropertyValue</span>(`<span class="hljs-attr">--el-color-primary</span>`)<br><br>// 设置 css 变量<br>el<span class="hljs-selector-class">.style</span><span class="hljs-selector-class">.setProperty</span>(&#x27;<span class="hljs-attr">--el-color-primary</span>&#x27;, &#x27;red&#x27;)<br></code></pre></td></tr></table></figure>
+
+<h2 id="总结。"><a href="#总结。" class="headerlink" title="总结。"></a>总结。</h2><p>相当于我们重新定义了变量，覆盖了官方自己定义的变量，如果我们项目只需要一种颜色，那么这种方案是可行的，但是我们项目需要支持用户选择主题来替换，那么这种方案就不适用了。</p>
+<p>那么我来用另一种方案来实现吧。</p>
+<h1 id="换肤方案落地"><a href="#换肤方案落地" class="headerlink" title="换肤方案落地"></a>换肤方案落地</h1><p>在我们的项目中想要实现动态换肤，需要同时处理两个方面的内容：</p>
+<ol>
+<li><code>element-plus</code> 主题</li>
+<li>非 <code>element-plus</code> 主题</li>
+</ol>
+<p>明确好了原理之后，接下来我们就来理一下咱们的实现思路。</p>
+<p>从原理中我们可以得到以下两个关键信息：</p>
+<ol>
+<li>动态换肤的关键是修改 <code>css 变量</code> 的值</li>
+<li>换肤需要同时兼顾<ol>
+<li><code>element-plus</code> </li>
+<li>非 <code>element-plus</code> </li>
+</ol>
+</li>
+</ol>
+<p>那么根据以上关键信息，我们就可以得出对应的实现方案:</p>
+<ol>
+<li>创建一个组件 <code>ThemeSelect</code> 用来处理修改之后的 <code>css 变量</code> 的值</li>
+<li>根据新值修改 <code>element-plus</code>  主题色</li>
+<li>根据新值修改非 <code>element-plus</code>  主题色</li>
+</ol>
+<h2 id="创建-ThemeSelect-组件"><a href="#创建-ThemeSelect-组件" class="headerlink" title="创建 ThemeSelect 组件"></a>创建 ThemeSelect 组件</h2><p><code>ThemeSelect</code> 组件将由两部分组成：</p>
+<ol>
+<li><code>navbar</code> 中的展示图标</li>
+<li>选择颜色的弹出层</li>
+</ol>
+<p>这是效果图：</p>
+<p><img src="/img/theme-select.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<p><strong>创建 <code>components/ThemeSelect/index</code> 组件</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;template&gt;<br>  &lt;!-- 主题图标 v-bind：<span class="hljs-attr">https</span>:<span class="hljs-comment">//v3.cn.vuejs.org/api/instance-properties.html#attrs --&gt;</span><br>  <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">el-dropdown</span></span></span><br><span class="hljs-tag"><span class="language-xml">    <span class="hljs-attr">v-bind</span>=<span class="hljs-string">&quot;$attrs&quot;</span></span></span><br><span class="hljs-tag"><span class="language-xml">    <span class="hljs-attr">trigger</span>=<span class="hljs-string">&quot;click&quot;</span></span></span><br><span class="hljs-tag"><span class="language-xml">    <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;theme&quot;</span></span></span><br><span class="hljs-tag"><span class="language-xml">    @<span class="hljs-attr">command</span>=<span class="hljs-string">&quot;handleSetTheme&quot;</span></span></span><br><span class="hljs-tag"><span class="language-xml">  &gt;</span></span><br><span class="language-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;<span class="hljs-name">el-tooltip</span> <span class="hljs-attr">:content</span>=<span class="hljs-string">&quot;$t(&#x27;msg.navBar.themeChange&#x27;)&quot;</span>&gt;</span></span><br><span class="language-xml">        <span class="hljs-tag">&lt;<span class="hljs-name">svg-icon</span> <span class="hljs-attr">icon</span>=<span class="hljs-string">&quot;change-theme&quot;</span> /&gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;/<span class="hljs-name">el-tooltip</span>&gt;</span></span><br><span class="language-xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br><span class="language-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">template</span> #<span class="hljs-attr">dropdown</span>&gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;<span class="hljs-name">el-dropdown-menu</span>&gt;</span></span><br><span class="language-xml">        <span class="hljs-tag">&lt;<span class="hljs-name">el-dropdown-item</span> <span class="hljs-attr">command</span>=<span class="hljs-string">&quot;color&quot;</span>&gt;</span></span><br><span class="language-xml">          &#123;&#123; $t(&#x27;msg.theme.themeColorChange&#x27;) &#125;&#125;</span><br><span class="language-xml">        <span class="hljs-tag">&lt;/<span class="hljs-name">el-dropdown-item</span>&gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;/<span class="hljs-name">el-dropdown-menu</span>&gt;</span></span><br><span class="language-xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span></span><br><span class="language-xml">  <span class="hljs-tag">&lt;/<span class="hljs-name">el-dropdown</span>&gt;</span></span><br><br>  &lt;!-- 展示弹出层 --&gt;<br>  <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span></span><br><span class="language-xml">    ...</span><br><span class="language-xml">  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br>&lt;/template&gt;<br><br><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">setup</span>&gt;</span><span class="language-javascript"></span></span><br><span class="language-javascript"><span class="language-xml"><span class="hljs-keyword">const</span> <span class="hljs-title function_">handleSetTheme</span> = command =&gt; &#123;&#125;</span></span><br><span class="language-javascript"><span class="language-xml"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span><br><br><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">style</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;scss&quot;</span> <span class="hljs-attr">scoped</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span></span><br></code></pre></td></tr></table></figure>
+
+<p>在 <code>layout/components/navbar</code> 中进行引用</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;div <span class="hljs-keyword">class</span>=<span class="hljs-string">&quot;right-menu&quot;</span>&gt;<br>  <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">theme-picker</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;right-menu-item hover-effect&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">theme-picker</span>&gt;</span></span><br>&lt;/div&gt;<br><br>... <br><br><span class="hljs-keyword">import</span> <span class="hljs-title class_">ThemePicker</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@/components/ThemeSelect/index&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>创建 <code>SelectColor</code> 组件</strong></p>
+<p>在有了 <code>ThemeSelect</code> 之后，接下来我们来去处理颜色选择的组件 <code>SelectColor</code>，在这里我们会用到 <code>element</code> 中的 <code>el-color-picker</code> 组件</p>
+<p>对于 <code>SelectColor</code> 的处理，我们需要分成两步进行：</p>
+<ol>
+<li>完成 <code>SelectColor</code> 弹窗展示的双向数据绑定</li>
+<li>把选中的色值进行本地缓存</li>
+</ol>
+<p>那么下面咱们先来看第一步：<strong>完成 <code>SelectColor</code> 弹窗展示的双向数据绑定</strong></p>
+<p>创建 <code>components/ThemePicker/components/SelectColor.vue</code> </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;template&gt;<br>  <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">el-dialog</span> <span class="hljs-attr">title</span>=<span class="hljs-string">&quot;提示&quot;</span> <span class="hljs-attr">:model-value</span>=<span class="hljs-string">&quot;modelValue&quot;</span> @<span class="hljs-attr">close</span>=<span class="hljs-string">&quot;closed&quot;</span> <span class="hljs-attr">width</span>=<span class="hljs-string">&quot;22%&quot;</span>&gt;</span></span><br><span class="language-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;center&quot;</span>&gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;title&quot;</span>&gt;</span>&#123;&#123; $t(&#x27;msg.theme.themeColorChange&#x27;) &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;<span class="hljs-name">el-color-picker</span></span></span><br><span class="hljs-tag"><span class="language-xml">        <span class="hljs-attr">v-model</span>=<span class="hljs-string">&quot;mColor&quot;</span></span></span><br><span class="hljs-tag"><span class="language-xml">        <span class="hljs-attr">:predefine</span>=<span class="hljs-string">&quot;predefineColors&quot;</span></span></span><br><span class="hljs-tag"><span class="language-xml">      &gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">el-color-picker</span>&gt;</span></span><br><span class="language-xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br><span class="language-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">template</span> #<span class="hljs-attr">footer</span>&gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;dialog-footer&quot;</span>&gt;</span></span><br><span class="language-xml">        <span class="hljs-tag">&lt;<span class="hljs-name">el-button</span> @<span class="hljs-attr">click</span>=<span class="hljs-string">&quot;closed&quot;</span>&gt;</span>&#123;&#123; $t(&#x27;msg.universal.cancel&#x27;) &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">el-button</span>&gt;</span></span><br><span class="language-xml">        <span class="hljs-tag">&lt;<span class="hljs-name">el-button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;primary&quot;</span> @<span class="hljs-attr">click</span>=<span class="hljs-string">&quot;comfirm&quot;</span>&gt;</span>&#123;&#123;</span><br><span class="language-xml">          $t(&#x27;msg.universal.confirm&#x27;)</span><br><span class="language-xml">        &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">el-button</span>&gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span></span><br><span class="language-xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span></span><br><span class="language-xml">  <span class="hljs-tag">&lt;/<span class="hljs-name">el-dialog</span>&gt;</span></span><br>&lt;/template&gt;<br><br><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">setup</span>&gt;</span><span class="language-javascript"></span></span><br><span class="language-javascript"><span class="language-xml"><span class="hljs-keyword">import</span> &#123; defineProps, defineEmits, ref &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span></span></span><br><span class="language-javascript"><span class="language-xml"><span class="hljs-title function_">defineProps</span>(&#123;</span></span><br><span class="language-javascript"><span class="language-xml">  <span class="hljs-attr">modelValue</span>: &#123;</span></span><br><span class="language-javascript"><span class="language-xml">    <span class="hljs-attr">type</span>: <span class="hljs-title class_">Boolean</span>,</span></span><br><span class="language-javascript"><span class="language-xml">    <span class="hljs-attr">required</span>: <span class="hljs-literal">true</span></span></span><br><span class="language-javascript"><span class="language-xml">  &#125;</span></span><br><span class="language-javascript"><span class="language-xml">&#125;)</span></span><br><span class="language-javascript"><span class="language-xml"><span class="hljs-keyword">const</span> emits = <span class="hljs-title function_">defineEmits</span>([<span class="hljs-string">&#x27;update:modelValue&#x27;</span>])</span></span><br><span class="language-javascript"><span class="language-xml"></span></span><br><span class="language-javascript"><span class="language-xml"><span class="hljs-comment">// 预定义色值</span></span></span><br><span class="language-javascript"><span class="language-xml"><span class="hljs-keyword">const</span> predefineColors = [</span></span><br><span class="language-javascript"><span class="language-xml">  <span class="hljs-string">&#x27;#ff4500&#x27;</span>,</span></span><br><span class="language-javascript"><span class="language-xml">  <span class="hljs-string">&#x27;#ff8c00&#x27;</span>,</span></span><br><span class="language-javascript"><span class="language-xml">  <span class="hljs-string">&#x27;#ffd700&#x27;</span>,</span></span><br><span class="language-javascript"><span class="language-xml">  <span class="hljs-string">&#x27;#90ee90&#x27;</span>,</span></span><br><span class="language-javascript"><span class="language-xml">  <span class="hljs-string">&#x27;#00ced1&#x27;</span>,</span></span><br><span class="language-javascript"><span class="language-xml">  <span class="hljs-string">&#x27;#1e90ff&#x27;</span>,</span></span><br><span class="language-javascript"><span class="language-xml">  <span class="hljs-string">&#x27;#c71585&#x27;</span>,</span></span><br><span class="language-javascript"><span class="language-xml">  <span class="hljs-string">&#x27;rgba(255, 69, 0, 0.68)&#x27;</span>,</span></span><br><span class="language-javascript"><span class="language-xml">  <span class="hljs-string">&#x27;rgb(255, 120, 0)&#x27;</span>,</span></span><br><span class="language-javascript"><span class="language-xml">  <span class="hljs-string">&#x27;hsv(51, 100, 98)&#x27;</span>,</span></span><br><span class="language-javascript"><span class="language-xml">  <span class="hljs-string">&#x27;hsva(120, 40, 94, 0.5)&#x27;</span>,</span></span><br><span class="language-javascript"><span class="language-xml">  <span class="hljs-string">&#x27;hsl(181, 100%, 37%)&#x27;</span>,</span></span><br><span class="language-javascript"><span class="language-xml">  <span class="hljs-string">&#x27;hsla(209, 100%, 56%, 0.73)&#x27;</span>,</span></span><br><span class="language-javascript"><span class="language-xml">  <span class="hljs-string">&#x27;#c7158577&#x27;</span></span></span><br><span class="language-javascript"><span class="language-xml">]</span></span><br><span class="language-javascript"><span class="language-xml"><span class="hljs-comment">// 默认色值</span></span></span><br><span class="language-javascript"><span class="language-xml"><span class="hljs-keyword">const</span> mColor = <span class="hljs-title function_">ref</span>(<span class="hljs-string">&#x27;#00ff00&#x27;</span>)</span></span><br><span class="language-javascript"><span class="language-xml"></span></span><br><span class="language-javascript"><span class="language-xml"><span class="hljs-comment">/**</span></span></span><br><span class="hljs-comment"><span class="language-javascript"><span class="language-xml"> * 关闭</span></span></span><br><span class="hljs-comment"><span class="language-javascript"><span class="language-xml"> */</span></span></span><br><span class="language-javascript"><span class="language-xml"><span class="hljs-keyword">const</span> <span class="hljs-title function_">closed</span> = (<span class="hljs-params"></span>) =&gt; &#123;</span></span><br><span class="language-javascript"><span class="language-xml">  <span class="hljs-title function_">emits</span>(<span class="hljs-string">&#x27;update:modelValue&#x27;</span>, <span class="hljs-literal">false</span>)</span></span><br><span class="language-javascript"><span class="language-xml">&#125;</span></span><br><span class="language-javascript"><span class="language-xml"><span class="hljs-comment">/**</span></span></span><br><span class="hljs-comment"><span class="language-javascript"><span class="language-xml"> * 确定</span></span></span><br><span class="hljs-comment"><span class="language-javascript"><span class="language-xml"> * 1. 修改主题色</span></span></span><br><span class="hljs-comment"><span class="language-javascript"><span class="language-xml"> * 2. 保存最新的主题色</span></span></span><br><span class="hljs-comment"><span class="language-javascript"><span class="language-xml"> * 3. 关闭 dialog</span></span></span><br><span class="hljs-comment"><span class="language-javascript"><span class="language-xml"> */</span></span></span><br><span class="language-javascript"><span class="language-xml"><span class="hljs-keyword">const</span> <span class="hljs-title function_">comfirm</span> = <span class="hljs-keyword">async</span> (<span class="hljs-params"></span>) =&gt; &#123;</span></span><br><span class="language-javascript"><span class="language-xml">  <span class="hljs-title function_">closed</span>()</span></span><br><span class="language-javascript"><span class="language-xml">&#125;</span></span><br><span class="language-javascript"><span class="language-xml"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span><br><br><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">style</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;scss&quot;</span> <span class="hljs-attr">scoped</span>&gt;</span><span class="language-css"></span></span><br><span class="language-css"><span class="language-xml"><span class="hljs-selector-class">.center</span> &#123;</span></span><br><span class="language-css"><span class="language-xml">  <span class="hljs-attribute">text-align</span>: center;</span></span><br><span class="language-css"><span class="language-xml">  <span class="hljs-selector-class">.title</span> &#123;</span></span><br><span class="language-css"><span class="language-xml">    <span class="hljs-attribute">margin-bottom</span>: <span class="hljs-number">12px</span>;</span></span><br><span class="language-css"><span class="language-xml">  &#125;</span></span><br><span class="language-css"><span class="language-xml">&#125;</span></span><br><span class="language-css"><span class="language-xml"></span><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span></span><br><br></code></pre></td></tr></table></figure>
+
+<p>在 <code>ThemePicker/index</code> 中使用该组件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;template&gt;<br>  ...<br>  &lt;!-- 展示弹出层 --&gt;<br>  <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span></span><br><span class="language-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">select-color</span> <span class="hljs-attr">v-model</span>=<span class="hljs-string">&quot;selectColorVisible&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">select-color</span>&gt;</span></span><br><span class="language-xml">  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br>&lt;/template&gt;<br><br><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">setup</span>&gt;</span><span class="language-javascript"></span></span><br><span class="language-javascript"><span class="language-xml"><span class="hljs-keyword">import</span> <span class="hljs-title class_">SelectColor</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./components/SelectColor.vue&#x27;</span></span></span><br><span class="language-javascript"><span class="language-xml"><span class="hljs-keyword">import</span> &#123; ref &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span></span></span><br><span class="language-javascript"><span class="language-xml"></span></span><br><span class="language-javascript"><span class="language-xml"><span class="hljs-keyword">const</span> selectColorVisible = <span class="hljs-title function_">ref</span>(<span class="hljs-literal">false</span>)</span></span><br><span class="language-javascript"><span class="language-xml"><span class="hljs-keyword">const</span> <span class="hljs-title function_">handleSetTheme</span> = command =&gt; &#123;</span></span><br><span class="language-javascript"><span class="language-xml">  selectColorVisible.<span class="hljs-property">value</span> = <span class="hljs-literal">true</span></span></span><br><span class="language-javascript"><span class="language-xml">&#125;</span></span><br><span class="language-javascript"><span class="language-xml"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span><br><br></code></pre></td></tr></table></figure>
+
+<p>完成双向数据绑定之后，我们来处理第二步：<strong>把选中的色值进行本地缓存</strong></p>
+<p>缓存的方式分为两种：</p>
+<ol>
+<li><code>vuex</code></li>
+<li>本地存储</li>
+</ol>
+<p>在 <code>constants/index</code> 下新建常量值</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 主题色保存的 key</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-variable constant_">MAIN_COLOR</span> = <span class="hljs-string">&#x27;mainColor&#x27;</span><br><span class="hljs-comment">// 默认色值</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-variable constant_">DEFAULT_COLOR</span> = <span class="hljs-string">&#x27;#409eff&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>创建 <code>store/modules/theme</code> 模块，用来处理 <strong>主题色</strong> 相关内容</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> &#123; getItem, setItem &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@/utils/storage&#x27;</span><br><span class="hljs-keyword">import</span> &#123; <span class="hljs-variable constant_">MAIN_COLOR</span>, <span class="hljs-variable constant_">DEFAULT_COLOR</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@/constant&#x27;</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> &#123;<br>  <span class="hljs-attr">namespaced</span>: <span class="hljs-literal">true</span>,<br>  <span class="hljs-attr">state</span>: <span class="hljs-function">() =&gt;</span> (&#123;<br>    <span class="hljs-attr">mainColor</span>: <span class="hljs-title function_">getItem</span>(<span class="hljs-variable constant_">MAIN_COLOR</span>) || <span class="hljs-variable constant_">DEFAULT_COLOR</span><br>  &#125;),<br>  <span class="hljs-attr">mutations</span>: &#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 设置主题色</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-title function_">setMainColor</span>(<span class="hljs-params">state, newColor</span>) &#123;<br>      state.<span class="hljs-property">mainColor</span> = newColor<br>      <span class="hljs-title function_">setItem</span>(<span class="hljs-variable constant_">MAIN_COLOR</span>, newColor)<br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在 <code>store/getters</code> 下指定快捷访问</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-attr">mainColor</span>: <span class="hljs-function"><span class="hljs-params">state</span> =&gt;</span> state.<span class="hljs-property">theme</span>.<span class="hljs-property">mainColor</span><br></code></pre></td></tr></table></figure>
+
+<p>在 <code>store/index</code> 中导入 <code>theme</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js">...<br><span class="hljs-keyword">import</span> theme <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./modules/theme.js&#x27;</span><br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title function_">createStore</span>(&#123;<br>  getters,<br>  <span class="hljs-attr">modules</span>: &#123;<br>    ...<br>    theme<br>  &#125;<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>在 <code>selectColor</code> 中，设置初始色值 和  缓存色值</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs js">...<br><br>&lt;script setup&gt;<br><span class="hljs-keyword">import</span> &#123; defineProps, defineEmits, ref &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span><br><span class="hljs-keyword">import</span> &#123; useStore &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vuex&#x27;</span><br>...<br><span class="hljs-keyword">const</span> store = <span class="hljs-title function_">useStore</span>()<br><br><span class="hljs-comment">// 默认色值</span><br><span class="hljs-keyword">const</span> mColor = <span class="hljs-title function_">ref</span>(store.<span class="hljs-property">getters</span>.<span class="hljs-property">mainColor</span>)<br><br>...<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 确定按钮</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * 1. 修改主题色</span><br><span class="hljs-comment"> * 2. 保存最新的主题色</span><br><span class="hljs-comment"> * 3. 关闭 dialog</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">const</span> <span class="hljs-title function_">comfirm</span> = <span class="hljs-keyword">async</span> (<span class="hljs-params"></span>) =&gt; &#123;<br>  <span class="hljs-comment">// 2. 保存最新的主题色</span><br>  store.<span class="hljs-title function_">commit</span>(<span class="hljs-string">&#x27;theme/setMainColor&#x27;</span>, mColor.<span class="hljs-property">value</span>)<br>  <span class="hljs-comment">// 3. 关闭 dialog</span><br>  <span class="hljs-title function_">closed</span>()<br>&#125;<br>&lt;/script&gt;<br></code></pre></td></tr></table></figure>
+
+<h2 id="scss-mix方法"><a href="#scss-mix方法" class="headerlink" title="scss mix方法"></a>scss mix方法</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs css">// 给当前的颜色值，添加上 <span class="hljs-number">50%</span> 的白色<br><span class="hljs-selector-class">.white</span> &#123;<br>  <span class="hljs-attribute">color</span>: <span class="hljs-built_in">mix</span>(white, $color, <span class="hljs-number">50%</span>);<br>&#125;<br><br>// 给当前的颜色值，添加上 <span class="hljs-number">50%</span> 的黑色<br><span class="hljs-selector-class">.black</span> &#123;<br>  <span class="hljs-attribute">color</span>: <span class="hljs-built_in">mix</span>(black, $color, <span class="hljs-number">50%</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="处理-element-plus-主题色变更原理与步骤分析"><a href="#处理-element-plus-主题色变更原理与步骤分析" class="headerlink" title="处理 element-plus 主题色变更原理与步骤分析"></a>处理 element-plus 主题色变更原理与步骤分析</h2><p>对于 <code>element-plus</code> 的主题变更，相对比较复杂，所以说整个过程我们会分为三部分：</p>
+<ol>
+<li>实现原理</li>
+<li>实现步骤</li>
+<li>实现过程</li>
+</ol>
+<p><strong>实现原理：</strong></p>
+<p>在之前我们分析主题变更的实现原理时，我们说过，核心的原理是：*<em>通过修改 <code>scss</code> 变量 *</em> 的形式修改主题色完成主题变更</p>
+<p>但是对于 <code>element-plus</code> 而言，我们怎么去修改这样的主题色呢？</p>
+<p>其实整体的原理非常简单，分为三步：</p>
+<ol>
+<li>获取当前 <code>element-plus</code> 的所有样式</li>
+<li>找到我们想要替换的样式部分，通过正则完成替换</li>
+<li>把替换后的样式写入到 <code>style</code> 标签中，利用样式优先级的特性，替代固有样式</li>
+</ol>
+<p><strong>实现步骤：</strong></p>
+<p>那么明确了原理之后，我们的实现步骤也就呼之欲出了，对应原理总体可分为四步：</p>
+<ol>
+<li>获取当前 <code>element-plus</code> 的所有样式</li>
+<li>定义我们要替换之后的样式</li>
+<li>在原样式中，利用正则替换新样式</li>
+<li>把替换后的样式写入到 <code>style</code> 标签中</li>
+</ol>
+<p><strong>创建 <code>utils/theme</code> 工具类，写入两个方法</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 写入新样式到 style</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">*</span>&#125; elNewStyle  element-plus 的新样式</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">*</span>&#125; isNewStyleTag 是否生成新的 style 标签</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">writeNewStyle</span> = elNewStyle =&gt; &#123;<br>  <br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 根据主色值，生成最新的样式表</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">generateNewStyle</span> =  primaryColor =&gt; &#123;<br> <br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>那么接下来我们先实现第一个方法 <code>generateNewStyle</code>，在实现的过程中，我们需要安装两个工具类：</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://www.npmjs.com/package/rgb-hex">rgb-hex</a>：转换RGB(A)颜色为十六进制</li>
+<li><a target="_blank" rel="noopener" href="https://www.npmjs.com/package/css-color-function">css-color-function</a>：在 CSS 中 Tab Atkins 提出的颜色函数的解析器和转换器。</li>
+</ol>
+<p><strong>示例</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> rgbHex <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;rgb-hex&#x27;</span><br><br><span class="hljs-title function_">rgbHex</span>(<span class="hljs-number">65</span>, <span class="hljs-number">131</span>, <span class="hljs-number">196</span>);<br><span class="hljs-comment">//=&gt; &#x27;4183c4&#x27;</span><br><br><span class="hljs-title function_">rgbHex</span>(<span class="hljs-string">&#x27;rgb(40, 42, 54)&#x27;</span>);<br><span class="hljs-comment">//=&gt; &#x27;282a36&#x27;</span><br><br><span class="hljs-title function_">rgbHex</span>(<span class="hljs-number">65</span>, <span class="hljs-number">131</span>, <span class="hljs-number">196</span>, <span class="hljs-number">0.2</span>);<br><span class="hljs-comment">//=&gt; &#x27;4183c433&#x27;</span><br><br><span class="hljs-title function_">rgbHex</span>(<span class="hljs-number">40</span>, <span class="hljs-number">42</span>, <span class="hljs-number">54</span>, <span class="hljs-string">&#x27;75%&#x27;</span>);<br><span class="hljs-comment">//=&gt; &#x27;282a36bf&#x27;</span><br><br><span class="hljs-title function_">rgbHex</span>(<span class="hljs-string">&#x27;rgba(40, 42, 54, 75%)&#x27;</span>);<br><span class="hljs-comment">//=&gt; &#x27;282a36bf&#x27;</span><br><br>------------------------------------------------<br><br><span class="hljs-keyword">import</span> color <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;css-color-function&#x27;</span><br> <br>color.<span class="hljs-title function_">convert</span>(<span class="hljs-string">&#x27;color(red tint(50%))&#x27;</span>);<br><span class="hljs-comment">// &quot;rgb(255, 128, 128)&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>然后还需要写入一个 <strong>颜色转化计算器  <code>formula.json</code></strong>，这里主要是以 <code>primary</code> 色值为例</p>
+<p>创建 <code>constants/formula.json</code> </p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;shade-1&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;color(primary shade(10%))&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;light-1&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;color(primary tint(10%))&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;light-2&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;color(primary tint(20%))&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;light-3&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;color(primary tint(30%))&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;light-4&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;color(primary tint(40%))&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;light-5&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;color(primary tint(50%))&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;light-6&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;color(primary tint(60%))&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;light-7&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;color(primary tint(70%))&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;light-8&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;color(primary tint(80%))&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;light-9&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;color(primary tint(90%))&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;subMenuHover&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;color(primary tint(70%))&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;subMenuBg&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;color(primary tint(80%))&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;menuHover&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;color(primary tint(90%))&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;menuBg&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;color(primary)&quot;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+
+<p>我们来看下 element plus 定义的 <code>primary</code> 变量，<code>light-i</code> 表示颜色的深浅。</p>
+<p><img src="/img/primary.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<p>如果我们想要定义其它颜色，比如<code>--el-color-success</code>，已同样的方法，添加到 <code>formula.json</code> 中即可。</p>
+<p>同时我们还定义了自己变量在 <code>formula</code> 颜色转换器中，因为我们的 <code>菜单</code> 部分，也是需要跟着主题色变化的。</p>
+<p><strong>shade tint 方法其实就是利用了 scss 的 mix 方法</strong>，css-color-function 库内部调用进行解析，对某个颜色加深或者淡化！！</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs css">// scss<br><br>// 给当前的颜色值，添加上 <span class="hljs-number">50%</span> 的白色<br><span class="hljs-selector-class">.white</span> &#123;<br>  <span class="hljs-attribute">color</span>: <span class="hljs-built_in">mix</span>(white, $color, <span class="hljs-number">50%</span>);<br>&#125;<br><br>// 给当前的颜色值，添加上 <span class="hljs-number">50%</span> 的黑色<br><span class="hljs-selector-class">.black</span> &#123;<br>  <span class="hljs-attribute">color</span>: <span class="hljs-built_in">mix</span>(black, $color, <span class="hljs-number">50%</span>);<br>&#125;<br><br><span class="hljs-keyword">@function</span> tint($<span class="hljs-attribute">color</span>, $parcent) &#123;<br>  <span class="hljs-keyword">@return</span> mix(white, $<span class="hljs-attribute">color</span>, $parcent)<br>&#125;<br>@function shade($<span class="hljs-attribute">color</span>, $parcent) &#123;<br>  <span class="hljs-keyword">@return</span> mix(black, $<span class="hljs-attribute">color</span>, $parcent)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>准备就绪后，我们来实现 <code>generateNewStyle</code> 方法：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// https://www.npmjs.com/package/css-color-function</span><br><span class="hljs-keyword">import</span> color <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;css-color-function&#x27;</span><br><br><span class="hljs-comment">// https://www.npmjs.com/package/rgb-hex</span><br><span class="hljs-keyword">import</span> rgbHex <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;rgb-hex&#x27;</span><br><span class="hljs-keyword">import</span> axios <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;axios&#x27;</span><br><span class="hljs-keyword">import</span> formula <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@/constants/formula.json&#x27;</span><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 写入新样式到 style</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">*</span>&#125; cssText  element-plus 的新样式</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">*</span>&#125; isNewStyleTag 是否生成新的 style 标签</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">writeNewStyle</span> = (<span class="hljs-params">cssText: string</span>) =&gt; &#123;<br>  <span class="hljs-keyword">const</span> style = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;style&#x27;</span>)<br>  style.<span class="hljs-property">innerText</span> = cssText<br>  <span class="hljs-variable language_">document</span>.<span class="hljs-property">head</span>.<span class="hljs-title function_">appendChild</span>(style)<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 根据主色值，生成最新的样式表</span><br><span class="hljs-comment"> */</span><br>type <span class="hljs-title class_">TObject</span> = &#123; [<span class="hljs-attr">key</span>: string]: string &#125;<br><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">generateNewStyle</span> = <span class="hljs-keyword">async</span> (<span class="hljs-params">primaryColor: string</span>) =&gt; &#123;<br>  <span class="hljs-comment">// colors ===&gt; &#123; primary: &#x27;rgba(8, 12, 132, 0.68)&#x27;, shade-1: &#x27;#070b77ad&#x27;, light-1: &#x27;#212490ad&#x27;, ...... &#125;</span><br>  <span class="hljs-keyword">const</span> <span class="hljs-attr">colors</span>: <span class="hljs-title class_">TObject</span> = <span class="hljs-title function_">generateColors</span>(primaryColor) <span class="hljs-keyword">as</span> <span class="hljs-title class_">TObject</span><br><br>  <span class="hljs-comment">// 拿到整个 element plus 样式表，并对需要修改的变量打上了标记</span><br>  <span class="hljs-keyword">let</span> cssText = <span class="hljs-keyword">await</span> <span class="hljs-title function_">getOriginalStyle</span>()<br><br>  <span class="hljs-comment">// 遍历生成的样式表，在 CSS 的原样式中进行全局替换</span><br>  <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(colors).<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">key</span> =&gt;</span> &#123;<br>    <span class="hljs-comment">// reg pattern</span><br>    <span class="hljs-comment">// /(:|\s+)primary/g</span><br>    <span class="hljs-comment">// /(:|\s+)shade-1/g</span><br>    <span class="hljs-comment">// /(:|\s+)menuBg/g</span><br>    <span class="hljs-comment">// ...</span><br><br>    <span class="hljs-comment">// 这个模式中的 (:|\\s+) 表示一个冒号或一个或多个空白字符（包括空格、制表符和换行符）。</span><br>    <span class="hljs-comment">// \\s+ 的第一个 \ 是转义字符</span><br>    <span class="hljs-comment">// key 是一个变量，代表一个需要匹配的字符串，比如匹配 `primary`</span><br><br>    <span class="hljs-comment">// &#x27;$1&#x27; + colors[key]</span><br>    <span class="hljs-comment">// 关于为什么要在色值前面加上 $1，我们需要查看 replace 方法的第二个参数。</span><br>    <span class="hljs-comment">// 在这里，第二个参数是一个字符串，字符串中的 $1 会被替换成第一个括号捕获组（即 (:|\\s+)）匹配到的文本。</span><br>    <span class="hljs-comment">// 所以加上 $1 就是为了在【替换的文本】中【保留原本匹配到的文本】。</span><br>    cssText = cssText.<span class="hljs-title function_">replace</span>(<br>      <span class="hljs-keyword">new</span> <span class="hljs-title class_">RegExp</span>(<span class="hljs-string">&#x27;(:|\\s+)&#x27;</span> + key, <span class="hljs-string">&#x27;g&#x27;</span>),<br>      <span class="hljs-string">&#x27;$1&#x27;</span> + colors[key]<br>    )<br>  &#125;)<br><br>  <span class="hljs-comment">// 最终，新的样式表中，含有我们自定义的颜色主题</span><br>  <span class="hljs-keyword">return</span> cssText<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 根据主色生成色值表</span><br><span class="hljs-comment"> */</span><br>type <span class="hljs-title class_">TFormulaKey</span> = keyof <span class="hljs-keyword">typeof</span> formula<br><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">generateColors</span> = (<span class="hljs-params">primary: string</span>) =&gt; &#123;<br>  <span class="hljs-keyword">if</span> (!primary) <span class="hljs-keyword">return</span><br>  <span class="hljs-keyword">const</span> <span class="hljs-attr">colors</span>: &#123; [<span class="hljs-attr">key</span>: string]: string &#125; = &#123;<br>    primary<br>  &#125;<br><br>  ;(<span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(formula) <span class="hljs-keyword">as</span> <span class="hljs-title class_">Array</span>&lt;<span class="hljs-title class_">TFormulaKey</span>&gt;).<span class="hljs-title function_">forEach</span>(<br>    &lt;K <span class="hljs-keyword">extends</span> <span class="hljs-title class_">TFormulaKey</span>&gt;<span class="hljs-function">(<span class="hljs-params">key: K</span>) =&gt;</span> &#123;<br>      <span class="hljs-comment">// 将所有的主色，替换成我们选中的主题色，形式如 &gt;&gt;&gt; color(rgba(255, 69, 0, 1) shade(10%))</span><br>      <span class="hljs-keyword">const</span> value = formula[key].<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/primary/g</span>, primary)<br><br>      <span class="hljs-comment">// 通过 color 的 conver 方法，计算出 rgba 色值</span><br>      <span class="hljs-comment">// color.convert(value)  ===&gt;&gt;&gt;  rgba(0, 12, 230, 0.68)</span><br><br>      <span class="hljs-comment">// 最终将转为每个颜色，转为十六进制：#030420ad，写入到 colors 对象中，并返回</span><br>      colors[key] = <span class="hljs-string">&#x27;#&#x27;</span> + <span class="hljs-title function_">rgbHex</span>(color.<span class="hljs-title function_">convert</span>(value))<br>    &#125;<br>  )<br>  <span class="hljs-keyword">return</span> colors<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 获取当前 element-plus 的默认样式表</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">const</span> <span class="hljs-title function_">getOriginalStyle</span> = <span class="hljs-keyword">async</span> (<span class="hljs-params"></span>) =&gt; &#123;<br>  <span class="hljs-keyword">const</span> version = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;element-plus/package.json&#x27;</span>).<span class="hljs-property">version</span><br>  <span class="hljs-keyword">const</span> url = <span class="hljs-string">`https://unpkg.com/element-plus@<span class="hljs-subst">$&#123;version&#125;</span>/dist/index.css`</span><br>  <span class="hljs-keyword">const</span> &#123; data &#125; = <span class="hljs-keyword">await</span> <span class="hljs-title function_">axios</span>(url)<br><br>  <span class="hljs-comment">// 把获取到的数据筛选为原样式模板</span><br>  <span class="hljs-keyword">return</span> <span class="hljs-title function_">getStyleTemplate</span>(data)<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 返回 style 的 template</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">const</span> <span class="hljs-title function_">getStyleTemplate</span> = (<span class="hljs-params">data: string</span>) =&gt; &#123;<br>  <span class="hljs-comment">// element-plus 默认色值</span><br>  <span class="hljs-keyword">const</span> <span class="hljs-attr">colorMap</span>: &#123; [<span class="hljs-attr">key</span>: string]: string &#125; = &#123;<br>    <span class="hljs-string">&#x27;#3a8ee6&#x27;</span>: <span class="hljs-string">&#x27;shade-1&#x27;</span>,<br>    <span class="hljs-string">&#x27;#409eff&#x27;</span>: <span class="hljs-string">&#x27;primary&#x27;</span>, <span class="hljs-comment">// element-plus 中含有变量 `--el-color-primary: #409eff`</span><br>    <span class="hljs-string">&#x27;#53a8ff&#x27;</span>: <span class="hljs-string">&#x27;light-1&#x27;</span>,<br>    <span class="hljs-string">&#x27;#66b1ff&#x27;</span>: <span class="hljs-string">&#x27;light-2&#x27;</span>,<br>    <span class="hljs-string">&#x27;#79bbff&#x27;</span>: <span class="hljs-string">&#x27;light-3&#x27;</span>,<br>    <span class="hljs-string">&#x27;#8cc5ff&#x27;</span>: <span class="hljs-string">&#x27;light-4&#x27;</span>,<br>    <span class="hljs-string">&#x27;#a0cfff&#x27;</span>: <span class="hljs-string">&#x27;light-5&#x27;</span>,<br>    <span class="hljs-string">&#x27;#b3d8ff&#x27;</span>: <span class="hljs-string">&#x27;light-6&#x27;</span>,<br>    <span class="hljs-string">&#x27;#c6e2ff&#x27;</span>: <span class="hljs-string">&#x27;light-7&#x27;</span>,<br>    <span class="hljs-string">&#x27;#d9ecff&#x27;</span>: <span class="hljs-string">&#x27;light-8&#x27;</span>,<br>    <span class="hljs-string">&#x27;#ecf5ff&#x27;</span>: <span class="hljs-string">&#x27;light-9&#x27;</span><br>  &#125;<br>  <span class="hljs-comment">// 根据默认色值为要替换的色值打上标记</span><br>  <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(colorMap).<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">key</span> =&gt;</span> &#123;<br>    <span class="hljs-keyword">const</span> value = colorMap[key]<br>    data = data.<span class="hljs-title function_">replace</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">RegExp</span>(key, <span class="hljs-string">&#x27;ig&#x27;</span>), value)<br>  &#125;)<br><br>  <span class="hljs-comment">// 替换完之后</span><br>  <span class="hljs-comment">// `--el-color-primary: #409eff` 就变成了 `--el-color-primary: primary`</span><br>  <span class="hljs-comment">// --el-color-primary-light-3: #79bbff;  变成了  --el-color-primary-light-3: light-3</span><br>  <span class="hljs-comment">// ...</span><br>  <span class="hljs-comment">// ...</span><br>  <span class="hljs-comment">// `--el-color-primary-light-9: #ecf5ff` 变成了 `--el-color-primary-light-9: light-9`</span><br><br>  <span class="hljs-keyword">return</span> data<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>我们来分析一下 theme.ts 中函数的执行流程</strong></p>
+<ol>
+<li><p>首先，外部调用 <code>generateNewStyle</code> 方法，传入 primaryColor，我们通过 el-color-picker 选中后的值，就是 <code>primaryColor</code>，它的色值长这样 <code>rgba(8, 12, 132, 0.68)</code>。</p>
+</li>
+<li><p>通过 <code>generateColors</code> 方法生成色值表</p>
+<ol>
+<li><p>通过 <code>css-color-function</code> 处理我们的颜色转化计算器<code>formula.json</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-title function_">color</span>(<span class="hljs-title function_">rgba</span>(<span class="hljs-number">255</span>, <span class="hljs-number">69</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>) <span class="hljs-title function_">shade</span>(<span class="hljs-number">10</span>%)) &gt;&gt;&gt; color.<span class="hljs-title function_">convert</span>(value) &gt;&gt;&gt; <span class="hljs-title function_">rgba</span>(<span class="hljs-number">0</span>, <span class="hljs-number">12</span>, <span class="hljs-number">230</span>, <span class="hljs-number">0.68</span>)<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>使用 <code>rgbHex</code> 方法将 rgba 转化为十六进制格式</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-title function_">rgbHex</span>(color.<span class="hljs-title function_">convert</span>(value))  ===&gt;&gt;&gt;  <span class="hljs-string">&#x27;#030420ad&#x27;</span><br></code></pre></td></tr></table></figure></li>
+<li><p>返回处理过后的色值表 <code>colors</code></p>
+</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js">&#123;<br>  <span class="hljs-attr">primary</span>: <span class="hljs-string">&#x27;rgba(8, 12, 132, 0.68)&#x27;</span>, <span class="hljs-comment">// 保留了原始的rgba格式</span><br>  shade-<span class="hljs-number">1</span>: <span class="hljs-string">&#x27;#070b77ad&#x27;</span>,<br>  light-<span class="hljs-number">1</span>: <span class="hljs-string">&#x27;#212490ad&#x27;</span>,<br>  light-<span class="hljs-number">2</span>: <span class="hljs-string">&#x27;#393d9dad&#x27;</span>,<br>  ......<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li><p>通过 <code>getOriginalStyle</code> 方法，获取 element plus 样式表</p>
+</li>
+<li><p>拿到 element plus 样式数据后，通过 <code>getStyleTemplate</code> 方法，根据默认色值 <code>colorMap</code> 为要替换的色值打上标记</p>
+<ol>
+<li>element-plus 中含有变量 <code>--el-color-primary: #409eff</code>，而我们定义的 colorMap 默认值 <code>&#39;#409eff&#39;: &#39;primary&#39;</code> 就是与 element plus 中的十六进制值是对应。</li>
+<li>我们就是要将 element plus 中的 primary 十六进制值替换成我们的标记，<code>primary、shade-*</code>。因为我们已经处理过 <code>formula.json</code> 了，处理过后得到的是 <strong><code>&#123; primary: &#39;rgba(8, 12, 132, 0.68)&#39;, shade-1: &#39;#070b77ad&#39;, light-1: &#39;#212490ad&#39;, ...&#125;</code></strong> 这种形式，这里面的色值，就是我们需要应用到页面上的颜色。</li>
+<li>替换完之后，element plus 中的颜色变量就被标记上了记号，表示将来需要替换成真正的色值。<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-string">`--el-color-primary: #409eff`</span> 就变成了 <span class="hljs-string">`--el-color-primary: primary`</span><br><span class="hljs-string">`--el-color-primary-light-9: #ecf5ff`</span> 变成了 <span class="hljs-string">`--el-color-primary-light-9: light-9`</span><br></code></pre></td></tr></table></figure></li>
+<li>返回处理过后的 element plus 样式表 <code>cssText</code></li>
+</ol>
+</li>
+<li><p>接着，我们通过正则以及第二步 <code>generateColors</code> 方法返回的 colors，将 <code>cssText</code> 中每个打了标记的变量值替换</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js">cssText = cssText.<span class="hljs-title function_">replace</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">RegExp</span>(<span class="hljs-string">&#x27;(:|\\s+)&#x27;</span> + key, <span class="hljs-string">&#x27;g&#x27;</span>), <span class="hljs-string">&#x27;$1&#x27;</span> + colors[key])<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>这个模式中的 (:|\s+) 表示一个冒号或一个【或】多个空白字符(\s+)（包括空格、制表符和换行符）</li>
+<li>\s+ 的第一个 \ 是转义字符</li>
+<li>key 是一个变量，代表一个需要匹配的字符串，比如匹配 <code>primary</code></li>
+<li><code>&#39;$1&#39; + colors[key]</code>: replace 第二个参数是一个字符串，字符串中的 $1 会被替换成第一个括号捕获组（即 (:|\s+)）匹配到的文本。所以加上 $1 就是为了在【替换的文本】中【保留原本匹配到的文本】。</li>
+<li>最后返回 cssText，新的样式表中，含有我们自定义的颜色主题</li>
+</ol>
+</li>
+<li><p>最后，通过 <code>writeNewStyle</code> 将新的样式表 <code>cssText</code> 插入到文档中。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> style = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;style&#x27;</span>)<br>style.<span class="hljs-property">innerText</span> = cssText<br><span class="hljs-variable language_">document</span>.<span class="hljs-property">head</span>.<span class="hljs-title function_">appendChild</span>(style)<br></code></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p><strong>总结</strong></p>
+<p>到这里，我们对 <code>element plus</code> 的主题换肤就完成了。</p>
+<p>原理就是：拿到用户选中的颜色值(rgba)，通过 formula 颜色转换器转换成十六进制表 colors，然后拿到 <code>element plus</code> 的样式表，将其中需要修改的变量打上标记并返回含有标记的新样式表 cssText，最后，遍历 colors，通过正则将所有标记替换成 colors 中的值。完成样式的替换。</p>
+<h2 id="element-plus-新主题的立即生效"><a href="#element-plus-新主题的立即生效" class="headerlink" title="element-plus 新主题的立即生效"></a>element-plus 新主题的立即生效</h2><p>到目前我们已经完成了 <code>element-plus</code> 的主题变更，但是当前的主题变更还有一个小问题，那就是：<strong>在刷新页面后，新主题会失效</strong></p>
+<p>那么出现这个问题的原因，非常简单：<strong>因为没有写入新的 <code>style</code></strong></p>
+<p>所以我们只需要在 <strong>应用加载后，写入 <code>style</code> 即可</strong></p>
+<p>那么写入的时机，我们可以放入到 <code>app.vue</code> 中</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;script setup&gt;<br><span class="hljs-keyword">import</span> &#123; useStore &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vuex&#x27;</span><br><span class="hljs-keyword">import</span> &#123; generateNewStyle, writeNewStyle &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@/utils/theme&#x27;</span><br><br><span class="hljs-keyword">const</span> store = <span class="hljs-title function_">useStore</span>()<br><span class="hljs-title function_">generateNewStyle</span>(store.<span class="hljs-property">getters</span>.<span class="hljs-property">mainColor</span>).<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">newStyleText</span> =&gt;</span> &#123;<br>  <span class="hljs-title function_">writeNewStyle</span>(newStyleText)<br>&#125;)<br>&lt;/script&gt;<br></code></pre></td></tr></table></figure>
+
+<h2 id="自定义主题变更"><a href="#自定义主题变更" class="headerlink" title="自定义主题变更"></a>自定义主题变更</h2><p>自定义主题变更相对来说比较简单，因为 <strong>自己的代码更加可控</strong>。</p>
+<p>目前在我们的代码中，需要进行 <strong>自定义主题变更</strong> 为  <strong><code>menu</code> 菜单背景色</strong></p>
+<p>而目前指定 <code>menu</code> 菜单背景色的位置在 <code>layout/components/sidebar/SidebarMenu.vue</code> 中</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;el-menu<br>  :<span class="hljs-keyword">default</span>-active=<span class="hljs-string">&quot;activeMenu&quot;</span><br>  :collapse=<span class="hljs-string">&quot;!$store.getters.sidebarOpened&quot;</span><br>  :background-color=<span class="hljs-string">&quot;$store.getters.cssVar.menuBg&quot;</span><br>  :text-color=<span class="hljs-string">&quot;$store.getters.cssVar.menuText&quot;</span><br>  :active-text-color=<span class="hljs-string">&quot;$store.getters.cssVar.menuActiveText&quot;</span><br>  :unique-opened=<span class="hljs-string">&quot;true&quot;</span><br>  router<br>&gt;<br></code></pre></td></tr></table></figure>
+
+<p>此处的 背景色是通过 <code>getters</code> 进行指定的，该 <code>cssVar</code> 的 <code>getters</code> 为：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-attr">cssVar</span>: <span class="hljs-function"><span class="hljs-params">state</span> =&gt;</span> variables,<br></code></pre></td></tr></table></figure>
+
+<p>所以，我们想要修改 <strong>自定义主题</strong> ，只需要从这里入手即可。</p>
+<p><strong>根据当前保存的 <code>mainColor</code> 覆盖原有的默认色值</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> variables <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@/styles/variables.scss&#x27;</span><br><span class="hljs-keyword">import</span> &#123; <span class="hljs-variable constant_">MAIN_COLOR</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@/constant&#x27;</span><br><span class="hljs-keyword">import</span> &#123; getItem &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@/utils/storage&#x27;</span><br><span class="hljs-keyword">import</span> &#123; generateColors &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@/utils/theme&#x27;</span><br><br><span class="hljs-keyword">const</span> getters = &#123;<br>  ...<br>  <span class="hljs-attr">cssVar</span>: <span class="hljs-function"><span class="hljs-params">state</span> =&gt;</span> &#123;<br>    <span class="hljs-keyword">return</span> &#123;<br>      ...variables,<br>      ...<span class="hljs-title function_">generateColors</span>(<span class="hljs-title function_">getItem</span>(<span class="hljs-variable constant_">MAIN_COLOR</span>))<br>    &#125;<br>  &#125;,<br>  ...<br>&#125;<br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> getters<br><br></code></pre></td></tr></table></figure>
+
+<p>但是我们这样设定之后，整个自定义主题变更，还存在两个问题：</p>
+<ol>
+<li><code>menuBg</code> 背景颜色没有变化</li>
+</ol>
+<p>这个问题是因为咱们的 <code>sidebar</code> 的背景色未被替换，所以我们可以在 <code>layout/index</code> 中设置 <code>sidebar</code> 的 <code>backgroundColor</code></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">sidebar</span></span><br><span class="hljs-tag">  <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;guide-sidebar&quot;</span></span><br><span class="hljs-tag">  <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;sidebar-container&quot;</span></span><br><span class="hljs-tag">  <span class="hljs-attr">:style</span>=<span class="hljs-string">&quot;&#123; backgroundColor: $store.getters.cssVar.menuBg &#125;&quot;</span></span><br><span class="hljs-tag">/&gt;</span><br></code></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>主题色替换之后，需要刷新页面才可响应</li>
+</ol>
+<p>这个是因为 <code>getters</code> 中没有监听到 <strong>依赖值的响应变化</strong>，所以我们希望修改依赖值</p>
+<p>在 <code>store/modules/theme</code> 中</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs js">...<br><span class="hljs-keyword">import</span> variables <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@/styles/variables.scss&#x27;</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> &#123;<br>  <span class="hljs-attr">namespaced</span>: <span class="hljs-literal">true</span>,<br>  <span class="hljs-attr">state</span>: <span class="hljs-function">() =&gt;</span> (&#123;<br>    ...<br>    variables<br>  &#125;),<br>  <span class="hljs-attr">mutations</span>: &#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 设置主题色</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-title function_">setMainColor</span>(<span class="hljs-params">state, newColor</span>) &#123;<br>      ...<br>      state.<span class="hljs-property">variables</span>.<span class="hljs-property">menuBg</span> = newColor<br>      ...<br>    &#125;<br>  &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>在 <code>getters</code> 中</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs js">....<br><br><span class="hljs-keyword">const</span> getters = &#123;<br> ...<br>  <span class="hljs-attr">cssVar</span>: <span class="hljs-function"><span class="hljs-params">state</span> =&gt;</span> &#123;<br>    <span class="hljs-keyword">return</span> &#123;<br>      ...state.<span class="hljs-property">theme</span>.<span class="hljs-property">variables</span>,<br>      ...<span class="hljs-title function_">generateColors</span>(<span class="hljs-title function_">getItem</span>(<span class="hljs-variable constant_">MAIN_COLOR</span>))<br>    &#125;<br>  &#125;,<br>  ...<br>&#125;<br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> getters<br><br></code></pre></td></tr></table></figure>
+
+<p>那么到这里整个自定义主题我们就处理完成了。</p>
+<p>对于 <strong>自定义主题而言</strong>，核心的原理其实就是 <strong>修改<code>scss</code>变量来进行实现主题色变化</strong> </p>
+<p>明确好了原理之后，对后续实现的步骤就具体情况具体分析了。</p>
+<ol>
+<li>对于 <code>element-plus</code>：因为 <code>element-plus</code> 是第三方的包，所以它 <strong>不是完全可控</strong> 的，那么对于这种最简单直白的方案，就是直接拿到它编译后的 <code>css</code> 进行色值替换，利用 <code>style</code> <strong>内部样式表</strong> 优先级高于 <strong>外部样式表</strong> 的特性，来进行主题替换</li>
+<li>对于自定义主题：因为自定义主题是 <strong>完全可控</strong> 的，所以我们实现起来就轻松很多，只需要修改对应的 <code>scss</code>变量即可</li>
+</ol>
+<p>那么在之后大家遇到 <strong>自定义主题</strong> 的处理时，就可以按照这里所梳理的方案进行处理了。</p>
+<h1 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h1><p>这一章我们花了大量的篇幅来介绍换肤的原理以及业务场景如何实现换肤，篇幅有点长，就不在此添加其他功能的描述了。</p>
+<p>如下功能我们放到下一章节去实现：</p>
+<ul>
+<li>screenfull</li>
+<li>headerSearch</li>
+<li>tagView</li>
+<li>guide</li>
+</ul>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://www.ruanyifeng.com/blog/2017/05/css-variables.html">CSS变量教程</a></li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96-Vue3-%E9%80%9A%E7%94%A8%E5%8A%9F%E8%83%BD/">工程化,Vue3,通用功能</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/post/vue3-project-generalModule2.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Vue3项目实战(六)：通用功能开发(二)</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/post/vue3-project-layout.html">
+                        <span class="hidden-mobile">Vue3项目实战(四)：Layout架构实现</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    
+      <script type="text/javascript">
+        var disqus_config = function() {
+          this.page.url = 'http://yoursite.com/post/vue3-project-generalModule.html';
+          this.page.identifier = '/post/vue3-project-generalModule.html';
+        };
+        Fluid.utils.loadComments('#disqus_thread', function() {
+          var d = document, s = d.createElement('script');
+          s.src = '//' + 'helloalexcc' + '.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', new Date());
+          (d.head || d.body).appendChild(s);
+        });
+      </script>
+    
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hello-alex-cheng.github.io/" target="_blank" rel="nofollow noopener"><span>I</span></a> <i class="iconfont icon-love"></i> <a href="https://hello-alex-cheng.github.io/" target="_blank" rel="nofollow noopener"><span>YOU</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

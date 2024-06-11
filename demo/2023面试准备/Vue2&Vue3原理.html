@@ -1,0 +1,426 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Hello_AlexCc">
+  <meta name="keywords" content="Full stack engineer">
+  
+    <meta name="description" content="如何理解 MVVM Model–view–viewmodel   数据驱动视图。  修改 Model 的数据（plain objects），Vue 的 ViewModel 会帮我们处理数据、监听数据变化等，异步渲染、更新 DOM。避免了我们手动去操作 DOM。 如何理解 ViewModel ？ 在 Vue 中， ViewModel 代表 Vue 提供的底层能力，比如事件的处理、响应式系统等，它是作">
+<meta property="og:type" content="website">
+<meta property="og:title" content="page.title">
+<meta property="og:url" content="http://yoursite.com/demo/2023%E9%9D%A2%E8%AF%95%E5%87%86%E5%A4%87/Vue2&Vue3%E5%8E%9F%E7%90%86.html">
+<meta property="og:site_name" content="Hello_AlexCc">
+<meta property="og:description" content="如何理解 MVVM Model–view–viewmodel   数据驱动视图。  修改 Model 的数据（plain objects），Vue 的 ViewModel 会帮我们处理数据、监听数据变化等，异步渲染、更新 DOM。避免了我们手动去操作 DOM。 如何理解 ViewModel ？ 在 Vue 中， ViewModel 代表 Vue 提供的底层能力，比如事件的处理、响应式系统等，它是作">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/demo/2023%E9%9D%A2%E8%AF%95%E5%87%86%E5%A4%87/img/mvvm.jpg">
+<meta property="og:image" content="http://yoursite.com/demo/2023%E9%9D%A2%E8%AF%95%E5%87%86%E5%A4%87/img/vue-lifecycle.png">
+<meta property="article:published_time" content="2024-06-11T08:52:17.365Z">
+<meta property="article:modified_time" content="2024-06-11T08:52:17.365Z">
+<meta property="article:author" content="Hello_AlexCc">
+<meta property="article:tag" content="Full stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://yoursite.com/demo/2023%E9%9D%A2%E8%AF%95%E5%87%86%E5%A4%87/img/mvvm.jpg">
+  
+  
+  <title>page.title - Hello_AlexCc</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  <header style="height: 60vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Hello_AlexCc</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="page.title">
+              
+            </span>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      <div class="container nopadding-x-md">
+        <div class="py-5" id="board"
+          >
+          
+          <div class="container">
+            <div class="row">
+              <div class="col-12 col-md-10 m-auto">
+                
+
+<article class="page-content">
+  <h1 id="如何理解-MVVM"><a href="#如何理解-MVVM" class="headerlink" title="如何理解 MVVM"></a>如何理解 MVVM</h1><blockquote>
+<p>Model–view–viewmodel</p>
+</blockquote>
+<img src="./img/mvvm.jpg" srcset="/img/loading.gif" lazyload />
+数据驱动视图。
+
+<p>修改 Model 的数据（plain objects），Vue 的 ViewModel 会帮我们处理数据、监听数据变化等，异步渲染、更新 DOM。避免了我们手动去操作 DOM。</p>
+<p>如何理解 ViewModel ？</p>
+<p>在 Vue 中， ViewModel 代表 Vue 提供的底层能力，比如事件的处理、响应式系统等，它是作为 View 层和 Model 层的桥梁，View 和 Model 之间的同步工作，都是自动的。</p>
+<h1 id="MVVM与MVC有什么区别？"><a href="#MVVM与MVC有什么区别？" class="headerlink" title="MVVM与MVC有什么区别？"></a>MVVM与MVC有什么区别？</h1><p>MVC是Model-View-Contoller的简写，即模型-视图-控制器。</p>
+<p>MVC是单向通信，也就是View和Model必须通过Controller来承上启下。</p>
+<p>比如用户在页面上（View层）操作了一个按钮，事件被控制器接收处理，修改 Model 层的数据，然后将最新的数据同步到 View 层。当然，用户也可以直接操作控制器，通过控制器修改 Model 层的数据，将更新后的数据同步到 View 中。</p>
+<p>MVVM实现了View和Model的自动同步，当Model的属性改变时，不再需要自己手动操作DOM元素，提高了页面渲染性能。</p>
+<p>在MVVM架构下，View 和 Model 之间并没有直接的联系，而是通过ViewModel进行交互，Model 和 ViewModel 之间的交互是双向的。</p>
+<p><strong>View 可以通过 ViewModel 中<code>事件绑定</code> 的方式影响 Model，Model 可以通过 ViewModel 中 <code>数据绑定</code> 的方式去影响 View。</strong></p>
+<h1 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h1><img src="./img/vue-lifecycle.png" srcset="/img/loading.gif" lazyload />
+
+<h1 id="Vue-三要素"><a href="#Vue-三要素" class="headerlink" title="Vue 三要素"></a>Vue 三要素</h1><ul>
+<li><p>响应式</p>
+<p>Vue 如何监听到 data 的每个属性变化</p>
+</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></div></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> obj = &#123;&#125;<br><span class="hljs-keyword">let</span> name = <span class="hljs-string">&#x27;&#x27;</span><br><br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">defineProperty</span>(obj, <span class="hljs-string">&#x27;name&#x27;</span>, &#123;<br>  <span class="hljs-attr">get</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;触发 get&#x27;</span>)<br><br>    <span class="hljs-keyword">return</span> name<br>  &#125;,<br>  <span class="hljs-attr">set</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params">value</span>) &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;触发 set&#x27;</span>)<br>    name = value<br>  &#125;<br>&#125;)<br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;打印： &#x27;</span>, obj.<span class="hljs-property">name</span>)<br><br>obj.<span class="hljs-property">name</span> = <span class="hljs-string">&#x27;你好，世界&#x27;</span><br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;打印： &#x27;</span>, obj.<span class="hljs-property">name</span>)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><p>模板引擎</p>
+<p>本质：字符串。</p>
+<p>包含事件、指令、js 数据。</p>
+<p>模板如何解析、指令如何处理。</p>
+</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 到 Vue 源码中，查找 code.render</span><br><br><span class="hljs-title function_">with</span>(<span class="hljs-params"><span class="hljs-variable language_">this</span></span>)&#123;<br>  <span class="hljs-keyword">return</span> <span class="hljs-title function_">_c</span>(<br>    <span class="hljs-string">&#x27;div&#x27;</span>,<br>    &#123;<br>      <span class="hljs-attr">attrs</span>:&#123;<span class="hljs-string">&quot;id&quot;</span>:<span class="hljs-string">&quot;app&quot;</span>&#125;<br>    &#125;,<br>    [<br>      <span class="hljs-title function_">_c</span>(<span class="hljs-string">&#x27;ul&#x27;</span>,<span class="hljs-title function_">_l</span>((list),<span class="hljs-keyword">function</span>(<span class="hljs-params">item</span>)&#123;<span class="hljs-keyword">return</span> <span class="hljs-title function_">_c</span>(<span class="hljs-string">&#x27;li&#x27;</span>,[<span class="hljs-title function_">_v</span>(<span class="hljs-string">&quot;姓名：&quot;</span>+<span class="hljs-title function_">_s</span>(item.<span class="hljs-property">name</span>)+<span class="hljs-string">&quot;, 年龄：&quot;</span>+<span class="hljs-title function_">_s</span>(item.<span class="hljs-property">age</span>))])&#125;),<span class="hljs-number">0</span>)<br>    ]<br>  )<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><p>render 渲染函数</p>
+<p>将字符串模板转化为 js 语法（虚拟DOM），那么是渲染成 html？渲染过程是如何？</p>
+</li>
+</ul>
+<h1 id="Vue-响应式系统"><a href="#Vue-响应式系统" class="headerlink" title="Vue 响应式系统"></a>Vue 响应式系统</h1><ul>
+<li><p>Object.defineProperty（缺点）</p>
+<ol>
+<li>深度监听，需要递归给所有对象的属性进行监听，如果我们的数据对象嵌套太深，计算量大。</li>
+<li>直接给数据对象新增属性、或者通过 delete 删除对象属性，Vue 监听不到。所以有了 <code>Vue.$set</code> 和 <code>Vue.$delete</code></li>
+<li>defineProperty 本身不具备监听数组，需要对数组的方法特殊处理</li>
+</ol>
+</li>
+<li><p>Proxy（IE11不支持，兼容性不好，无法 polyfill）</p>
+</li>
+</ul>
+<h2 id="Vue2-如何深度监听数据"><a href="#Vue2-如何深度监听数据" class="headerlink" title="Vue2 如何深度监听数据"></a>Vue2 如何深度监听数据</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">function</span> <span class="hljs-title function_">observer</span>(<span class="hljs-params">target</span>) &#123;<br>  <span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> i <span class="hljs-keyword">in</span> target) &#123;<br>    <span class="hljs-title function_">defineReactive</span>(target, i, target[i])<br>  &#125;<br>&#125;<br><span class="hljs-keyword">function</span> <span class="hljs-title function_">defineReactive</span>(<span class="hljs-params">target, key, value</span>) &#123;<br>  <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">defineProperty</span>(target, key, &#123;<br>    <span class="hljs-attr">get</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<br>      <span class="hljs-keyword">return</span> value<br>    &#125;,<br>    <span class="hljs-attr">set</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params">newValue</span>) &#123;<br>      value = newValue<br><br>      <span class="hljs-title function_">updateView</span>() <span class="hljs-comment">// 更新视图</span><br>    &#125;<br>  &#125;)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="Vue2-如何监听数组"><a href="#Vue2-如何监听数组" class="headerlink" title="Vue2 如何监听数组"></a>Vue2 如何监听数组</h2><p>重写数组方法</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> arrayPrototype = <span class="hljs-title class_">Array</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span><br><br><span class="hljs-comment">// 创建新对象，原型链指向数组的原型对象 newArrayProto.__proto__ === Array.prototype</span><br><span class="hljs-comment">// 再扩展方法就不会影响到 Array.prototype 了，并且我们还可以覆盖原有的数组方法</span><br><span class="hljs-keyword">const</span> newArrayProto = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(arrayPrototype)<br></code></pre></td></tr></table></figure>
+
+<p>扩展原有方法</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> methodsToPatch = [<br>  <span class="hljs-string">&#x27;push&#x27;</span>,<br>  <span class="hljs-string">&#x27;pop&#x27;</span>,<br>  <span class="hljs-string">&#x27;shift&#x27;</span>,<br>  <span class="hljs-string">&#x27;unshift&#x27;</span>,<br>  <span class="hljs-string">&#x27;splice&#x27;</span>,<br>  <span class="hljs-string">&#x27;sort&#x27;</span>,<br>  <span class="hljs-string">&#x27;reverse&#x27;</span><br>];<br><br>  methodsToPatch.<span class="hljs-title function_">forEach</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">method</span>) &#123;<br>    <span class="hljs-comment">// cache original method</span><br>    <span class="hljs-keyword">const</span> original = arrayPrototype[method];<br><br>    <span class="hljs-comment">// 劫持数组方法</span><br>    newArrayProto[method] = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<br>      <span class="hljs-title function_">updateView</span>()<br><br>      <span class="hljs-comment">// 执行原数组</span><br>      original.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, ...<span class="hljs-variable language_">arguments</span>)<br>    &#125;<br>  &#125;)<br></code></pre></td></tr></table></figure>
+
+<h2 id="Vue3-的-Proxy-来代理对象"><a href="#Vue3-的-Proxy-来代理对象" class="headerlink" title="Vue3 的 Proxy 来代理对象"></a>Vue3 的 Proxy 来代理对象</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> o = &#123;<br>  <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;对象&#x27;</span>,<br>  <span class="hljs-attr">age</span>: <span class="hljs-number">19</span>,<br>  <span class="hljs-attr">favor</span>: [<span class="hljs-string">&#x27;sing&#x27;</span>, <span class="hljs-string">&#x27;dance&#x27;</span>]<br>&#125;<br><br><span class="hljs-keyword">const</span> proxy = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Proxy</span>(o, &#123;<br>  <span class="hljs-title function_">get</span>(<span class="hljs-params">target, key, receiver</span>) &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;有人来获取属性啦：&#x27;</span>, target, key)<br><br>    <span class="hljs-keyword">return</span> target[key]<br>  &#125;,<br>  <span class="hljs-title function_">set</span>(<span class="hljs-params">target, key, value</span>) &#123;<br>    target[key] = value<br>  &#125;<br>&#125;)<br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(proxy.<span class="hljs-property">name</span>)<br><br>proxy.<span class="hljs-property">name</span> = <span class="hljs-string">&#x27;123&#x27;</span><br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(proxy.<span class="hljs-property">name</span>)<br><br>proxy.<span class="hljs-property">favor</span>.<span class="hljs-title function_">push</span>(<span class="hljs-string">&#x27;hahahahahah&#x27;</span>)<br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(proxy.<span class="hljs-property">favor</span>)<br></code></pre></td></tr></table></figure>
+
+<h1 id="虚拟-DOM-和-Diff-算法"><a href="#虚拟-DOM-和-Diff-算法" class="headerlink" title="虚拟 DOM 和 Diff 算法"></a>虚拟 DOM 和 Diff 算法</h1><p>为什么需要 vDom，又为什么说操作 DOM 耗性能？</p>
+<p>主要是在两个方面：</p>
+<ol>
+<li><p>DOM 的实现和 JS 的实现属于两个独立的模块，跨模块交互性能消耗挺高。</p>
+</li>
+<li><p>耗浏览器性能，当我们操作 DOM，通常会引起浏览器的重绘和回流。</p>
+</li>
+</ol>
+<h2 id="Virtual-DOM"><a href="#Virtual-DOM" class="headerlink" title="Virtual DOM"></a>Virtual DOM</h2><p>用 JavaScript 对象结构表示 DOM 树的结构；然后用这个树构建一个真正的 DOM 树</p>
+<h2 id="Diff-算法"><a href="#Diff-算法" class="headerlink" title="Diff 算法"></a>Diff 算法</h2><p>树的 diff 算法时间复杂度为 O（n^3），是如优化到 O(n)的？</p>
+<ol>
+<li><p>只比较同一层级，不跨层比较</p>
+</li>
+<li><p>tag 不相同，直接删掉重建，不再深度比较</p>
+</li>
+<li><p>tag 和 key 相同，则认为是相同节点，不再深入比较</p>
+</li>
+</ol>
+<h1 id="参考视频"><a href="#参考视频" class="headerlink" title="参考视频"></a>参考视频</h1><section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span>百度网盘-我的资源-前端框架及项目面试（Vue&amp;React原理、Webpack&amp;Babel、项目设计&amp;项目流程）
+<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
+
+  
+</article>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hello-alex-cheng.github.io/" target="_blank" rel="nofollow noopener"><span>I</span></a> <i class="iconfont icon-love"></i> <a href="https://hello-alex-cheng.github.io/" target="_blank" rel="nofollow noopener"><span>YOU</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
