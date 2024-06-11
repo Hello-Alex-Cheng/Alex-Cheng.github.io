@@ -10,10 +10,10 @@ excerpt: First Article
 ### What
 > This is my first Blog.
 
-### No.2
+### No.1
 ```js
 if (true) {
-    console.log("Hello_AlexCc!")
+    console.log("Hello_AlexCc!😊")
 }
 
 return "ヾ(◍°∇°◍)ﾉﾞ"
