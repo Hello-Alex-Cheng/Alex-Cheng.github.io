@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+    <div id="app"></div>
+    <script type="text/babel">
+
+        class EventEmitter {
+            constructor() {
+                this.eventMap = {}
+            }
+
+            // 注册事件, type 表示事件名, handler 表示事件函数
+            on(type, handler) {
+                if (!(handler instanceof Function)) {
+                    throw new Error('请传递正确函数')
+                }
+
+                if (!this.eventMap[type]) {
+                    this.eventMap[type] = []
+                }
+
+                this.eventMap[type].push(handler)
+            }
+
+            emit(type, params) {
+                if (this.eventMap[type]) {
+                    this.eventMap[type].forEach((handler, index) => {
+                        handler(params)
+                    })
+                }
+            }
+
+            off(type, handler) {
+                if (this.eventMap[type]) {
+                    const isIndex = this.eventMap[type].indexOf(handler)
+                    if (isIndex >= 0) {
+                        this.eventMap[type].splice(isIndex, 1)
+                    }
+                }
+            }
+        }
+
+
+        const myEvent = new EventEmitter()
+
+        const sayHi = (what) => {
+            console.log('hi', what)
+        }
+        myEvent.on('sayHi', sayHi)
+
+        myEvent.emit('sayHi', 'alex.cc')
+
+        console.log('myEvent', myEvent)
+
+        myEvent.off('sayHi', sayHi)
+
+        console.log('myEvent', myEvent)
+
+    </script>
+</body>
+</html>

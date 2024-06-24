@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+    <div id="app"></div>
+    <script type="text/babel">
+
+        // 父组件通过 ref 拿到子组件实例,调用子组件内部方法
+        // 在自定义 Modal 组件时,很实用
+        class Child extends React.Component {
+
+            say() {
+                console.log('is child')
+            }
+
+            render() {
+                return (
+                    <p>Child</p>
+                )
+            }
+        }
+
+        class App extends React.Component {
+
+            componentDidMount(){
+                console.log(this.child.say())
+            }
+
+            render() {
+
+                return <Child ref={
+                    c => this.child = c
+                } />
+            }
+        }
+
+        ReactDOM.render(<App />, document.querySelector('#app'))
+    </script>
+</body>
+</html>
