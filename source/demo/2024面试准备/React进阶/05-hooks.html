@@ -13,8 +13,32 @@
     <script type="text/babel">
         const { useState, useEffect } = React
 
+        const useSize = () => {
+            const [size, setSize] = useState(null)
+
+            const onResize = () => {
+                setSize({
+                    width: document.documentElement.clientWidth,
+                    height: document.documentElement.clientHeight,
+                })
+            }
+
+            console.log('size')
+
+            useEffect(() => {
+                window.addEventListener('resize', onResize)
+                return () => {
+                    window.removeEventListener('resize', onResize)
+                }
+            }, [])
+
+            return size
+        }
+
         const Child = (props) => {
             const { count } = props
+
+            const size = useSize()
 
             useEffect(() => {
                 console.log('use effect')
@@ -24,8 +48,14 @@
                 }
             }, [count])
 
+            
+
             return (
-                <h1>Child</h1>
+                <div>
+                    
+                    <h1>Child{count}</h1>
+                    <pre>{JSON.stringify(size, null, 2)}</pre>
+                </div>
             )
         }
 

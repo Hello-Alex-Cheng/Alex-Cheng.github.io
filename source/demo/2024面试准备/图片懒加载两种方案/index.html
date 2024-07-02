@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+    <p>文字文字</p>
+
+    <img data-src="./压测结果.png" alt="404.png" />
+    <hr />
+    <img data-src="./四次挥手.jpg" alt="404.jpg" />
+
+    <script>
+
+        const imgs = document.getElementsByTagName('img')
+
+        // const setImgSrc = () => {
+        //     [...imgs].forEach(img => {
+        //         const top = img.getBoundingClientRect().top;
+        //         console.log(top)
+        //         console.log(img)
+
+        //         if (top < window.innerHeight) {
+        //             const data_src = img.getAttribute('data-src')
+        //             img.setAttribute('src', data_src)
+
+        //             console.log('监听中...')
+        //         }
+        //     })
+        // }
+        // const loadImgs = () => {
+        //     window.addEventListener('scroll', setImgSrc)
+        // }
+        // loadImgs()
+
+
+
+        const loadImgs = () => {
+            const cb = (entries) => {
+                console.log(entries)
+                entries.forEach(entry => {
+                    console.log(entry)
+
+                    if (entry.isIntersecting) {
+                        const img = entry.target
+                        const data_src = img.getAttribute('data-src')
+                        img.setAttribute('src', data_src)
+
+                        observer.unobserve(img)
+                    }
+                })
+            }
+
+            const observer = new IntersectionObserver(cb);
+
+            [...imgs].forEach(img => {
+                observer.observe(img)
+            })
+        }
+
+        loadImgs()
+    </script>
+</body>
+</html>

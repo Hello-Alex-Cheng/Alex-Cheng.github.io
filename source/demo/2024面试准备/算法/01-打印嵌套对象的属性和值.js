@@ -30,20 +30,6 @@ const fomatter = (obj, k = '') => {
     return res
 }
 
-// function fatten(obj, o = {} ,preKey = "") {
-//     this.o = o;
-//     for(key in obj){
-//         const fattenKey = preKey+(Array.isArray(obj)? `[${key}]`: `${preKey? '.': ''}${key}`);
-//         if(typeof obj[key] !== 'object'){
-//             this.o[fattenKey] = obj[key];
-//         }else{
-//             fatten(obj[key], this.o, fattenKey);
-//         }
-//     }
-//     return this.o;
-// }
-
-
 const result = fomatter(input)
 
 console.log(result)
