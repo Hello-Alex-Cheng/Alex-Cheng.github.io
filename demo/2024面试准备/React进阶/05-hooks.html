@@ -16,15 +16,15 @@
   <meta name="author" content="Hello_AlexCc">
   <meta name="keywords" content="Full stack engineer">
   
-    <meta name="description" content="时间分片              &#x2F;&#x2F; 记录任务开始时间     let now &#x3D; Date.now();     &#x2F;&#x2F; 插入十万条数据     const total &#x3D; 100000;     &#x2F;&#x2F; 获取容器     let ul &#x3D; document.getElementById(&#39;container&#39;);     &#x2F;&#x2F; 将数据插入容器中     for (let">
+    <meta name="description" content="Document                                    const { useState, useEffect } &#x3D; React          const useSize &#x3D; () &#x3D;&gt; {             const [size, setSize] &#x3D; useState(null)              cons">
 <meta property="og:type" content="website">
 <meta property="og:title" content="page.title">
-<meta property="og:url" content="http://yoursite.com/demo/timeFragment.html">
+<meta property="og:url" content="http://yoursite.com/demo/2024%E9%9D%A2%E8%AF%95%E5%87%86%E5%A4%87/React%E8%BF%9B%E9%98%B6/05-hooks.html">
 <meta property="og:site_name" content="Hello_AlexCc">
-<meta property="og:description" content="时间分片              &#x2F;&#x2F; 记录任务开始时间     let now &#x3D; Date.now();     &#x2F;&#x2F; 插入十万条数据     const total &#x3D; 100000;     &#x2F;&#x2F; 获取容器     let ul &#x3D; document.getElementById(&#39;container&#39;);     &#x2F;&#x2F; 将数据插入容器中     for (let">
+<meta property="og:description" content="Document                                    const { useState, useEffect } &#x3D; React          const useSize &#x3D; () &#x3D;&gt; {             const [size, setSize] &#x3D; useState(null)              cons">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-06-21T02:04:31.416Z">
-<meta property="article:modified_time" content="2024-06-21T02:04:31.416Z">
+<meta property="article:published_time" content="2024-06-25T06:12:19.414Z">
+<meta property="article:modified_time" content="2024-06-25T06:12:19.414Z">
 <meta property="article:author" content="Hello_AlexCc">
 <meta property="article:tag" content="Full stack engineer">
 <meta name="twitter:card" content="summary_large_image">
@@ -203,70 +203,89 @@
 <article class="page-content">
   <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>时间分片</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@16.8/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16.8/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
-
 <body>
-  <ul id="container"></ul>
-  <script>
-    // 记录任务开始时间
-    let now = Date.now();
-    // 插入十万条数据
-    const total = 100000;
-    // 获取容器
-    let ul = document.getElementById('container');
-    // 将数据插入容器中
-    for (let i = 0; i < total; i++) {
-      let li = document.createElement('li');
-      li.innerText = i
-      ul.appendChild(li);
-    }
+    <div id="app"></div>
+    <script type="text/babel">
+        const { useState, useEffect } = React
 
-    console.log('JS运行时间：', Date.now() - now);
-    setTimeout(() => {
-      console.log('总运行时间：', Date.now() - now);
-    }, 0)
+        const useSize = () => {
+            const [size, setSize] = useState(null)
 
+            const onResize = () => {
+                setSize({
+                    width: document.documentElement.clientWidth,
+                    height: document.documentElement.clientHeight,
+                })
+            }
 
+            console.log('size')
 
-    // // --------- 分批渲染 --------- 
-    // //需要插入的容器
-    // let ul = document.getElementById('container');
-    // // 插入十万条数据
-    // let total = 100000;
-    // // 一次插入 20 条
-    // let once = 20;
-    // //总页数
-    // let page = total / once
-    // //每条记录的索引
-    // let index = 0;
-    // //循环加载数据
-    // function loop(curTotal, curIndex) {
-    //   if (curTotal <= 0) {
-    //     return false;
-    //   }
-    //   //每页多少条
-    //   let pageCount = Math.min(curTotal, once);
-    //   setTimeout(() => {
-    //     for (let i = 0; i < pageCount; i++) {
-    //       let li = document.createElement('li');
-    //       li.innerText = curIndex + i + ' : ' + ~~(Math.random() * total)
-    //       ul.appendChild(li)
-    //     }
-    //     loop(curTotal - pageCount, curIndex + pageCount)
-    //   }, 0)
-    // }
-    // loop(total, index);
+            useEffect(() => {
+                window.addEventListener('resize', onResize)
+                return () => {
+                    window.removeEventListener('resize', onResize)
+                }
+            }, [])
 
-  </script>
+            return size
+        }
+
+        const Child = (props) => {
+            const { count } = props
+
+            const size = useSize()
+
+            useEffect(() => {
+                console.log('use effect')
+
+                return () => {
+                    console.log('init and unmount')
+                }
+            }, [count])
+
+            
+
+            return (
+                <div>
+                    
+                    <h1>Child{count}</h1>
+                    <div class="code-wrapper"><pre>{JSON.stringify(size, null, 2)}</pre></div>
+                </div>
+            )
+        }
+
+        const App = () => {
+            const [count, setCount] = React.useState(0)
+            return (
+                <>
+                    <h1>hooks</h1>
+                    <p>{count}</p>
+                    <button onClick={() => {
+                        setCount(count + 1)
+                        setCount(count + 1)
+                        setCount(count + 1)
+                        setCount(count + 1)
+
+                        console.log(count)
+                    }}>add</button>
+
+                    {count > 3 ? null : <Child count={count} />}
+                </>
+            )
+        }
+
+        ReactDOM.render(<App />, document.querySelector('#app'))
+    </script>
 </body>
-
 </html>
-
 
   
 </article>
