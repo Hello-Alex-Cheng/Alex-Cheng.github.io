@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@16.8/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16.8/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+    <div id="app"></div>
+    <script type="text/babel">
+        const { useState, useEffect } = React
+
+        const useDefer = (maxCount = 100) => {
+            const [frameCount, setFrameCount] = useState(0)
+            let rafid;
+
+            function updateFrameCount() {
+                rafid = requestAnimationFrame(() => {
+                    setFrameCount(frameCount + 1)
+
+                    if (frameCount >= maxCount) {
+                        return
+                    }
+                    updateFrameCount()
+                })
+            }
+
+            updateFrameCount()
+
+            useEffect(() => {
+                return () => {
+                    cancelAnimationFrame(rafid)
+                }
+            })
+
+            return function defer(n) {
+                return frameCount >= n
+            }
+
+        }
+
+        const Child = (props) => {
+            return (
+                <div>
+                    <h3>Child</h3>
+                    {
+                        new Array(100).fill(100).map(i => {
+                            return (
+                                <>
+                                    {
+                                        new Array(100).fill(100).map(i => {
+                                            return <span>{i}</span>
+                                        })
+                                    }
+                                </>
+                            )
+                        })
+                    }
+                </div>
+            )
+        }
+
+        const App = () => {
+            const [count, setCount] = React.useState(0)
+            const defer = useDefer()
+            return (
+                <>
+                    <h1>自定义hook useDefer</h1>
+                    {
+                        new Array(100).fill('????').map((i, idx) => {
+                            return defer(idx) && <Child />
+                        })
+                    }
+                </>
+            )
+        }
+
+        ReactDOM.render(<App />, document.querySelector('#app'))
+    </script>
+</body>
+</html>

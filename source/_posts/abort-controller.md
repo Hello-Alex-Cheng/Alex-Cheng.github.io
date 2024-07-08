@@ -16,7 +16,6 @@ excerpt: AbortController 接口表示一个控制器对象，允许你根据需�
 
 AbortController 接口表示一个控制器对象，允许你根据需要中止一个或多个 Web 请求。
 
-
 # fetch
 
 > [示例](https://mdn.github.io/dom-examples/abort-api/)
@@ -64,17 +63,58 @@ abortBtn.addEventListener('click', () => {
 
 同理 fetch，使用 `AbortController` 控制请求取消。
 
+
 ```js
-const controller = new AbortController();
+import axios from "axios";
 
-axios.get('/foo/bar', {
-   signal: controller.signal
-}).then(function(response) {
-   //...
-});
+let _env = import.meta.env
+// 开发环境走代理，生产环境走服务端
+let url = _env.MODE == 'development'?_env.VITE_APP_BASE_API:_env.VITE_HOST_URL
 
-// 取消请求
-controller.abort()
+const service = axios.create({
+  baseURL:url,
+  timeout:5000,
+})
+
+// 存储 url 及 abort controler 对象
+const ac = new Map()
+
+// 请求拦截器
+service.interceptors.request.use(
+  (config) => {
+
+    // 设置 map 对象, 如果存在 url, 就取消请求
+    if (ac.get(config.url)) {
+      ac.get(config.url).abort()
+      ac.delete(config.url)
+    }
+
+    const c = new AbortController()
+    config.signal = c.signal
+    ac.set(config.url, c)
+
+    return config
+  },
+  (error) => {
+    return Promise.reject(error)
+  }
+)
+
+// 响应拦截器
+service.interceptors.response.use((response) => {
+  const { success, message, data } = response.data
+
+  // 请求成功后, 需要删除 url 对应的对象
+  ac.delete(config.url)
+
+  if (success) {
+    return data
+  } else {
+    return Promise.reject(new Error(message))
+  }
+})
+
+export default service
 ```
 
 ## 过渡 CancelToken `deprecated`
